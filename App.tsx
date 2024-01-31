@@ -7,6 +7,7 @@ import HomeScreen from "./src/screens/Home";
 import SignIn from "./src/screens/SignIn";
 import CustomDrawer from "./src/components/Drawer";
 import { colors } from "./src/styles";
+import Lesson from "./src/screens/Lesson";
 
 const Drawer = createDrawerNavigator();
 
@@ -18,7 +19,8 @@ export default function App() {
         drawerContent={(props) => <CustomDrawer {...props} />}
         screenOptions={{
           headerShown: true,
-          drawerActiveTintColor: colors.themePrimary,
+          headerStyle: {backgroundColor: colors.themeSecondary},
+          drawerActiveTintColor: colors.themeSecondary,
           drawerInactiveTintColor: colors.white,
           drawerItemStyle: {
           },
@@ -32,6 +34,7 @@ export default function App() {
         <Drawer.Screen name="SignIn" component={SignIn} />
         <Drawer.Screen name="Home1" component={HomeScreen} />
         <Drawer.Screen name="SignIn12" component={SignIn} />
+        <Drawer.Screen name="Lesson" component={Lesson} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

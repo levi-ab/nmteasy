@@ -18,7 +18,7 @@ const CustomDrawer = (props) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#000",
+        backgroundColor: colors.basicGray,
         position: "relative",
         height: "100%",
       }}
@@ -31,7 +31,7 @@ const CustomDrawer = (props) => {
         }}
       >
         <ImageBackground
-          source={require("../assets/gradient.jpeg")}
+          source={require("../assets/gradient.png")}
           style={{
             flex: 1,
             alignItems: "center",
@@ -72,7 +72,7 @@ const CustomDrawer = (props) => {
             </Text>
           </View>
         </ImageBackground>
-        <View style={{ flex: 1, backgroundColor: "#000", paddingTop: 10 }}>
+        <View style={{ flex: 1, backgroundColor: colors.basicGray, paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
