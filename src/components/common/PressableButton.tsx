@@ -8,6 +8,7 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
+import { colors } from "../../styles";
 
 export interface IPressableButton {
   onPress: () => void;
@@ -15,12 +16,16 @@ export interface IPressableButton {
   buttonShadow: string;
   textStyle: TextStyle;
   text: string;
+  disabled?: boolean;
 }
 
 const PressableButton = (props: IPressableButton) => {
   const [animation, _] = useState(new Animated.Value(0));
 
   const handlePressIn = () => {
+    if(props.disabled){
+      return;
+    }
     Animated.timing(animation, {
       toValue: 1,
       duration: 50,
@@ -53,7 +58,6 @@ const PressableButton = (props: IPressableButton) => {
     <TouchableWithoutFeedback
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={{ backgroundColor: "red" }}
     >
       <View style={[props.style]}>
         <View>
@@ -61,7 +65,7 @@ const PressableButton = (props: IPressableButton) => {
             style={[
               heightStyle,
               {
-                backgroundColor: props.buttonShadow,
+                backgroundColor: props.disabled ? colors.grays30 : props.buttonShadow,
                 borderRadius: props.style.borderRadius,
               },
             ]}
@@ -70,12 +74,12 @@ const PressableButton = (props: IPressableButton) => {
               style={[
                 styles.inner,
                 {
-                  backgroundColor: props.style.backgroundColor,
+                  backgroundColor: props.disabled ? colors.grays30 : props.style.backgroundColor,
                   borderRadius: props.style.borderRadius,
                 },
               ]}
             >
-                <Text style={props.textStyle}>{props.text}</Text>
+                <Text style={[props.textStyle, props.disabled && {color: colors.grays10}]}>{props.text}</Text>
             </Animated.View>
           </Animated.View>
         </View>
@@ -96,4 +100,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  disabled: {
+    backgroundColor: colors.grays30,
+    color: colors.basicGray
+  }
 });
