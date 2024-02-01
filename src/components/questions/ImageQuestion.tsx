@@ -10,11 +10,18 @@ interface IImageQuestion extends IQuestion{
 export interface IImageQuestionProps {
     question: IImageQuestion,
     setNextQuestionActive: Function
+    setIsAnswerRight: Function
 }
 
 
 const ImageQuestion = (props: IImageQuestionProps) => {
   const [selectedImage, setSelectedImage] = useState("");
+
+  const handleImageOptionClicked = (src: string) => {
+    setSelectedImage(src); 
+    props.setNextQuestionActive(true);
+    props.setIsAnswerRight(props.question.right_answer === src);
+  }
 
   return (
     <View style={[styles.centeredView]}>
@@ -27,7 +34,7 @@ const ImageQuestion = (props: IImageQuestionProps) => {
               uri: src,
             }}
             isSelected={selectedImage === src}
-            onPress={() =>{setSelectedImage(src); props.setNextQuestionActive(true)}}
+            onPress={() => handleImageOptionClicked(src)}
           />
         ))}
       </View>

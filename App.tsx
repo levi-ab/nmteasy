@@ -34,7 +34,7 @@ export default function App() {
         <Drawer.Screen name="SignIn" component={SignIn} />
         <Drawer.Screen name="Home1" component={HomeScreen} />
         <Drawer.Screen name="SignIn12" component={SignIn} />
-        <Drawer.Screen name="Lesson" component={Lesson} />
+        <Drawer.Screen name="Lesson" component={Lesson} options={{unmountOnBlur: true}} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
