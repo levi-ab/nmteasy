@@ -7,20 +7,37 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { colors } from "../../styles";
+import { colors } from "../../../styles";
 
 
 export interface IImageIcon {
   src: ImageSourcePropType;
   style?: ImageStyle;
   isSelected: boolean;
+  isRight: boolean;
+  answerResultVisible: boolean;
   onPress: (event: GestureResponderEvent) => void;
 }
 
 const QuestionImageOption = (props: IImageIcon) => {
+  const getBorderStyle = () => {
+    if(props.isRight && props.answerResultVisible){
+      return styles.selectedContainerStyle
+    }
+
+    if(props.isSelected){
+      if(props.answerResultVisible && !props.isRight){
+        return styles.wrongContainerStyle
+      }
+
+      return styles.selectedContainerStyle
+    }
+
+    return {}
+  }
 
   return (
-    <Pressable style={[styles.imageContainer, props.isSelected && styles.selectedContainerStyle]} onPress={props.onPress}>
+    <Pressable style={[styles.imageContainer, getBorderStyle()]} onPress={props.onPress}>
       <Image source={props.src} style={styles.imageStyles}></Image>
     </Pressable>
   );
@@ -41,6 +58,10 @@ const styles = StyleSheet.create({
   selectedContainerStyle: {
     borderWidth: 5,
     borderColor: colors.themePrimary
+  },
+  wrongContainerStyle: {
+    borderWidth: 5,
+    borderColor: colors.red
   },
   imageStyles: {
     flex: 1,

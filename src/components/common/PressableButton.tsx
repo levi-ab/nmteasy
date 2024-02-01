@@ -12,9 +12,9 @@ import { colors } from "../../styles";
 
 export interface IPressableButton {
   onPress: () => void;
-  style: ViewStyle;
+  style?: ViewStyle;
   buttonShadow: string;
-  textStyle: TextStyle;
+  textStyle?: TextStyle;
   text: string;
   disabled?: boolean;
 }
@@ -28,7 +28,7 @@ const PressableButton = (props: IPressableButton) => {
     }
     Animated.timing(animation, {
       toValue: 1,
-      duration: 50,
+      duration: 25,
       useNativeDriver: false,
     }).start(() => {
       props.onPress();
@@ -38,7 +38,7 @@ const PressableButton = (props: IPressableButton) => {
   const handlePressOut = () => {
     Animated.timing(animation, {
       toValue: 0,
-      duration: 50,
+      duration: 25,
       useNativeDriver: false,
     }).start();
   };
@@ -66,7 +66,7 @@ const PressableButton = (props: IPressableButton) => {
               heightStyle,
               {
                 backgroundColor: props.disabled ? colors.grays30 : props.buttonShadow,
-                borderRadius: props.style.borderRadius,
+                borderRadius: props?.style?.borderRadius,
               },
             ]}
           >
@@ -74,8 +74,8 @@ const PressableButton = (props: IPressableButton) => {
               style={[
                 styles.inner,
                 {
-                  backgroundColor: props.disabled ? colors.grays30 : props.style.backgroundColor,
-                  borderRadius: props.style.borderRadius,
+                  backgroundColor: props.disabled ? colors.grays30 : props?.style?.backgroundColor,
+                  borderRadius: props?.style?.borderRadius,
                 },
               ]}
             >

@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
-import ImageQuestion from "../components/questions/ImageQuestion";
+import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import { useEffect, useState } from "react";
-import { QuestionTypes } from "../../utils/contants";
+import { QuestionTypes, questions } from "../../utils/contants";
 import PressableButton from "../components/common/PressableButton";
 import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
+import SelectQuestion from "../components/questions/Select/SelectQuestion";
+import LevelFinished from "../components/LevelFinished";
+import LessonHeader from "../components/LessonHeader";
 
 type ParamList = {
   Lesson: {
@@ -21,54 +24,6 @@ export interface IQuestion {
   right_answer: string;
 }
 
-const questions: IQuestion[] = [
-  {
-    id: "1",
-    type: "image",
-    text: "Identify the fruit in the image.",
-    question_data: [
-      "https://zno.osvita.ua/doc/images/znotest/174/17462/ansd_17462.jpg",
-      "https://zno.osvita.ua/doc/images/znotest/174/17462/ansc_17462.jpg",
-      "https://zno.osvita.ua/doc/images/znotest/174/17462/ansb_17462.jpg",
-      "https://zno.osvita.ua/doc/images/znotest/174/17462/ansa_17462.jpg",
-    ],
-    right_answer:
-      "https://zno.osvita.ua/doc/images/znotest/174/17462/ansd_17462.jpg",
-  },
-  {
-    id: "2",
-    type: "text",
-    text: "What is the capital of France?",
-    question_data: [],
-    right_answer: "Paris",
-  },
-  {
-    id: "3",
-    type: "select",
-    text: "Choose the correct color for the sky.",
-    question_data: [],
-    right_answer: "Blue",
-  },
-  {
-    id: "4",
-    type: "multipleselect",
-    text: "Select the countries in Europe.",
-    question_data: [],
-    right_answer: "asdf",
-  },
-  {
-    id: "5",
-    type: "match",
-    text: "Match the country with its capital.",
-    question_data: [
-      { country: "USA", capital: "Washington D.C." },
-      { country: "Japan", capital: "Tokyo" },
-      { country: "Brazil", capital: "Brasília" },
-    ],
-    right_answer: "asdf",
-  },
-];
-
 const Lesson = ({ navigation }) => {
   const route = useRoute<RouteProp<ParamList, "Lesson">>();
   const lessonID: string = route.params.lessonID;
@@ -76,7 +31,24 @@ const Lesson = ({ navigation }) => {
   const [nextQuestionActive, setNextQuestionActive] = useState(false);
   const [answerResultVisible, setAnswerResultVisible] = useState(false);
   const [isAnswerRight, setIsAnswerRight] = useState(false);
+  const [showLevelFinished, setShowLevelFinished] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [rightAnswersCount, setRightAnswersCount] = useState(0);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
+
+  useEffect(() => {
+    let timerId;
+
+    if (!showLevelFinished) {
+      timerId = setInterval(() => {
+        setElapsedTime((prevTime) => prevTime + 1);
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [showLevelFinished]);
 
   const renderCurrentQuestion = () => {
     const question = questions[currentQuestionIndex];
@@ -87,14 +59,22 @@ const Lesson = ({ navigation }) => {
             question={question}
             setNextQuestionActive={setNextQuestionActive}
             setIsAnswerRight={setIsAnswerRight}
+            answerResultVisible={answerResultVisible}
           />
         );
       // case QuestionTypes.Match:
       //   return <ImageQuestion question={question} />;
       // case QuestionTypes.MultipleSelect:
       //   return <ImageQuestion question={question} />;
-      // case QuestionTypes.Select:
-      //   return <ImageQuestion question={question} />;
+      case QuestionTypes.Select:
+        return (
+          <SelectQuestion
+            question={question}
+            setNextQuestionActive={setNextQuestionActive}
+            setIsAnswerRight={setIsAnswerRight}
+            answerResultVisible={answerResultVisible}
+          />
+        );
       // case QuestionTypes.Text:
       //   return <ImageQuestion question={question} />;
       default:
@@ -103,15 +83,25 @@ const Lesson = ({ navigation }) => {
   };
 
   const handleNextQuestionClicked = () => {
+    if (lastQuestionFinished && nextQuestionActive === false) {
+      setShowLevelFinished(true);
+      return;
+    }
+
     if (lastQuestionFinished) {
-      //last question finishing the lesson
-      navigation.navigate("Home");
+      setNextQuestionActive(false); //selected the answer, setting check button
+      setAnswerResultVisible(true);
+      if (isAnswerRight) {
+        setRightAnswersCount(
+          (prevRightAnswersCount) => prevRightAnswersCount + 1
+        );
+      }
       return;
     }
 
     if (answerResultVisible) {
       //answered the question, setting the next question
-      setNextQuestionActive(true);
+      setNextQuestionActive(false);
       setAnswerResultVisible(false);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       return;
@@ -119,33 +109,40 @@ const Lesson = ({ navigation }) => {
 
     setNextQuestionActive(false); //selected the answer, setting check button
     setAnswerResultVisible(true);
+    if (isAnswerRight) {
+      setRightAnswersCount(
+        (prevRightAnswersCount) => prevRightAnswersCount + 1
+      );
+    }
   };
 
   const getTextForNextButton = () => {
     if (lastQuestionFinished) {
-      return "Finish the lesson";
+      return "Завершити урок";
     }
 
     if (!answerResultVisible) {
-      return "Check";
+      return "Перевірити";
     }
 
     if (isAnswerRight) {
-      return "Continue";
+      return "Наступне питання!";
     }
 
-    return "Got it";
+    return "Йой!";
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.grays100 }}>
+    <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
+      <LessonHeader progress={(currentQuestionIndex + 1) / questions.length} />
       <View style={styles.questionContainer}>{renderCurrentQuestion()}</View>
       <View style={styles.buttonContainer}>
         <AnswerResultSlideUp
           isVisible={answerResultVisible}
           isRight={isAnswerRight}
-          rightText={`Nice! It is the right answer`}
-          wrongText="Ooops that is wrong"
+          isFinished={lastQuestionFinished}
+          rightText={"Чудово! Це правильна відповідь"}
+          wrongText="Отакої( Це неправильно"
         />
         <PressableButton
           onPress={handleNextQuestionClicked}
@@ -162,7 +159,7 @@ const Lesson = ({ navigation }) => {
           buttonShadow={
             !isAnswerRight && answerResultVisible
               ? colors.redShadow
-              : colors.themeSecondary
+              : colors.themePrimary
           }
           textStyle={{
             color: colors.grays80,
@@ -173,6 +170,12 @@ const Lesson = ({ navigation }) => {
           text={getTextForNextButton()}
         />
       </View>
+      <LevelFinished
+        isVisible={showLevelFinished}
+        elapsedTime={elapsedTime}
+        rightAnswersCount={rightAnswersCount}
+        questionCount={questions.length}
+      />
     </View>
   );
 };

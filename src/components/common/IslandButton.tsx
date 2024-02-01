@@ -35,7 +35,7 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress})
   const handlePressIn = () => {
     Animated.timing(animation, {
       toValue: 1,
-      duration: 50,
+      duration: 25,
       useNativeDriver: false,
     }).start(() => {
       onPress()
@@ -45,7 +45,7 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress})
   const handlePressOut = () => {
     Animated.timing(animation, {
       toValue: 0,
-      duration: 50,
+      duration: 25,
       useNativeDriver: false,
     }).start();
   };
