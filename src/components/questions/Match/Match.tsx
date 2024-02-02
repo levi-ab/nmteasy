@@ -31,25 +31,43 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
     props.setIsAnswerRight(false);
   }, []);
 
-  const getSelectFillColor = (text: string) => {
-    const isRight = props.question.right_answer === text;
+  const getSelectFillColor = (rowIndex: number, columnIndex: number) => {
+    const answerArray = props.question.right_answer
+      .split("|")
+      .filter(Boolean)
+      .map(Number);
+      
+    const isRight = (answerArray[0] === rowIndex && answerArray[1] === columnIndex) ||  
+                    (answerArray[2] === rowIndex && answerArray[3] === columnIndex) ||
+                    (answerArray[4] === rowIndex && answerArray[5] === columnIndex) ||
+                    (answerArray[6] === rowIndex && answerArray[7] === columnIndex);
+
     if (isRight && props.answerResultVisible) {
       return colors.themeSecondary;
     }
 
-    // if(selectedOption === text){
-    //   if(props.answerResultVisible && !isRight){
-    //     return colors.red
-    //   }
+    if(matrixState[rowIndex][columnIndex]){
+      if(props.answerResultVisible && !isRight){
+        return colors.red
+      }
 
-    //   return colors.themeSecondary
-    // }
+      return colors.themeSecondary
+    }
 
     return colors.themeSecondary;
   };
 
-  const getUnCheckedFillColor = (text: string) => {
-    if (props.answerResultVisible && props.question.right_answer === text) {
+  const getUnCheckedFillColor = (rowIndex: number, columnIndex: number) => {
+    const answerArray = props.question.right_answer
+      .split("|")
+      .filter(Boolean)
+      .map(Number);
+
+    if (props.answerResultVisible && (
+      answerArray[0] === rowIndex && answerArray[1] === columnIndex || 
+      answerArray[2] === rowIndex && answerArray[3] === columnIndex || 
+      answerArray[4] === rowIndex && answerArray[5] === columnIndex || 
+      answerArray[6] === rowIndex && answerArray[7] === columnIndex)) {
       return colors.themeSecondary;
     }
 
@@ -61,8 +79,6 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
       .split("|")
       .filter(Boolean)
       .map(Number);
-      console.log(answerArray)
-      console.log(matrixState[answerArray[0]][answerArray[1]])
     if (
       matrixState[answerArray[0]][answerArray[1]] &&
       matrixState[answerArray[2]][answerArray[3]] &&
@@ -196,8 +212,8 @@ const RenderAnswerMatrix = ({
 }: {
   first_row_answers: IAnswer[];
   second_row_answers: IAnswer[];
-  getSelectFillColor: (string: string) => string;
-  getUnCheckedFillColor: (string: string) => string;
+  getSelectFillColor: (rowIndex: number, columnIndex: number) => string;
+  getUnCheckedFillColor: (rowIndex: number, columnIndex: number) => string;
   matrixState: any[];
   handleCheckboxChange: (row: number, column: number) => void;
 }) => {
@@ -216,8 +232,8 @@ const RenderAnswerMatrix = ({
       {second_row_answers?.map((columnItem: any, columnIndex: number) => (
         <BouncyCheckbox
           size={25}
-          fillColor={getSelectFillColor("answer.text")}
-          unfillColor={getUnCheckedFillColor("answer.text")}
+          fillColor={getSelectFillColor(rowIndex, columnIndex)}
+          unfillColor={getUnCheckedFillColor(rowIndex, columnIndex)}
           key={columnIndex}
           disableBuiltInState={true}
           isChecked={matrixState[rowIndex][columnIndex]}
