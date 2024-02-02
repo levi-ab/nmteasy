@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import { useEffect, useState } from "react";
-import { QuestionTypes, questions } from "../../utils/contants";
+import { QuestionTypes } from "../../utils/constants";
+import { mapToSingleOrDoubleAnswersQuestion } from "../../utils/utils";
 import PressableButton from "../components/common/PressableButton";
 import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
 import SelectQuestion from "../components/questions/Select/SelectQuestion";
 import LevelFinished from "../components/LevelFinished";
 import LessonHeader from "../components/LessonHeader";
+import MatchQuestion from "../components/questions/Match/Match";
+import getAllQuestions from "../../services/historyLessonService";
+import { IDoubleAnswersQuestion, IQuestion, ISingleAnswersQuestion } from "../../models/questions";
+import historyLessonService from "../../services/historyLessonService";
 
 type ParamList = {
   Lesson: {
@@ -16,15 +21,7 @@ type ParamList = {
   };
 };
 
-export interface IQuestion {
-  id: string;
-  type: string;
-  text: string;
-  question_data: Array<any>;
-  right_answer: string;
-}
-
-const Lesson = ({ navigation }) => {
+const Lesson = () => {
   const route = useRoute<RouteProp<ParamList, "Lesson">>();
   const lessonID: string = route.params.lessonID;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -34,10 +31,17 @@ const Lesson = ({ navigation }) => {
   const [showLevelFinished, setShowLevelFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
+  const [questions, setQuestions] = useState<(ISingleAnswersQuestion | IDoubleAnswersQuestion)[]>([])
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
 
   useEffect(() => {
-    let timerId;
+    historyLessonService.getQuestionsByLesson(lessonID)
+    .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
+    .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    let timerId: NodeJS.Timeout;
 
     if (!showLevelFinished) {
       timerId = setInterval(() => {
@@ -52,6 +56,9 @@ const Lesson = ({ navigation }) => {
 
   const renderCurrentQuestion = () => {
     const question = questions[currentQuestionIndex];
+    if(!question){
+      return <></>
+    }
     switch (question.type) {
       case QuestionTypes.Image:
         return (
@@ -62,19 +69,33 @@ const Lesson = ({ navigation }) => {
             answerResultVisible={answerResultVisible}
           />
         );
-      // case QuestionTypes.Match:
-      //   return <ImageQuestion question={question} />;
-      // case QuestionTypes.MultipleSelect:
-      //   return <ImageQuestion question={question} />;
-      case QuestionTypes.Select:
+      case QuestionTypes.MatchWithTwoRows:
         return (
-          <SelectQuestion
-            question={question}
+          <MatchQuestion
+            question={question as IDoubleAnswersQuestion}
             setNextQuestionActive={setNextQuestionActive}
             setIsAnswerRight={setIsAnswerRight}
             answerResultVisible={answerResultVisible}
           />
         );
+      case QuestionTypes.Select:
+        return (
+          <SelectQuestion
+            question={question as ISingleAnswersQuestion}
+            setNextQuestionActive={setNextQuestionActive}
+            setIsAnswerRight={setIsAnswerRight}
+            answerResultVisible={answerResultVisible}
+          />
+        );
+        case QuestionTypes.Match:
+          return (
+            <SelectQuestion
+              question={question as ISingleAnswersQuestion}
+              setNextQuestionActive={setNextQuestionActive}
+              setIsAnswerRight={setIsAnswerRight}
+              answerResultVisible={answerResultVisible}
+            />
+          );
       // case QuestionTypes.Text:
       //   return <ImageQuestion question={question} />;
       default:
@@ -134,6 +155,7 @@ const Lesson = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
+      {questions && <>
       <LessonHeader progress={(currentQuestionIndex + 1) / questions.length} />
       <View style={styles.questionContainer}>{renderCurrentQuestion()}</View>
       <View style={styles.buttonContainer}>
@@ -175,7 +197,7 @@ const Lesson = ({ navigation }) => {
         elapsedTime={elapsedTime}
         rightAnswersCount={rightAnswersCount}
         questionCount={questions.length}
-      />
+      /></>}
     </View>
   );
 };

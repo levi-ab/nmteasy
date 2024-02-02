@@ -96,7 +96,7 @@ const LevelFinished = (props: Props) => {
             <Text
               style={[styles.textStyle, { fontSize: 16, textAlign: "right" }]}
             >
-              {(props.rightAnswersCount / props.questionCount) * 100}%
+              {Number((props.rightAnswersCount / props.questionCount) * 100).toFixed(0)}%
             </Text>
           </View>
           <View

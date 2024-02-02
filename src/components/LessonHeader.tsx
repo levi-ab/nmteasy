@@ -4,7 +4,8 @@ import * as Progress from "react-native-progress";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Circle, Line, Svg } from "react-native-svg";
-const LessonHeader = (props) => {
+
+const LessonHeader = (props: { progress: number; }) => {
   const navigation = useNavigation<NavigationProp<any>>();
 
   return (

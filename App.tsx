@@ -8,8 +8,6 @@ import SignIn from "./src/screens/SignIn";
 import CustomDrawer from "./src/components/Drawer";
 import { colors } from "./src/styles";
 import Lesson from "./src/screens/Lesson";
-import { getHeaderTitle } from "@react-navigation/elements";
-import LessonHeader from "./src/components/LessonHeader";
 const Drawer = createDrawerNavigator();
 
 export default function App() {

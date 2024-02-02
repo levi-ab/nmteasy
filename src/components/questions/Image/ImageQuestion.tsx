@@ -4,11 +4,8 @@ import { IQuestion } from "../../../screens/Lesson";
 import { colors } from "../../../styles";
 import { useState } from "react";
 
-interface IImageQuestion extends IQuestion{
-    question_data: string[]
-}
 export interface IImageQuestionProps {
-    question: IImageQuestion,
+    question: IQuestion,
     setNextQuestionActive: Function
     setIsAnswerRight: Function
     answerResultVisible: boolean
@@ -27,10 +24,10 @@ const ImageQuestion = (props: IImageQuestionProps) => {
   return (
     <View style={[styles.centeredView]}>
       <ScrollView style={{flexGrow: 0}}>
-        <Text style={styles.questionText}>{props.question.text}</Text>
+        <Text style={styles.questionText}>{props.question.question_text}</Text>
       </ScrollView>
       <View style={styles.imageOptionsContainer}>
-        {props.question.question_data.map((src) => (
+        {props.question.answers.map((src) => (
           <QuestionImageOption
             key={src}
             src={{

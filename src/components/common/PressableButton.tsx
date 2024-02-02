@@ -28,7 +28,7 @@ const PressableButton = (props: IPressableButton) => {
     }
     Animated.timing(animation, {
       toValue: 1,
-      duration: 25,
+      duration: 50,
       useNativeDriver: false,
     }).start(() => {
       props.onPress();
@@ -38,7 +38,7 @@ const PressableButton = (props: IPressableButton) => {
   const handlePressOut = () => {
     Animated.timing(animation, {
       toValue: 0,
-      duration: 25,
+      duration: 50,
       useNativeDriver: false,
     }).start();
   };

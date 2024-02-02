@@ -1,16 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   TouchableWithoutFeedback,
   Animated,
   StyleSheet,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
-import { SvgXml } from "react-native-svg";
 import { colors } from "../../styles";
 
-const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}) => {
+interface Props {
+  percentage: number;
+  marginLeft: number;
+  marginRight: number;
+  marginTop: number;
+  onPress: Function
+}
+
+const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}: Props) => {
   const [animation, _] = useState(new Animated.Value(0));
   const [color, setColor] = useState(colors.gray);
   const [filledLength, setFilledLength] = useState(0);

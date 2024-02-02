@@ -6,6 +6,7 @@ import { useNavigation, NavigationProp  } from "@react-navigation/native";
 export interface IStartLevelModal {
     setSelectedLevelID: React.Dispatch<React.SetStateAction<string | null>>
     selectedLevelID: string | null;
+    levelTitle: string;
 }
 
 const StartLevelModal = (props: IStartLevelModal) => {
@@ -33,10 +34,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
               { color: colors.white, marginBottom: 10 },
             ]}
           >
-            Start the lesson!
-          </Text>
-          <Text style={[styles.textStyle, { marginBottom: 20 }]}>
-            I am description
+            {props.levelTitle}
           </Text>
           <PressableButton
             onPress={() =>
@@ -55,7 +53,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
               textAlign: "center",
               fontSize: 16,
             }}
-            text="Start the lesson"
+            text="Почати Урок"
           />
         </View>
       </View>
@@ -110,7 +108,9 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontWeight: "700",
+    paddingBottom: 20,
+    width: "100%",
     fontSize: 18,
-    textAlign: "left",
+    textAlign: "center",
   },
 });
