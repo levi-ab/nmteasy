@@ -1,3 +1,4 @@
+import { ILessonByGeneralTitle } from "../models/lessons";
 import { IQuestion, ISingleAnswersQuestion, IDoubleAnswersQuestion } from "../models/questions";
 
 
@@ -59,3 +60,25 @@ export const isMatrixSolved = (answerKey: string | any[], matrix: any[]) => {
 
   return true;
 }
+
+export const getLessonTitleById = (
+  lessonID: string | null,
+  historyLessons: ILessonByGeneralTitle[]
+): string => {
+  let foundTitle = "";
+  if(!lessonID || !historyLessons){
+    return ""
+  }
+
+  historyLessons.some((lessonGroup) =>
+    lessonGroup.data.some((lesson) => {
+      if (lesson.id === lessonID) {
+        foundTitle = lesson.proper_title;
+        return true;
+      }
+      return false;
+    })
+  );
+
+  return foundTitle;
+};

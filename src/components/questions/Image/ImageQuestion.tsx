@@ -1,11 +1,11 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import QuestionImageOption from "./QuestionImageOption";
-import { IQuestion } from "../../../screens/Lesson";
 import { colors } from "../../../styles";
 import { useState } from "react";
+import { ISingleAnswersQuestion } from "../../../../models/questions";
 
 export interface IImageQuestionProps {
-    question: IQuestion,
+    question: ISingleAnswersQuestion,
     setNextQuestionActive: Function
     setIsAnswerRight: Function
     answerResultVisible: boolean
@@ -23,20 +23,20 @@ const ImageQuestion = (props: IImageQuestionProps) => {
 
   return (
     <View style={[styles.centeredView]}>
-      <ScrollView style={{flexGrow: 0}}>
+      <ScrollView style={{ maxHeight: "30%", flexGrow: 0 }}>
         <Text style={styles.questionText}>{props.question.question_text}</Text>
       </ScrollView>
       <View style={styles.imageOptionsContainer}>
-        {props.question.answers.map((src) => (
+        {props.question.answers.map((answer) => (
           <QuestionImageOption
-            key={src}
+            key={answer.text}
             src={{
-              uri: src,
+              uri: answer.text,
             }}
-            isSelected={selectedImage === src}
+            isSelected={selectedImage === answer.text}
             answerResultVisible={props.answerResultVisible}
-            isRight={src === props.question.right_answer}
-            onPress={() => handleImageOptionClicked(src)}
+            isRight={answer.text === props.question.right_answer}
+            onPress={() => handleImageOptionClicked(answer.text)}
           />
         ))}
       </View>

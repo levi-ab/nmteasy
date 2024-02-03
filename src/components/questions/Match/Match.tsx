@@ -9,9 +9,7 @@ import {
 import { colors } from "../../../styles";
 import { useEffect, useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { FlatList } from "react-native-gesture-handler";
 import { IAnswer, IDoubleAnswersQuestion } from "../../../../models/questions";
-import { copyMatrix, isMatrixSolved } from "../../../../utils/utils";
 import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
 
 export interface ISelectQuestionProps {
@@ -27,6 +25,7 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
       Array(props.question.answers.second_row_answers.length).fill(false)
     )
   );
+
   useEffect(() => {
     props.setIsAnswerRight(false);
   }, []);
@@ -90,29 +89,31 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
   };
 
   const handleCheckboxChange = (rowIndex: number, columnIndex: number) => {
-    if (
-      !matrixState[rowIndex][columnIndex] &&
-      matrixState[rowIndex].some((e: any) => e)
-    ) {
-      return;
-    }
-    let newMatrixState = copyMatrix(matrixState);
-    newMatrixState[rowIndex][columnIndex] =
-      !newMatrixState[rowIndex][columnIndex];
+    const updatedMatrixState = matrixState.map(row => [...row]);
+
+    updatedMatrixState[rowIndex] = updatedMatrixState[rowIndex].map(() => false);
+
+    updatedMatrixState.forEach(row => {
+      row[columnIndex] = false;
+    });
+
+    updatedMatrixState[rowIndex][columnIndex] = !matrixState[rowIndex][columnIndex];
 
     if (
-      newMatrixState.every((row) =>
+      updatedMatrixState.every((row) =>
         row.some((value: boolean) => value === true)
       )
     ) {
       props.setNextQuestionActive(true);
+    } else {
+      props.setNextQuestionActive(false);
     }
 
-    if(checkIfMatrixIsCorrect(newMatrixState)){
+    if(checkIfMatrixIsCorrect(updatedMatrixState)){
       props.setIsAnswerRight(true)
     }
 
-    setMatrixState(newMatrixState);
+    setMatrixState(updatedMatrixState);
   };
 
   return (

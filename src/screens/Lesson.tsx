@@ -12,7 +12,11 @@ import LevelFinished from "../components/LevelFinished";
 import LessonHeader from "../components/LessonHeader";
 import MatchQuestion from "../components/questions/Match/Match";
 import getAllQuestions from "../../services/historyLessonService";
-import { IDoubleAnswersQuestion, IQuestion, ISingleAnswersQuestion } from "../../models/questions";
+import {
+  IDoubleAnswersQuestion,
+  IQuestion,
+  ISingleAnswersQuestion,
+} from "../../models/questions";
 import historyLessonService from "../../services/historyLessonService";
 
 type ParamList = {
@@ -31,13 +35,16 @@ const Lesson = () => {
   const [showLevelFinished, setShowLevelFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
-  const [questions, setQuestions] = useState<(ISingleAnswersQuestion | IDoubleAnswersQuestion)[]>([])
+  const [questions, setQuestions] = useState<
+    (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
+  >([]);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
 
   useEffect(() => {
-    historyLessonService.getQuestionsByLesson(lessonID)
-    .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
-    .catch((err) => console.error(err));
+    historyLessonService
+      .getQuestionsByLesson(lessonID)
+      .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -56,22 +63,15 @@ const Lesson = () => {
 
   const renderCurrentQuestion = () => {
     const question = questions[currentQuestionIndex];
-    if(!question){
-      return <></>
+    if (!question) {
+      return <></>;
     }
+
     switch (question.type) {
-      case QuestionTypes.Image:
-        return (
-          <ImageQuestion
-            question={question}
-            setNextQuestionActive={setNextQuestionActive}
-            setIsAnswerRight={setIsAnswerRight}
-            answerResultVisible={answerResultVisible}
-          />
-        );
       case QuestionTypes.MatchWithTwoRows:
         return (
           <MatchQuestion
+            key={question.id}
             question={question as IDoubleAnswersQuestion}
             setNextQuestionActive={setNextQuestionActive}
             setIsAnswerRight={setIsAnswerRight}
@@ -79,23 +79,39 @@ const Lesson = () => {
           />
         );
       case QuestionTypes.Select:
-        return (
-          <SelectQuestion
-            question={question as ISingleAnswersQuestion}
-            setNextQuestionActive={setNextQuestionActive}
-            setIsAnswerRight={setIsAnswerRight}
-            answerResultVisible={answerResultVisible}
-          />
-        );
-        case QuestionTypes.Match:
+        if (
+          (question as ISingleAnswersQuestion).answers.every(
+            (answer) => answer.type === QuestionTypes.Image
+          )
+        )
           return (
-            <SelectQuestion
+            <ImageQuestion
+              key={question.id}
               question={question as ISingleAnswersQuestion}
               setNextQuestionActive={setNextQuestionActive}
               setIsAnswerRight={setIsAnswerRight}
               answerResultVisible={answerResultVisible}
             />
           );
+        return (
+          <SelectQuestion
+            key={question.id}
+            question={question as ISingleAnswersQuestion}
+            setNextQuestionActive={setNextQuestionActive}
+            setIsAnswerRight={setIsAnswerRight}
+            answerResultVisible={answerResultVisible}
+          />
+        );
+      case QuestionTypes.Match:
+        return (
+          <SelectQuestion
+            key={question.id}
+            question={question as ISingleAnswersQuestion}
+            setNextQuestionActive={setNextQuestionActive}
+            setIsAnswerRight={setIsAnswerRight}
+            answerResultVisible={answerResultVisible}
+          />
+        );
       // case QuestionTypes.Text:
       //   return <ImageQuestion question={question} />;
       default:
@@ -155,49 +171,56 @@ const Lesson = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
-      {questions && <>
-      <LessonHeader progress={(currentQuestionIndex + 1) / questions.length} />
-      <View style={styles.questionContainer}>{renderCurrentQuestion()}</View>
-      <View style={styles.buttonContainer}>
-        <AnswerResultSlideUp
-          isVisible={answerResultVisible}
-          isRight={isAnswerRight}
-          isFinished={lastQuestionFinished}
-          rightText={"Чудово! Це правильна відповідь"}
-          wrongText="Отакої( Це неправильно"
-        />
-        <PressableButton
-          onPress={handleNextQuestionClicked}
-          style={{
-            backgroundColor:
-              !isAnswerRight && answerResultVisible
-                ? colors.red
-                : colors.themeSecondary,
-            height: 50,
-            width: "100%",
-            borderRadius: 20,
-          }}
-          disabled={!nextQuestionActive && !answerResultVisible}
-          buttonShadow={
-            !isAnswerRight && answerResultVisible
-              ? colors.redShadow
-              : colors.themePrimary
-          }
-          textStyle={{
-            color: colors.grays80,
-            fontWeight: "bold",
-            textAlign: "center",
-            fontSize: 16,
-          }}
-          text={getTextForNextButton()}
-        />
-      </View>
-      <LevelFinished
-        isVisible={showLevelFinished}
-        elapsedTime={elapsedTime}
-        rightAnswersCount={rightAnswersCount}
-        questionCount={questions.length}
-      /></>}
+      {questions && (
+        <>
+          <LessonHeader
+            progress={(currentQuestionIndex + 1) / questions.length}
+          />
+          <View style={styles.questionContainer}>
+            {renderCurrentQuestion()}
+          </View>
+          <View style={styles.buttonContainer}>
+            <AnswerResultSlideUp
+              isVisible={answerResultVisible}
+              isRight={isAnswerRight}
+              isFinished={lastQuestionFinished}
+              rightText={"Чудово! Це правильна відповідь"}
+              wrongText="Отакої( Це неправильно"
+            />
+            <PressableButton
+              onPress={handleNextQuestionClicked}
+              style={{
+                backgroundColor:
+                  !isAnswerRight && answerResultVisible
+                    ? colors.red
+                    : colors.themeSecondary,
+                height: 50,
+                width: "100%",
+                borderRadius: 20,
+              }}
+              disabled={!nextQuestionActive && !answerResultVisible}
+              buttonShadow={
+                !isAnswerRight && answerResultVisible
+                  ? colors.redShadow
+                  : colors.themePrimary
+              }
+              textStyle={{
+                color: colors.grays80,
+                fontWeight: "bold",
+                textAlign: "center",
+                fontSize: 16,
+              }}
+              text={getTextForNextButton()}
+            />
+          </View>
+          <LevelFinished
+            isVisible={showLevelFinished}
+            elapsedTime={elapsedTime}
+            rightAnswersCount={rightAnswersCount}
+            questionCount={questions.length}
+          />
+        </>
+      )}
     </View>
   );
 };

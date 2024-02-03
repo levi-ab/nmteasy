@@ -8,9 +8,19 @@ import SignIn from "./src/screens/SignIn";
 import CustomDrawer from "./src/components/Drawer";
 import { colors } from "./src/styles";
 import Lesson from "./src/screens/Lesson";
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from "expo-font";
+import { useCallback } from "react";
+
 const Drawer = createDrawerNavigator();
 
+
 export default function App() {
+
+  const [fontsLoaded, fontError] = useFonts({
+    'Inter-Black': require('./src/assets/fonts/Inter-Black.otf'),
+  });
+
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -24,7 +34,6 @@ export default function App() {
           drawerItemStyle: {},
 
           drawerLabelStyle: {
-            fontFamily: "Roboto-Medium",
             fontSize: 15,
           },
         }}
@@ -47,12 +56,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

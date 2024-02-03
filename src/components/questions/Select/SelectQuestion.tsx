@@ -14,6 +14,7 @@ export interface ISelectQuestionProps {
 
 const SelectQuestion = (props: ISelectQuestionProps) => {
   const [selectedOption, setSelectedOption] = useState("");
+  
   useEffect(() => {
     props.setIsAnswerRight(false);
   }, []);

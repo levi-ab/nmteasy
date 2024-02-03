@@ -4,3 +4,8 @@ export interface ILesson {
     questions: null;
     proper_title: string;
 }
+
+export interface ILessonByGeneralTitle {
+  title: string,
+  data: ILesson[];
+}

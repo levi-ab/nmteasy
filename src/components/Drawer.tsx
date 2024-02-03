@@ -54,7 +54,6 @@ const CustomDrawer = (props) => {
             style={{
               color: "#fff",
               fontSize: 18,
-              fontFamily: "Roboto-Medium",
               marginBottom: 5,
             }}
           >
@@ -64,7 +63,6 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 color: "#fff",
-                fontFamily: "Roboto-Regular",
                 marginRight: 5,
               }}
             >
@@ -83,7 +81,6 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 fontSize: 15,
-                fontFamily: "Roboto-Medium",
                 marginLeft: 5,
                 color: colors.lightGray
               }}
@@ -97,7 +94,6 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 fontSize: 15,
-                fontFamily: "Roboto-Medium",
                 marginLeft: 5,
                 color: colors.lightGray
               }}
