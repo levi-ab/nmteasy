@@ -1,5 +1,5 @@
 import { ScrollView, SectionList, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { colors } from "../styles";
 import IslandButton from "../components/common/IslandButton";
@@ -8,6 +8,7 @@ import historyLessonService from "../../services/historyLessonService";
 import { ILesson, ILessonByGeneralTitle } from "../../models/lessons";
 import { getLessonTitleById } from "../../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
+import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 
 const HomeScreen = ({}) => {
   const [selectedLevelID, setSelectedLevelID] = useState<null | string>(null);
@@ -20,28 +21,14 @@ const HomeScreen = ({}) => {
   }, []);
 
 
-  const isLandRenderItem = ({ item , index }: {item: ILesson, index: number}) => {
-    let marginRight = 0;
-    if (index % 5 >= 3) {
-      marginRight = (-index % 5) * 30;
-    } else {
-      marginRight = (index % 5) * 60;
-    }
-
-    return (
-      <IslandButton
-        percentage={100}
-        key={item.id}
-        marginLeft={0}
-        marginTop={20}
-        marginRight={marginRight}
-        onPress={() => setSelectedLevelID(item.id)}
-      />
-    );
-  };
+const handleLevelPress = useCallback((id: SetStateAction<string | null>) => {
+  setSelectedLevelID(id);
+}, [setSelectedLevelID]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.grays100 }}>
+    <View
+      style={{ flex: 1, backgroundColor: colors.grays100 }}
+    >
       <StartLevelModal
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}
@@ -51,18 +38,16 @@ const HomeScreen = ({}) => {
         sections={historyLessons}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => (
-          <View>
-            <IslandButton
-              percentage={100}
-              key={item.id}
-              marginLeft={0}
-              marginTop={20}
-              marginRight={index % 5 >= 2 ? (-index % 5) * 30 : (index % 5) * 60}
-              onPress={() => setSelectedLevelID(item.id)}
-            />
-          </View>
+          <MemoizedIsLandRenderItem
+            item={item}
+            index={index}
+            handleLevelPress={handleLevelPress}
+          />
         )}
-        renderSectionHeader={({ section: { title } }) => <CloudTitleBanner title={title}/>}
+        initialNumToRender={5}
+        renderSectionHeader={({ section: { title } }) => (
+          <CloudTitleBanner title={title} />
+        )}
         contentContainerStyle={{
           alignItems: "center",
           justifyContent: "center",
