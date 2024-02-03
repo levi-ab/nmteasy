@@ -11,8 +11,8 @@ import { colors } from "../../../styles";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useEffect, useState } from "react";
 import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
-import { RenderAnswerMatrix } from "./MatchTwoRowsQuestion";
-import { checkIfMatchQuestionMatrixIsCorrect } from "../../../../utils/utils";
+import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";
+import { checkIfMatchQuestionMatrixIsCorrect } from "../../../../utils/matrixUtils";
 
 export interface IMatchQuestionProps {
   question: ISingleAnswersQuestion;
@@ -57,25 +57,6 @@ const MatchQuestion = (props: IMatchQuestionProps) => {
     }
 
     return colors.themeSecondary;
-  };
-
-  const getUnCheckedFillColor = (rowIndex: number, columnIndex: number) => {
-    const answerArray = props.question.right_answer
-      .split("|")
-      .filter(Boolean)
-      .map(Number);
-
-    if (
-      props.answerResultVisible &&
-      ((answerArray[0] === rowIndex && answerArray[1] === columnIndex) ||
-        (answerArray[2] === rowIndex && answerArray[3] === columnIndex) ||
-        (answerArray[4] === rowIndex && answerArray[5] === columnIndex) ||
-        (answerArray[6] === rowIndex && answerArray[7] === columnIndex))
-    ) {
-      return colors.themeSecondary;
-    }
-
-    return colors.white;
   };
 
   const handleCheckboxChange = (rowIndex: number, columnIndex: number) => {
@@ -162,7 +143,7 @@ const MatchQuestion = (props: IMatchQuestionProps) => {
             </Text>
           ))}
         </View>
-        <RenderAnswerMatrix
+        <AnswerBoxForMatchQuestion
           first_row_answers={props.question.answers}
           second_row_answers={props.question.answers}
           matrixState={matrixState}
