@@ -10,7 +10,7 @@ import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
 import SelectQuestion from "../components/questions/Select/SelectQuestion";
 import LevelFinished from "../components/LevelFinished";
 import LessonHeader from "../components/LessonHeader";
-import MatchQuestion from "../components/questions/Match/Match";
+import MatchTwoRowsQuestion from "../components/questions/Match/MatchTwoRowsQuestion";
 import getAllQuestions from "../../services/historyLessonService";
 import {
   IDoubleAnswersQuestion,
@@ -18,6 +18,7 @@ import {
   ISingleAnswersQuestion,
 } from "../../models/questions";
 import historyLessonService from "../../services/historyLessonService";
+import MatchQuestion from "../components/questions/Match/MatchQuestion";
 
 type ParamList = {
   Lesson: {
@@ -70,7 +71,7 @@ const Lesson = () => {
     switch (question.type) {
       case QuestionTypes.MatchWithTwoRows:
         return (
-          <MatchQuestion
+          <MatchTwoRowsQuestion
             key={question.id}
             question={question as IDoubleAnswersQuestion}
             setNextQuestionActive={setNextQuestionActive}
@@ -104,7 +105,7 @@ const Lesson = () => {
         );
       case QuestionTypes.Match:
         return (
-          <SelectQuestion
+          <MatchQuestion
             key={question.id}
             question={question as ISingleAnswersQuestion}
             setNextQuestionActive={setNextQuestionActive}

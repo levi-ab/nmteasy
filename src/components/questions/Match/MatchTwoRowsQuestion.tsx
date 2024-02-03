@@ -11,15 +11,20 @@ import { useEffect, useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { IAnswer, IDoubleAnswersQuestion } from "../../../../models/questions";
 import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
+import {
+  checkIfMatchQuestionMatrixIsCorrect,
+  getSelectFillColorForMatrix,
+  getUnCheckedFillColorForMatrix,
+} from "../../../../utils/utils";
 
-export interface ISelectQuestionProps {
+export interface IMatchTwoRowsQuestionProps {
   question: IDoubleAnswersQuestion;
   setNextQuestionActive: Function;
   setIsAnswerRight: Function;
   answerResultVisible: boolean;
 }
 
-const MatchQuestion = (props: ISelectQuestionProps) => {
+const MatchTwoRowsQuestion = (props: IMatchTwoRowsQuestionProps) => {
   const [matrixState, setMatrixState] = useState(
     Array(props.question.answers.first_row_answers.length).fill(
       Array(props.question.answers.second_row_answers.length).fill(false)
@@ -30,74 +35,19 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
     props.setIsAnswerRight(false);
   }, []);
 
-  const getSelectFillColor = (rowIndex: number, columnIndex: number) => {
-    const answerArray = props.question.right_answer
-      .split("|")
-      .filter(Boolean)
-      .map(Number);
-      
-    const isRight = (answerArray[0] === rowIndex && answerArray[1] === columnIndex) ||  
-                    (answerArray[2] === rowIndex && answerArray[3] === columnIndex) ||
-                    (answerArray[4] === rowIndex && answerArray[5] === columnIndex) ||
-                    (answerArray[6] === rowIndex && answerArray[7] === columnIndex);
-
-    if (isRight && props.answerResultVisible) {
-      return colors.themeSecondary;
-    }
-
-    if(matrixState[rowIndex][columnIndex]){
-      if(props.answerResultVisible && !isRight){
-        return colors.red
-      }
-
-      return colors.themeSecondary
-    }
-
-    return colors.themeSecondary;
-  };
-
-  const getUnCheckedFillColor = (rowIndex: number, columnIndex: number) => {
-    const answerArray = props.question.right_answer
-      .split("|")
-      .filter(Boolean)
-      .map(Number);
-
-    if (props.answerResultVisible && (
-      answerArray[0] === rowIndex && answerArray[1] === columnIndex || 
-      answerArray[2] === rowIndex && answerArray[3] === columnIndex || 
-      answerArray[4] === rowIndex && answerArray[5] === columnIndex || 
-      answerArray[6] === rowIndex && answerArray[7] === columnIndex)) {
-      return colors.themeSecondary;
-    }
-
-    return colors.white;
-  };
-
-  const checkIfMatrixIsCorrect = (matrixState: any[]) => {
-    const answerArray = props.question.right_answer
-      .split("|")
-      .filter(Boolean)
-      .map(Number);
-    if (
-      matrixState[answerArray[0]][answerArray[1]] &&
-      matrixState[answerArray[2]][answerArray[3]] &&
-      matrixState[answerArray[4]][answerArray[5]] &&
-      matrixState[answerArray[6]][answerArray[7]]
-    )
-      return true;
-    return false;
-  };
-
   const handleCheckboxChange = (rowIndex: number, columnIndex: number) => {
-    const updatedMatrixState = matrixState.map(row => [...row]);
+    const updatedMatrixState = matrixState.map((row) => [...row]);
 
-    updatedMatrixState[rowIndex] = updatedMatrixState[rowIndex].map(() => false);
+    updatedMatrixState[rowIndex] = updatedMatrixState[rowIndex].map(
+      () => false
+    );
 
-    updatedMatrixState.forEach(row => {
+    updatedMatrixState.forEach((row) => {
       row[columnIndex] = false;
     });
 
-    updatedMatrixState[rowIndex][columnIndex] = !matrixState[rowIndex][columnIndex];
+    updatedMatrixState[rowIndex][columnIndex] =
+      !matrixState[rowIndex][columnIndex];
 
     if (
       updatedMatrixState.every((row) =>
@@ -109,8 +59,13 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
       props.setNextQuestionActive(false);
     }
 
-    if(checkIfMatrixIsCorrect(updatedMatrixState)){
-      props.setIsAnswerRight(true)
+    if (
+      checkIfMatchQuestionMatrixIsCorrect(
+        updatedMatrixState,
+        props.question.right_answer
+      )
+    ) {
+      props.setIsAnswerRight(true);
     }
 
     setMatrixState(updatedMatrixState);
@@ -191,34 +146,34 @@ const MatchQuestion = (props: ISelectQuestionProps) => {
         <RenderAnswerMatrix
           first_row_answers={props.question.answers.first_row_answers}
           second_row_answers={props.question.answers.second_row_answers}
-          getSelectFillColor={getSelectFillColor}
-          getUnCheckedFillColor={getUnCheckedFillColor}
           matrixState={matrixState}
           handleCheckboxChange={handleCheckboxChange}
+          right_answer={props.question.right_answer}
+          answerResultVisible={props.answerResultVisible}
         />
       </View>
     </View>
   );
 };
 
-export default MatchQuestion;
+export default MatchTwoRowsQuestion;
 
-const RenderAnswerMatrix = ({
+export const RenderAnswerMatrix = ({
   first_row_answers,
   second_row_answers,
-  getSelectFillColor,
-  getUnCheckedFillColor,
   matrixState,
   handleCheckboxChange,
+  right_answer,
+  answerResultVisible,
 }: {
   first_row_answers: IAnswer[];
   second_row_answers: IAnswer[];
-  getSelectFillColor: (rowIndex: number, columnIndex: number) => string;
-  getUnCheckedFillColor: (rowIndex: number, columnIndex: number) => string;
   matrixState: any[];
   handleCheckboxChange: (row: number, column: number) => void;
+  right_answer: string;
+  answerResultVisible: boolean;
 }) => {
-  return first_row_answers?.map((rowItem: any, rowIndex: number) => (
+  return first_row_answers?.map((_: any, rowIndex: number) => (
     <View
       key={rowIndex}
       style={{
@@ -230,11 +185,22 @@ const RenderAnswerMatrix = ({
       <Text style={[styles.answerText, { marginRight: 10 }]}>
         {rowIndex + 1}
       </Text>
-      {second_row_answers?.map((columnItem: any, columnIndex: number) => (
+      {second_row_answers?.map((_: any, columnIndex: number) => (
         <BouncyCheckbox
           size={25}
-          fillColor={getSelectFillColor(rowIndex, columnIndex)}
-          unfillColor={getUnCheckedFillColor(rowIndex, columnIndex)}
+          fillColor={getSelectFillColorForMatrix(
+            rowIndex,
+            columnIndex,
+            right_answer,
+            answerResultVisible,
+            matrixState
+          )}
+          unfillColor={getUnCheckedFillColorForMatrix(
+            rowIndex,
+            columnIndex,
+            right_answer,
+            answerResultVisible
+          )}
           key={columnIndex}
           disableBuiltInState={true}
           isChecked={matrixState[rowIndex][columnIndex]}
