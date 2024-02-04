@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -12,8 +12,16 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { colors } from "../styles";
+import { useAuth } from "../data/AuthContext";
 
-const CustomDrawer = (props) => {
+const CustomDrawer = (props: any) => {
+
+  const { state: { user }, dispatch } = useAuth();
+
+  const handleSignOut = () => {
+    dispatch({ type: 'SIGN_OUT' });
+  }
+
   return (
     <View
       style={{
@@ -50,15 +58,17 @@ const CustomDrawer = (props) => {
             source={require("../assets/user-icon.png")}
             style={{ width: 100, height: 100 }}
           />
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 18,
-              marginBottom: 5,
-            }}
-          >
-            John Doe
-          </Text>
+          {user && (
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 18,
+                marginBottom: 5,
+              }}
+            >
+              {user.first_name + " " + user.last_name}
+            </Text>
+          )}
           <View style={{ flexDirection: "row" }}>
             <Text
               style={{
@@ -70,32 +80,40 @@ const CustomDrawer = (props) => {
             </Text>
           </View>
         </ImageBackground>
-        <View style={{ flex: 1, backgroundColor: colors.basicGray, paddingTop: 10 }}>
+        <View
+          style={{ flex: 1, backgroundColor: colors.basicGray, paddingTop: 10 }}
+        >
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
 
-      <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: colors.lightGray}}>
+      <View
+        style={{
+          padding: 20,
+          borderTopWidth: 1,
+          borderTopColor: colors.lightGray,
+        }}
+      >
         <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text
               style={{
                 fontSize: 15,
                 marginLeft: 5,
-                color: colors.lightGray
+                color: colors.lightGray,
               }}
             >
               Tell a Friend
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
+        <TouchableOpacity onPress={() => handleSignOut()} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text
               style={{
                 fontSize: 15,
                 marginLeft: 5,
-                color: colors.lightGray
+                color: colors.lightGray,
               }}
             >
               Sign Out

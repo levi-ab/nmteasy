@@ -6,9 +6,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { IAnswer, ISingleAnswersQuestion } from "../../../data/models/questions";
+import { ISingleAnswersQuestion } from "../../../data/models/questions";
 import { colors } from "../../../styles";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useEffect, useState } from "react";
 import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
 import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";

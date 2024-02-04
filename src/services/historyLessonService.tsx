@@ -1,10 +1,13 @@
 import { IQuestion } from "../data/models/questions";
 const apiURL = process.env.EXPO_PUBLIC_API_URL
 class _historyLessonService {
-   getQuestionsByLesson = (lessonID: string): Promise<IQuestion[]> => {
+   getQuestionsByLesson = (lessonID: string, token: string): Promise<IQuestion[]> => {
     return fetch(
       `${apiURL}/history-questions/${lessonID}`,{
           method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+          }
       }
     ).then((res) => {
       if (res.ok) {
@@ -16,10 +19,13 @@ class _historyLessonService {
     });
   };
 
-  getHistoryLessons = (): Promise<any> => {
+  getHistoryLessons = (token: string): Promise<any> => {
     return fetch(
       `${apiURL}/history-lessons`,{
           method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+          }
       }
     ).then((res) => {
       if (res.ok) {

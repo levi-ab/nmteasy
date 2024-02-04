@@ -1,5 +1,13 @@
 import { ScrollView, SectionList, Text, View } from "react-native";
-import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { colors } from "../styles";
 import IslandButton from "../components/common/IslandButton";
@@ -9,26 +17,31 @@ import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
 import { getLessonTitleById } from "../../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
+import { useAuth } from "../data/AuthContext";
 
-const HomeScreen = ({}) => {
+const HomeScreen = () => {
   const [selectedLevelID, setSelectedLevelID] = useState<null | string>(null);
-  const [historyLessons, setHistoryLessons] = useState<ILessonByGeneralTitle[]>([]);
+  const [historyLessons, setHistoryLessons] = useState<ILessonByGeneralTitle[]>(
+    []
+  );
+  const { state: { token } } = useAuth();
 
   useEffect(() => {
-    historyLessonService.getHistoryLessons()
-    .then((res) => setHistoryLessons(res))
-    .catch((err) => console.error(err));
+    historyLessonService
+      .getHistoryLessons(token)
+      .then((res) => setHistoryLessons(res))
+      .catch((err) => console.error(err));
   }, []);
 
-
-const handleLevelPress = useCallback((id: SetStateAction<string | null>) => {
-  setSelectedLevelID(id);
-}, [setSelectedLevelID]);
+  const handleLevelPress = useCallback(
+    (id: SetStateAction<string | null>) => {
+      setSelectedLevelID(id);
+    },
+    [setSelectedLevelID]
+  );
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.grays100 }}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.grays100 }}>
       <StartLevelModal
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}

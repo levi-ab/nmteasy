@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { QuestionTypes } from "../../utils/constants";
 import { mapToSingleOrDoubleAnswersQuestion } from "../../utils/utils";
 import PressableButton from "../components/common/PressableButton";
@@ -19,6 +19,7 @@ import {
 } from "../data/models/questions";
 import historyLessonService from "../services/historyLessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
+import { useAuth } from "../data/AuthContext";
 
 type ParamList = {
   Lesson: {
@@ -40,10 +41,11 @@ const Lesson = () => {
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >([]);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
+  const { state: { token } } = useAuth();
 
   useEffect(() => {
     historyLessonService
-      .getQuestionsByLesson(lessonID)
+      .getQuestionsByLesson(lessonID, token)
       .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
       .catch((err) => console.error(err));
   }, []);
