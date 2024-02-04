@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import { colors } from "../../../styles";
 import { useEffect, useState } from "react";
-import { IDoubleAnswersQuestion } from "../../../../models/questions";
-import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
+import { IDoubleAnswersQuestion } from "../../../data/models/questions";
+import { LetterOptions, QuestionTypes } from "../../../utils/constants";
 import {
-  checkIfMatchQuestionMatrixIsCorrect} from "../../../../utils/matrixUtils";
+  checkIfMatchQuestionMatrixIsCorrect} from "../../../utils/matrixUtils";
 import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";
 
 export interface IMatchTwoRowsQuestionProps {

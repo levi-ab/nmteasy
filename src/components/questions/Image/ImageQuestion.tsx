@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import QuestionImageOption from "./QuestionImageOption";
 import { colors } from "../../../styles";
 import { useState } from "react";
-import { ISingleAnswersQuestion } from "../../../../models/questions";
+import { ISingleAnswersQuestion } from "../../../data/models/questions";
 
 export interface IImageQuestionProps {
     question: ISingleAnswersQuestion,

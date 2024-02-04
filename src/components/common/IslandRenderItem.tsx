@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { ILesson } from '../../../models/lessons';
+import { ILesson } from '../../data/models/lessons';
 import IslandButton from './IslandButton';
 import { View } from 'react-native';
 

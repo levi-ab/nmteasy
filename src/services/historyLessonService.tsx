@@ -1,4 +1,4 @@
-import { IQuestion } from "../models/questions";
+import { IQuestion } from "../data/models/questions";
 const apiURL = process.env.EXPO_PUBLIC_API_URL
 class _historyLessonService {
    getQuestionsByLesson = (lessonID: string): Promise<IQuestion[]> => {

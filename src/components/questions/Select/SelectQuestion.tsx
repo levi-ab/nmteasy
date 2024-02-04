@@ -2,8 +2,8 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { colors } from "../../../styles";
 import { useEffect, useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { ISingleAnswersQuestion } from "../../../../models/questions";
-import { QuestionTypes } from "../../../../utils/constants";
+import { ISingleAnswersQuestion } from "../../../data/models/questions";
+import { QuestionTypes } from "../../../utils/constants";
 
 export interface ISelectQuestionProps {
   question: ISingleAnswersQuestion;

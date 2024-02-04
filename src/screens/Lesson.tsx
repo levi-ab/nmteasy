@@ -3,21 +3,21 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import { useEffect, useState } from "react";
-import { QuestionTypes } from "../../utils/constants";
-import { mapToSingleOrDoubleAnswersQuestion } from "../../utils/utils";
+import { QuestionTypes } from "../utils/constants";
+import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import PressableButton from "../components/common/PressableButton";
 import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
 import SelectQuestion from "../components/questions/Select/SelectQuestion";
 import LevelFinished from "../components/LevelFinished";
 import LessonHeader from "../components/LessonHeader";
 import MatchTwoRowsQuestion from "../components/questions/Match/MatchTwoRowsQuestion";
-import getAllQuestions from "../../services/historyLessonService";
+import getAllQuestions from "../services/historyLessonService";
 import {
   IDoubleAnswersQuestion,
   IQuestion,
   ISingleAnswersQuestion,
-} from "../../models/questions";
-import historyLessonService from "../../services/historyLessonService";
+} from "../data/models/questions";
+import historyLessonService from "../services/historyLessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 
 type ParamList = {

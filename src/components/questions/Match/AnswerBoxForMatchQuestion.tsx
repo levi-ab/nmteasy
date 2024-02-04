@@ -1,14 +1,15 @@
 import {
+  StyleSheet,
   Text,
   View
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { IAnswer } from "../../../../models/questions";
+import { IAnswer } from "../../../data/models/questions";
 import {
   getSelectFillColorForMatrix,
   getUnCheckedFillColorForMatrix
-} from "../../../../utils/matrixUtils";
-import { styles } from "./MatchTwoRowsQuestion";
+} from "../../../utils/matrixUtils";
+import { colors } from "../../../styles";
 
 
 export const AnswerBoxForMatchQuestion = ({
@@ -57,3 +58,42 @@ export const AnswerBoxForMatchQuestion = ({
     </View>
   ));
 };
+
+export const styles = StyleSheet.create({
+  centeredView: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: 22,
+    flex: 1,
+    width: "100%",
+    padding: 10,
+    paddingBottom: 0,
+  },
+  questionText: {
+    fontWeight: "700",
+    color: colors.white,
+    fontSize: 20,
+    textAlign: "left",
+    marginBottom: 15,
+  },
+  answerText: {
+    fontWeight: "500",
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "left",
+  },
+  optionsContainer: {
+    flexGrow: 1,
+    height: "60%",
+    paddingHorizontal: 10,
+    width: "100%",
+    marginTop: 50,
+    flexDirection: "column",
+    alignContent: "center",
+  },
+  option: {
+    flex: 1,
+    paddingVertical: 15,
+    width: "100%",
+  }
+});

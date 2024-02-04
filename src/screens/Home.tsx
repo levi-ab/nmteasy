@@ -4,9 +4,9 @@ import { FlatList } from "react-native-gesture-handler";
 import { colors } from "../styles";
 import IslandButton from "../components/common/IslandButton";
 import StartLevelModal from "../components/StartLevelModal";
-import historyLessonService from "../../services/historyLessonService";
-import { ILesson, ILessonByGeneralTitle } from "../../models/lessons";
-import { getLessonTitleById } from "../../utils/utils";
+import historyLessonService from "../services/historyLessonService";
+import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
+import { getLessonTitleById } from "../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 

@@ -1,4 +1,4 @@
-import { colors } from "../src/styles";
+import { colors } from "../styles";
 
 
 export const checkIfMatchQuestionMatrixIsCorrect = (
