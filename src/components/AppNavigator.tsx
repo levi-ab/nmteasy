@@ -10,6 +10,7 @@ import HomeScreen from "../screens/Home";
 import Lesson from "../screens/Lesson";
 import SignIn from "../screens/SignIn";
 import { colors } from "../styles";
+import { View } from "react-native";
 
 type AppDrawerParamList = {
   Home: undefined;
@@ -42,7 +43,17 @@ const AppNavigator: React.FC = () => {
         {state.user ? (
           <>
             <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Lesson" component={Lesson} />
+            <Drawer.Screen
+              name="Lesson"
+              component={Lesson}
+              options={{
+                drawerItemStyle: { height: 0 },
+                unmountOnBlur: true,
+                header: ({ navigation, route, options }) => {
+                  return <View />;
+                },
+              }}
+            />
           </>
         ) : (
           <Drawer.Screen name="SignIn" component={SignIn} />
