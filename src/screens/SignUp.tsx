@@ -106,7 +106,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
         }}
         onPress={handleLogin}
         buttonShadow={colors.themePrimary}
-        text={"Увійти"}
+        text={"Зареєструватись"}
         textStyle={{
           color: colors.grays80,
           fontWeight: "bold",
