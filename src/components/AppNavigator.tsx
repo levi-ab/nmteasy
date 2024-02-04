@@ -11,14 +11,9 @@ import Lesson from "../screens/Lesson";
 import SignIn from "../screens/SignIn";
 import { colors } from "../styles";
 import { View } from "react-native";
+import SignUp from "../screens/SignUp";
 
-type AppDrawerParamList = {
-  Home: undefined;
-  SignIn: undefined;
-  Lesson: undefined;
-};
-
-const Drawer = createDrawerNavigator<AppDrawerParamList>();
+const Drawer = createDrawerNavigator<any>();
 
 const AppNavigator: React.FC = () => {
   const { state } = useAuth();
@@ -56,7 +51,18 @@ const AppNavigator: React.FC = () => {
             />
           </>
         ) : (
-          <Drawer.Screen name="SignIn" component={SignIn} options={{drawerLabel:"Увійти", title: "Увійти"}}/>
+          <>
+            <Drawer.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{ drawerLabel: "Увійти", title: "Увійти" }}
+            />
+            <Drawer.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{ drawerLabel: "Зареєструватись", title: "Зареєструватись" }}
+            />
+          </>
         )}
       </Drawer.Navigator>
     </NavigationContainer>

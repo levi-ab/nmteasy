@@ -13,9 +13,12 @@ import { colors } from "../styles";
 import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
 
-const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
+const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [focusedElement, setFocusedElement] = useState("");
 
   const { dispatch } = useAuth();
 
@@ -33,24 +36,66 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Увійти в {"NMTEASY"}</Text>
+      <Text style={styles.header}>Зареєструватись в NMTEASY</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <TextInputWithLabel
+          style={{ width: "40%" }}
+          label={"Ім'я"}
+          secureTextEntry
+          labelStyle={styles.label}
+          textInputStyle={styles.input}
+          onChangeText={(text) => setFirstName(text)}
+          focusBorderColor={colors.themePrimary}
+          notFocusedBorderColor={colors.grays50}
+        />
+        <TextInputWithLabel
+          style={{ width: "50%" }}
+          label={"Прізвище"}
+          secureTextEntry
+          labelStyle={styles.label}
+          textInputStyle={styles.input}
+          onChangeText={(text) => setLastName(text)}
+          focusBorderColor={colors.themePrimary}
+          notFocusedBorderColor={colors.grays50}
+        />
+      </View>
+      <View style={{ width: "100%" }}>
+        <Text style={styles.label}>Пошта</Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              borderColor:
+                focusedElement === "Email"
+                  ? colors.themePrimary
+                  : colors.grays50,
+              borderWidth: focusedElement === "Email" ? 2 : 1,
+            },
+          ]}
+          placeholderTextColor={colors.grays50}
+          placeholder="Пошта"
+          onChangeText={(text) => setEmail(text)}
+          onFocus={() => setFocusedElement("Email")}
+          onBlur={() => setFocusedElement("")}
+        />
+      </View>
       <TextInputWithLabel
-        label={"Пошта"}
-        labelStyle={styles.label}
-        textInputStyle={styles.input}
-        onChangeText={(text) => setEmail(text)}
-        focusBorderColor={colors.themePrimary}
-        notFocusedBorderColor={colors.grays50}
-      />
-      <TextInputWithLabel
+        style={{ width: "100%" }}
         label={"Пароль"}
+        secureTextEntry
         labelStyle={styles.label}
         textInputStyle={styles.input}
         onChangeText={(text) => setPassword(text)}
         focusBorderColor={colors.themePrimary}
         notFocusedBorderColor={colors.grays50}
-        secureTextEntry
       />
+
       <PressableButton
         style={{
           height: 50,
@@ -70,16 +115,16 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
         }}
       />
       <View style={{ flexDirection: "row", marginTop: 15, gap: 10 }}>
-        <Text style={styles.smallLabel}>Ще не маєш акаунту?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-          <Text style={styles.signUpLabel}>Зареєструватись</Text>
+        <Text style={styles.smallLabel}>Уже маєш акаунт?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+          <Text style={styles.signUpLabel}>Увійти</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default SignIn;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.basicGray,
+    backgroundColor: colors.basicGray
   },
   smallLabel: {
     fontWeight: "600",
@@ -96,26 +141,25 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Black",
   },
   signUpLabel: {
-    fontWeight: "400",
-    fontSize: 14,
-    color: colors.themePrimary,
-    fontFamily: "Inter-Black",
+      fontWeight: "400",
+      fontSize: 14,
+      color: colors.themePrimary,
+      fontFamily: "Inter-Black",
   },
   header: {
-    width: "100%",
     fontSize: 25,
     marginBottom: 20,
-    marginLeft: 15,
     color: colors.themePrimary,
     fontFamily: "Inter-Black",
+    textAlign: "left",
+    width: "100%"
   },
   label: {
     fontFamily: "Inter-Black",
     fontWeight: "500",
-    color: colors.themePrimary,
+    color: colors.themePrimary
   },
   input: {
-    width: 300,
     height: 45,
     color: colors.themeSecondary,
     borderWidth: 1,
