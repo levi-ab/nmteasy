@@ -14,3 +14,5 @@ export const LetterOptions = [
   "D",
   "E"
 ]
+
+export const StorageUserKey = "nmteasy_user"

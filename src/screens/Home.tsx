@@ -6,7 +6,7 @@ import IslandButton from "../components/common/IslandButton";
 import StartLevelModal from "../components/StartLevelModal";
 import historyLessonService from "../services/historyLessonService";
 import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
-import { getLessonTitleById } from "../utils/utils";
+import { getLessonTitleById } from "../../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 
