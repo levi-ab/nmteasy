@@ -56,7 +56,7 @@ const AppNavigator: React.FC = () => {
             />
           </>
         ) : (
-          <Drawer.Screen name="SignIn" component={SignIn} />
+          <Drawer.Screen name="SignIn" component={SignIn} options={{drawerLabel:"Увійти", title: "Увійти"}}/>
         )}
       </Drawer.Navigator>
     </NavigationContainer>

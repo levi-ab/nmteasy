@@ -15,7 +15,6 @@ import { colors } from "../styles";
 import { useAuth } from "../data/AuthContext";
 
 const CustomDrawer = (props: any) => {
-
   const { state: { user }, dispatch } = useAuth();
 
   const handleSignOut = () => {
