@@ -41,7 +41,7 @@ const HomeScreen = () => {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.grays100 }}>
+    <View style={{ flex: 1, backgroundColor: colors.basicGray }}>
       <StartLevelModal
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}

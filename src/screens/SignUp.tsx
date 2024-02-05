@@ -12,6 +12,8 @@ import { useAuth } from "../data/AuthContext";
 import { colors } from "../styles";
 import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
+import Toast from 'react-native-toast-message';
+import { ErrorsMap } from "../utils/constants";
 
 const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
@@ -22,16 +24,31 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
 
   const { dispatch } = useAuth();
 
-  const handleLogin = () => {
+  const showToast  = (text: string, type: "success" | "error") => {
+    Toast.show({
+      type: type,
+      text1: type === "error" ? "Помилочка" : "Повідомлення",
+      text2: text
+    });
+  }
+
+  const handleSignUp = () => {
     userService
-      .signIn(email, password)
-      .then((res) =>
-        dispatch({
-          type: "SIGN_IN",
-          payload: { user: res.user, token: res.token },
-        })
-      )
-      .catch((err) => console.error(err));
+      .signUp(email, password, firstName, lastName)
+      .then((res) => {
+        setTimeout(() => {
+          dispatch({
+            type: "SIGN_IN",
+            payload: { user: res.user, token: res.token },
+          });
+        }, 1000);
+        showToast("Успішно Зареєстровано", "success");
+      })
+      .catch((err) => {
+        console.error(err);
+        const parsedError = JSON.parse(err.message).error;
+        showToast(ErrorsMap[parsedError], "error");
+      });
   };
 
   return (
@@ -47,7 +64,6 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
         <TextInputWithLabel
           style={{ width: "40%" }}
           label={"Ім'я"}
-          secureTextEntry
           labelStyle={styles.label}
           textInputStyle={styles.input}
           onChangeText={(text) => setFirstName(text)}
@@ -57,7 +73,6 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
         <TextInputWithLabel
           style={{ width: "50%" }}
           label={"Прізвище"}
-          secureTextEntry
           labelStyle={styles.label}
           textInputStyle={styles.input}
           onChangeText={(text) => setLastName(text)}
@@ -95,7 +110,6 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
         focusBorderColor={colors.themePrimary}
         notFocusedBorderColor={colors.grays50}
       />
-
       <PressableButton
         style={{
           height: 50,
@@ -104,7 +118,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
           backgroundColor: colors.themeSecondary,
           marginTop: 20,
         }}
-        onPress={handleLogin}
+        onPress={handleSignUp}
         buttonShadow={colors.themePrimary}
         text={"Зареєструватись"}
         textStyle={{
@@ -120,6 +134,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
           <Text style={styles.signUpLabel}>Увійти</Text>
         </TouchableOpacity>
       </View>
+      <Toast />
     </View>
   );
 };

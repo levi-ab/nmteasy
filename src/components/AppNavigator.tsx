@@ -12,6 +12,7 @@ import SignIn from "../screens/SignIn";
 import { colors } from "../styles";
 import { View } from "react-native";
 import SignUp from "../screens/SignUp";
+import Settings from "../screens/Settings";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -24,7 +25,7 @@ const AppNavigator: React.FC = () => {
         initialRouteName={state.user ? "Home" : "SignIn"}
         drawerContent={(props) => <CustomDrawer {...props} />}
         screenOptions={{
-          headerShown: true,
+          headerShown: !!state.user,
           headerStyle: { backgroundColor: colors.themeSecondary },
           drawerActiveTintColor: colors.themeSecondary,
           drawerInactiveTintColor: colors.white,
@@ -37,7 +38,21 @@ const AppNavigator: React.FC = () => {
       >
         {state.user ? (
           <>
-            <Drawer.Screen name="Home" component={HomeScreen} />
+            <Drawer.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ drawerLabel: "Головна", title: "Головна" }}
+            />
+            <Drawer.Screen
+              name="Settings"
+              component={Settings}
+              options={{
+                drawerLabel: "Налаштування",
+                title: "Налаштування",
+                drawerItemStyle: { height: 0 },
+                unmountOnBlur: true,
+              }}
+            />
             <Drawer.Screen
               name="Lesson"
               component={Lesson}
@@ -60,7 +75,10 @@ const AppNavigator: React.FC = () => {
             <Drawer.Screen
               name="SignUp"
               component={SignUp}
-              options={{ drawerLabel: "Зареєструватись", title: "Зареєструватись" }}
+              options={{
+                drawerLabel: "Зареєструватись",
+                title: "Зареєструватись",
+              }}
             />
           </>
         )}

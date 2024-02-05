@@ -12,12 +12,22 @@ import { useAuth } from "../data/AuthContext";
 import { colors } from "../styles";
 import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
+import Toast from "react-native-toast-message";
+import { ErrorsMap } from "../utils/constants";
 
 const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { dispatch } = useAuth();
+
+  const showToast  = (text: string, type: "success" | "error") => {
+    Toast.show({
+      type: type,
+      text1: type === "error" ? "Помилочка" : "Повідомлення",
+      text2: text
+    });
+  }
 
   const handleLogin = () => {
     userService
@@ -28,7 +38,10 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
           payload: { user: res.user, token: res.token },
         })
       )
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        showToast("Пароль чи Пошта неправильні", "error");
+      });
   };
 
   return (
@@ -70,11 +83,12 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
         }}
       />
       <View style={{ flexDirection: "row", marginTop: 15, gap: 10 }}>
-        <Text style={styles.smallLabel}>Ще не маєш акаунту?</Text>
+        <Text style={styles.smallLabel}>Ще не маєш aкаунту?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
           <Text style={styles.signUpLabel}>Зареєструватись</Text>
         </TouchableOpacity>
       </View>
+      <Toast />
     </View>
   );
 };
