@@ -13,23 +13,25 @@ import { colors } from "../styles";
 import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
 import Toast from "react-native-toast-message";
-import { ErrorsMap } from "../utils/constants";
+import GlobalLoader from "../components/common/GlobalLoader";
 
 const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { dispatch } = useAuth();
 
-  const showToast  = (text: string, type: "success" | "error") => {
+  const showToast = (text: string, type: "success" | "error") => {
     Toast.show({
       type: type,
       text1: type === "error" ? "Помилочка" : "Повідомлення",
-      text2: text
+      text2: text,
     });
-  }
+  };
 
   const handleLogin = () => {
+    setIsLoading(true);
     userService
       .signIn(email, password)
       .then((res) =>
@@ -40,6 +42,7 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
       )
       .catch((err) => {
         console.error(err);
+        setIsLoading(false);
         showToast("Пароль чи Пошта неправильні", "error");
       });
   };
@@ -89,6 +92,7 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
         </TouchableOpacity>
       </View>
       <Toast />
+      <GlobalLoader isVisible={isLoading} />
     </View>
   );
 };

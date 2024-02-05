@@ -14,6 +14,7 @@ import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
 import Toast from 'react-native-toast-message';
 import { ErrorsMap } from "../utils/constants";
+import GlobalLoader from "../components/common/GlobalLoader";
 
 const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [focusedElement, setFocusedElement] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { dispatch } = useAuth();
 
@@ -33,6 +35,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
   }
 
   const handleSignUp = () => {
+    setIsLoading(true);
     userService
       .signUp(email, password, firstName, lastName)
       .then((res) => {
@@ -42,10 +45,12 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
             payload: { user: res.user, token: res.token },
           });
         }, 1000);
+        setIsLoading(false);
         showToast("Успішно Зареєстровано", "success");
       })
       .catch((err) => {
         console.error(err);
+        setIsLoading(false);
         const parsedError = JSON.parse(err.message).error;
         showToast(ErrorsMap[parsedError], "error");
       });
@@ -135,6 +140,7 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
         </TouchableOpacity>
       </View>
       <Toast />
+      <GlobalLoader isVisible={isLoading}/>
     </View>
   );
 };

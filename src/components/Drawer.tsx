@@ -10,18 +10,19 @@ import {
 import {
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerNavigationProp, 
 } from "@react-navigation/drawer";
 import { colors } from "../styles";
 import { useAuth } from "../data/AuthContext";
 import Svg, { Path, G } from 'react-native-svg';
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 const CustomDrawer = (props: any) => {
   const { state: { user }, dispatch } = useAuth();
-  const navigation = useNavigation<NavigationProp<any>>();
 
   const handleSignOut = () => {
-    dispatch({ type: 'SIGN_OUT' });
+   props.navigation.closeDrawer();
+   dispatch({ type: 'SIGN_OUT' });
   }
 
   return (
@@ -51,7 +52,7 @@ const CustomDrawer = (props: any) => {
           }}
         >
           <View style={styles.bellIcon}>
-            <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+            <TouchableOpacity onPress={() => props.navigation.navigate("Settings")}>
               <Svg
                 width="25px"
                 height="25px"

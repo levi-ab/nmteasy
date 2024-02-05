@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionTypes } from "../utils/constants";
 import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import PressableButton from "../components/common/PressableButton";
@@ -11,15 +11,14 @@ import SelectQuestion from "../components/questions/Select/SelectQuestion";
 import LevelFinished from "../components/LevelFinished";
 import LessonHeader from "../components/LessonHeader";
 import MatchTwoRowsQuestion from "../components/questions/Match/MatchTwoRowsQuestion";
-import getAllQuestions from "../services/historyLessonService";
 import {
   IDoubleAnswersQuestion,
-  IQuestion,
   ISingleAnswersQuestion,
 } from "../data/models/questions";
 import historyLessonService from "../services/historyLessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
+import GlobalLoader from "../components/common/GlobalLoader";
 
 type ParamList = {
   Lesson: {
@@ -174,7 +173,7 @@ const Lesson = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
-      {questions && (
+      {questions?.length ? (
         <>
           <LessonHeader
             progress={(currentQuestionIndex + 1) / questions.length}
@@ -223,7 +222,7 @@ const Lesson = () => {
             questionCount={questions.length}
           />
         </>
-      )}
+      ) : <GlobalLoader isVisible={true}/>}
     </View>
   );
 };

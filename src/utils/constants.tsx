@@ -31,4 +31,5 @@ export const ErrorsMap: ErrorsMapType = {
   "user already exists": "Користувач уже існує",
   "email already exists": "Пошта уже існує",
   "username already exists": "Юзернейм уже існує",
+  "no user found": "Пароль чи Пошта неправильні"
 };

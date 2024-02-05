@@ -7,6 +7,7 @@ import { useState } from "react";
 import Toast from "react-native-toast-message";
 import userService from "../services/userService";
 import { ErrorsMap } from "../utils/constants";
+import GlobalLoader from "../components/common/GlobalLoader";
 
 const Settings = () => {
   const {
@@ -17,6 +18,8 @@ const Settings = () => {
   const [email, setEmail] = useState(user?.email ?? "");
   const [firstName, setFirstName] = useState(user?.first_name ?? "");
   const [lastName, setLastName] = useState(user?.last_name ?? "");
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const showToast = (text: string, type: "success" | "error") => {
     Toast.show({
@@ -27,6 +30,7 @@ const Settings = () => {
   };
 
   const handleEdit = () => {
+    setIsLoading(true);
     userService
       .edit(email, username, firstName, lastName, token)
       .then((res) => {
@@ -36,10 +40,12 @@ const Settings = () => {
             payload: { user: res.user, token: res.token },
           });
         }, 1000);
+        setIsLoading(false);
         showToast("Успішно Змінено", "success");
       })
       .catch((err) => {
         console.error(err);
+        setIsLoading(false);
         const parsedError = JSON.parse(err.message).error;
         showToast(ErrorsMap[parsedError], "error");
       });
@@ -125,6 +131,7 @@ const Settings = () => {
         />
       </ScrollView>
       <Toast />
+      <GlobalLoader isVisible={isLoading}/>
     </View>
   );
 };

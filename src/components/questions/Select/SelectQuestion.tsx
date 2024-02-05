@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
   questionImage: {
     width: 200,
     height: 200,
-    marginTop: 20
+    marginTop: 20,
+    objectFit: "contain"
   }
 });
