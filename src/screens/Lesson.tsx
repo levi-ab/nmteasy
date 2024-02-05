@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Modal, StyleSheet, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
@@ -19,6 +19,7 @@ import historyLessonService from "../services/historyLessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
 import GlobalLoader from "../components/common/GlobalLoader";
+import ExplainQuestionModal from "../components/modals/ExplainQuestionModal";
 
 type ParamList = {
   Lesson: {
@@ -36,6 +37,7 @@ const Lesson = () => {
   const [showLevelFinished, setShowLevelFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
+  const [showExplainModal, setShowExplainModal] = useState(false);
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >([]);
@@ -181,8 +183,14 @@ const Lesson = () => {
           <View style={styles.questionContainer}>
             {renderCurrentQuestion()}
           </View>
+          <ExplainQuestionModal
+            questionText={questions[currentQuestionIndex].question_text}
+            showExplainModal={showExplainModal}
+            setShowExplainModal={setShowExplainModal}
+          />
           <View style={styles.buttonContainer}>
             <AnswerResultSlideUp
+              setShowExplainModal={setShowExplainModal}
               isVisible={answerResultVisible}
               isRight={isAnswerRight}
               isFinished={lastQuestionFinished}

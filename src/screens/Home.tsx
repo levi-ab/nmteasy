@@ -11,7 +11,7 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { colors } from "../styles";
 import IslandButton from "../components/common/IslandButton";
-import StartLevelModal from "../components/StartLevelModal";
+import StartLevelModal from "../components/modals/StartLevelModal";
 import historyLessonService from "../services/historyLessonService";
 import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
 import { getLessonTitleById } from "../utils/utils";

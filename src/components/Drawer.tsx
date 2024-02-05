@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,12 +10,10 @@ import {
 import {
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerNavigationProp, 
 } from "@react-navigation/drawer";
 import { colors } from "../styles";
 import { useAuth } from "../data/AuthContext";
 import Svg, { Path, G } from 'react-native-svg';
-import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 const CustomDrawer = (props: any) => {
   const { state: { user }, dispatch } = useAuth();

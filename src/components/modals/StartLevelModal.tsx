@@ -1,6 +1,6 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { colors } from "../styles";
-import PressableButton from "./common/PressableButton";
+import { colors } from "../../styles";
+import PressableButton from "../common/PressableButton";
 import { useNavigation, NavigationProp  } from "@react-navigation/native";
 
 export interface IStartLevelModal {
