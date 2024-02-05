@@ -10,24 +10,28 @@ import {
 import { colors } from "../../styles";
 import { useEffect, useState } from "react";
 import PressableButton from "../common/PressableButton";
+import historyLessonService from "../../services/historyLessonService";
+import { IExplanation } from "../../data/models/questions";
+import { useAuth } from "../../data/AuthContext";
 
 const ExplainQuestionModal = (props: {
   showExplainModal: boolean;
   setShowExplainModal: Function;
-  questionText: string;
+  questionID: string;
 }) => {
   const [answerLoading, setAnswerLoading] = useState(true);
-  const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJib2RhbGV2YTUzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7InBvaWQiOiJvcmctQlJmQjA3OFhRSTRENHFzREo4UnVaM1M5IiwidXNlcl9pZCI6InVzZXItYnVnN2RLdVBITEFKaDVoY2FtWE85NWhCIn0sImlzcyI6Imh0dHBzOi8vYXV0aDAub3BlbmFpLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwNDg5NDY3Mjk2MTI0OTcyMTI2OCIsImF1ZCI6WyJodHRwczovL2FwaS5vcGVuYWkuY29tL3YxIiwiaHR0cHM6Ly9vcGVuYWkub3BlbmFpLmF1dGgwYXBwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE3MDcxMjE5MDEsImV4cCI6MTcwNzk4NTkwMSwiYXpwIjoiVGRKSWNiZTE2V29USHROOTVueXl3aDVFNHlPbzZJdEciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG1vZGVsLnJlYWQgbW9kZWwucmVxdWVzdCBvcmdhbml6YXRpb24ucmVhZCBvcmdhbml6YXRpb24ud3JpdGUgb2ZmbGluZV9hY2Nlc3MifQ.0NqWCftHWdQRxL2C5Nkk4L0bjfVvZkZ0BHpgq3QiP0PRso5eHH6BTgC-aa_56K7MbJ8br7Y5zEwSRR_hdeAKQ_y2zj6FojgLdGVsCddvoYfit-Fgs4P3zpi9CeH_s6hoY_Si0JbDejcN4WWSA0QLSVzq_1IUpbwa-36yIpUTczains-PZT150Yq1wX2h9-H5LqkVwwPxm9Zurhh1QzOLEqoVmwvtTPDulZlw4xL0MiwIJy_UUfEKWWEkLc26G6muU0hV6nGqba1eZXKTjARw-vpydiflyKq8oHqFLPit_h91iJWSLTjd2rnu-nLPG9JNYty_6lrB3odfByK8y5G45g`;
+  const [explanation, setExplanation] = useState<IExplanation | null>(null)
+  const { state: { token } } = useAuth();
 
   useEffect(() => {
     if(props.showExplainModal){
+        setExplanation(null);
         setAnswerLoading(true);
-        setTimeout(() => {
-          setAnswerLoading(false);
-        }, 2500);
+        historyLessonService.getExplanationByQuestion(token, props.questionID)
+          .then(res =>{ setExplanation(res); setAnswerLoading(false); console.log(res)})
+          .catch(err => {console.error(err);  setAnswerLoading(false);})
     }
-   
-  }, [props.showExplainModal, props.questionText]);
+  }, [props.questionID, props.showExplainModal]);
 
   return (
     <Modal
@@ -40,46 +44,19 @@ const ExplainQuestionModal = (props: {
         onTouchEnd={() => props.setShowExplainModal(false)}
       >
         <View style={[styles.modalView]}>
-          <Text
-            style={[
-              styles.modalText,
-              { color: colors.white, position: "absolute", top: 15 },
-            ]}
-          >
-            Пояснюємо питання
-          </Text>
           {answerLoading ? (
             <View
-              style={{ width: "100%", height: "90%", justifyContent: "center" }}
+              style={{ width: "100%", height: "85%", justifyContent: "center" }}
             >
               <ActivityIndicator size="large" color={colors.themePrimary} />
             </View>
           ) : (
-            <ScrollView style={{ width: "100%", marginVertical: 30 }}>
+            <ScrollView style={{ width: "100%", marginBottom: 20 }}>
               <Text style={[styles.explainingText]}>
-                флдіовалдфідв афідлвафіваолдфіовафл івадофдіова лдфівдалофі
-                вдалофіовлд аофівладфіва флдіовалдфідва фідлва
-                фіваолдфіовафлівадофдіовалд івда лофівдало фіовлдаофівла
-                дфівафіва фіва фів а фі ав іф ва лфівалфіва іфв афілваоіфва
-                іфваоіфвалфівта івафі ва івф а фі ва іфва флдіовалдфідв
-                афідлвафіваолдфіовафл івадофдіова лдфівдалофі вдалофіовлд
-                аофівладфіва флдіовалдфідва фідлва фіваолдфіовафлівадофдіовалд
-                івда лофівдало фіовлдаофівла дфівафіва фіва фів а фі ав іф ва
-                лфівалфіва іфв афілваоіфва іфваоіфвалфівта івафі ва івф а фі ва
-                іфва флдіовалдфідв афідлвафіваолдфіовафл івадофдіова лдфівдалофі
-                вдалофіовлд аофівладфіва флдіовалдфідва фідлва
-                фіваолдфіовафлівадофдіовалд івда лофівдало фіовлдаофівла
-                дфівафіва фіва фів а фі ав іф ва лфівалфіва іфв афілваоіфва
-                іфваоіфвалфівта івафі ва івф а фі ва іфва флдіовалдфідв
-                афідлвафіваолдфіовафл івадофдіова лдфівдалофі вдалофіовлд
-                аофівладфіва флдіовалдфідва фідлва фіваолдфіовафлівадофдіовалд
-                івда лофівдало фіовлдаофівла дфівафіва фіва фів а фі ав іф ва
-                лфівалфіва іфв афілваоіфва іфваоіфвалфівта івафі ва івф а фі ва
-                іфва флдіовалдфідв афідлвафіваолдфіовафл івадофдіова лдфівдалофі
-                вдалофіовлд аофівладфіва флдіовалдфідва фідлва
-                фіваолдфіовафлівадофдіовалд івда лофівдало фіовлдаофівла
-                дфівафіва фіва фів а фі ав іф ва лфівалфіва іфв афілваоіфва
-                іфваоіфвалфівта івафі ва івф а фі ва іфва
+                {explanation?.explanation?.length 
+                  ? explanation.explanation
+                  : "Пояснення до цього питання не знайдено(("
+                }
               </Text>
             </ScrollView>
           )}
@@ -146,7 +123,6 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontWeight: "700",
-    paddingBottom: 20,
     width: "100%",
     fontSize: 18,
     textAlign: "center",

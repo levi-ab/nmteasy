@@ -41,3 +41,9 @@ export interface IAnswer {
   type: string;
   text: string;
 };
+
+export interface IExplanation {
+  id: string;
+  history_question_id: string;
+  explanation: string;
+};

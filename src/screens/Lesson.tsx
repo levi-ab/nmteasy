@@ -184,7 +184,7 @@ const Lesson = () => {
             {renderCurrentQuestion()}
           </View>
           <ExplainQuestionModal
-            questionText={questions[currentQuestionIndex].question_text}
+            questionID={questions[currentQuestionIndex].id}
             showExplainModal={showExplainModal}
             setShowExplainModal={setShowExplainModal}
           />
