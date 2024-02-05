@@ -8,7 +8,7 @@ import { IAnswer } from "../../../data/models/questions";
 import {
   getSelectFillColorForMatrix,
   getUnCheckedFillColorForMatrix
-} from "../../../../utils/matrixUtils";
+} from "../../../utils/matrixUtils";
 import { colors } from "../../../styles";
 
 

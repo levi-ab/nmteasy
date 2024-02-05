@@ -9,9 +9,9 @@ import {
 import { ISingleAnswersQuestion } from "../../../data/models/questions";
 import { colors } from "../../../styles";
 import { useEffect, useState } from "react";
-import { LetterOptions, QuestionTypes } from "../../../../utils/constants";
+import { LetterOptions, QuestionTypes } from "../../../utils/constants";
 import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";
-import { checkIfMatchQuestionMatrixIsCorrect } from "../../../../utils/matrixUtils";
+import { checkIfMatchQuestionMatrixIsCorrect } from "../../../utils/matrixUtils";
 
 export interface IMatchQuestionProps {
   question: ISingleAnswersQuestion;

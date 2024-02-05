@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IUser from './models/user';
-import { StorageUserKey } from '../../utils/constants';
+import { StorageUserKey } from '../utils/constants';
 
 interface AuthState {
   user: IUser | null;

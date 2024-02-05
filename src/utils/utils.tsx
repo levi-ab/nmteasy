@@ -1,9 +1,9 @@
-import { ILessonByGeneralTitle } from "../src/data/models/lessons";
+import { ILessonByGeneralTitle } from "../data/models/lessons";
 import {
   IQuestion,
   ISingleAnswersQuestion,
   IDoubleAnswersQuestion,
-} from "../src/data/models/questions";
+} from "../data/models/questions";
 
 export const mapToSingleOrDoubleAnswersQuestion = (
   question: IQuestion
