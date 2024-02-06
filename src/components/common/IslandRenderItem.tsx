@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { ILesson } from '../../data/models/lessons';
-import IslandButton from './IslandButton';
-import { View } from 'react-native';
+import { memo } from "react";
+import { ILesson } from "../../data/models/lessons";
+import IslandButton from "./IslandButton";
+import { View } from "react-native";
 
 interface IsLandRenderItemProps {
   item: ILesson;
@@ -9,11 +9,21 @@ interface IsLandRenderItemProps {
   handleLevelPress: Function;
 }
 
-const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({ item, index, handleLevelPress }) => {
+const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({
+  item,
+  index,
+  handleLevelPress,
+}) => {
   return (
     <View>
       <IslandButton
-        percentage={100}
+        percentage={
+          item.history_lesson_analytic.right_answers_count !== 0
+            ? (item.history_lesson_analytic.right_answers_count /
+                item.history_lesson_analytic.questions_count) *
+              100
+            : 0
+        }
         key={item.id}
         marginLeft={0}
         marginTop={20}

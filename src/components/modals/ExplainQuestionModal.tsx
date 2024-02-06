@@ -19,17 +19,17 @@ const ExplainQuestionModal = (props: {
   setShowExplainModal: Function;
   questionID: string;
 }) => {
-  const [answerLoading, setAnswerLoading] = useState(true);
+  const [answerLoading, setAnswerLoading] = useState(false);
   const [explanation, setExplanation] = useState<IExplanation | null>(null)
   const { state: { token } } = useAuth();
 
   useEffect(() => {
     if(props.showExplainModal){
         setExplanation(null);
-        setAnswerLoading(true);
+        // setAnswerLoading(true);
         historyLessonService.getExplanationByQuestion(token, props.questionID)
-          .then(res =>{ setExplanation(res); setAnswerLoading(false); console.log(res)})
-          .catch(err => {console.error(err);  setAnswerLoading(false);})
+          .then(res =>{ setExplanation(res); })
+          .catch(err => {console.error(err); })
     }
   }, [props.questionID, props.showExplainModal]);
 

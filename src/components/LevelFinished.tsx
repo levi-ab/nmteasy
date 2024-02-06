@@ -4,24 +4,27 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Svg, { Defs, G, Path, Rect } from "react-native-svg";
 import { colors } from "../styles";
 import PressableButton from "./common/PressableButton";
+import analyticsService from "../services/analyticsService";
+import { useAuth } from "../data/AuthContext";
 
 interface Props {
   rightAnswersCount: number;
   questionCount: number;
   isVisible: boolean;
   elapsedTime: number;
+  lessonID: string;
 }
 
 const getResultByPercent = (progress: number) => {
-  if (progress > 0.2) {
+  if (progress > 0.4) {
     return "Хороший!";
   }
 
-  if (progress > 0.6) {
+  if (progress > 0.7) {
     return "Чудовий!";
   }
 
-  if (progress > 0.8) {
+  if (progress > 0.85) {
     return "Неймовірний!";
   }
 
@@ -31,6 +34,9 @@ const getResultByPercent = (progress: number) => {
 const LevelFinished = (props: Props) => {
   const [slideAnim] = useState(new Animated.Value(1));
   const navigation = useNavigation<NavigationProp<any>>();
+  const {
+    state: { token },
+  } = useAuth();
 
   useEffect(() => {
     if (props.isVisible) {
@@ -47,6 +53,19 @@ const LevelFinished = (props: Props) => {
       }).start();
     }
   }, [props.isVisible, slideAnim]);
+
+  const handleGoHome = () => {
+    analyticsService
+      .addHistoryAnalytic(
+        token,
+        props.lessonID,
+        props.elapsedTime,
+        props.rightAnswersCount,
+        props.questionCount
+      )
+      .catch((err) => console.error(err));
+    navigation.navigate("Home", { revalidate: true });
+  };
 
   return (
     <Animated.View
@@ -96,7 +115,10 @@ const LevelFinished = (props: Props) => {
             <Text
               style={[styles.textStyle, { fontSize: 16, textAlign: "right" }]}
             >
-              {Number((props.rightAnswersCount / props.questionCount) * 100).toFixed(0)}%
+              {Number(
+                (props.rightAnswersCount / props.questionCount) * 100
+              ).toFixed(0)}
+              %
             </Text>
           </View>
           <View
@@ -139,7 +161,7 @@ const LevelFinished = (props: Props) => {
           </View>
         </View>
         <PressableButton
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => handleGoHome()}
           text="До уроків"
           style={{
             backgroundColor: colors.themeSecondary,

@@ -172,7 +172,7 @@ const Lesson = () => {
 
     return "Йой!";
   };
-
+  
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
       {questions?.length ? (
@@ -228,6 +228,7 @@ const Lesson = () => {
             elapsedTime={elapsedTime}
             rightAnswersCount={rightAnswersCount}
             questionCount={questions.length}
+            lessonID={lessonID}
           />
         </>
       ) : <GlobalLoader isVisible={true}/>}
