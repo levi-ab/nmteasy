@@ -8,15 +8,14 @@ export enum QuestionTypes {
 }
 
 export const LetterOptions = [
-  "A" ,
-  "B",
-  "C",
-  "D",
-  "E"
+  "А" ,
+  "Б",
+  "В",
+  "Г",
+  "Д"
 ]
 
 export const StorageUserKey = "nmteasy_user"
-
 
 interface ErrorsMapType {
   [key: string]: string;
@@ -33,3 +32,8 @@ export const ErrorsMap: ErrorsMapType = {
   "username already exists": "Юзернейм уже існує",
   "no user found": "Пароль чи Пошта неправильні"
 };
+
+
+export enum LessonTypes {
+  History = "history",
+}

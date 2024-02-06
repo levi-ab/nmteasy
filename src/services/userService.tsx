@@ -74,6 +74,34 @@ class _userService {
       });
     });
   };
+
+  sendComplaint  = (
+    token: string,
+    lesson_id: string,
+    complaint_text: string,
+    question_id: string,
+    lesson_type: string,
+  ): Promise<null> => {
+    return fetch(`${apiURL}/lesson-complaint`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        "lesson_id": lesson_id,
+        "complaint_text": complaint_text,
+        "question_id": question_id,
+        "lesson_type": lesson_type
+    }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return res.text().then((text) => {
+        throw new Error(text);
+      });
+    });
+  };
 }
 
 const userService = new _userService();

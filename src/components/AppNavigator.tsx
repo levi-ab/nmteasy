@@ -13,6 +13,7 @@ import { colors } from "../styles";
 import { View } from "react-native";
 import SignUp from "../screens/SignUp";
 import Settings from "../screens/Settings";
+import Analytics from "../screens/Analytics";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -42,6 +43,11 @@ const AppNavigator: React.FC = () => {
               name="Home"
               component={HomeScreen}
               options={{ drawerLabel: "Головна", title: "Головна" }}
+            />
+            <Drawer.Screen
+              name="Аналітика"
+              component={Analytics}
+              options={{ drawerLabel: "Аналітика", title: "Аналітика" }}
             />
             <Drawer.Screen
               name="Settings"

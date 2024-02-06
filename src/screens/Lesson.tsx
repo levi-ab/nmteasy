@@ -20,6 +20,8 @@ import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
 import GlobalLoader from "../components/common/GlobalLoader";
 import ExplainQuestionModal from "../components/modals/ExplainQuestionModal";
+import ComplainQuestionModal from "../components/modals/ComplainQuestionModal";
+import Toast from "react-native-toast-message";
 
 type ParamList = {
   Lesson: {
@@ -38,6 +40,7 @@ const Lesson = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
   const [showExplainModal, setShowExplainModal] = useState(false);
+  const [showComplainModal, setShowComplainModal] = useState(false); 
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >([]);
@@ -172,6 +175,14 @@ const Lesson = () => {
 
     return "Йой!";
   };
+
+  const showToast = (text: string, type: "success" | "error") => {
+    Toast.show({
+      type: type,
+      text1: type === "error" ? "Помилочка" : "Повідомлення",
+      text2: text,
+    });
+  };
   
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
@@ -188,9 +199,17 @@ const Lesson = () => {
             showExplainModal={showExplainModal}
             setShowExplainModal={setShowExplainModal}
           />
+          <ComplainQuestionModal
+            showComplainModal={showComplainModal}
+            setShowComplainModal={setShowComplainModal}
+            questionID={questions[currentQuestionIndex].id}
+            lessonID={lessonID}
+            showToast={showToast}
+          />
           <View style={styles.buttonContainer}>
             <AnswerResultSlideUp
               setShowExplainModal={setShowExplainModal}
+              setShowComplainModal={setShowComplainModal}
               isVisible={answerResultVisible}
               isRight={isAnswerRight}
               isFinished={lastQuestionFinished}
@@ -232,6 +251,7 @@ const Lesson = () => {
           />
         </>
       ) : <GlobalLoader isVisible={true}/>}
+      <Toast/>
     </View>
   );
 };
