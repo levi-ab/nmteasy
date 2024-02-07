@@ -1,5 +1,5 @@
 import { RefreshControl, ScrollView, SectionList, Text, View } from "react-native";
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { SetStateAction, useCallback, useContext, useEffect, useState } from "react";
 import { colors } from "../styles";
 import StartLevelModal from "../components/modals/StartLevelModal";
 import historyLessonService from "../services/historyLessonService";
@@ -9,6 +9,7 @@ import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 import { useAuth } from "../data/AuthContext";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import LessonsContext from "../data/LessonsContext";
 
 type ParamList = {
   Home: {
@@ -18,29 +19,16 @@ type ParamList = {
 
 const HomeScreen = () => {
   const [selectedLevelID, setSelectedLevelID] = useState<null | string>(null);
-  const [historyLessons, setHistoryLessons] = useState<ILessonByGeneralTitle[]>(
-    []
-    );
   const [refreshing, setRefreshing] = useState(false);
+  const {lessons, setLessons} = useContext(LessonsContext);
   const {
     state: { token },
   } = useAuth();
-  const route = useRoute<RouteProp<ParamList, "Home">>();
-  const revalidate: boolean = route?.params?.revalidate;
-
-  useEffect(() => {
-    if (revalidate) {
-      historyLessonService
-        .getHistoryLessons(token)
-        .then((res) => setHistoryLessons(res))
-        .catch((err) => console.error(err));
-    }
-  }, [revalidate]);
 
   useEffect(() => {
     historyLessonService
       .getHistoryLessons(token)
-      .then((res) => setHistoryLessons(res))
+      .then((res) => setLessons(res))
       .catch((err) => console.error(err));
   }, []);
 
@@ -55,7 +43,7 @@ const HomeScreen = () => {
     setRefreshing(true); 
     historyLessonService
     .getHistoryLessons(token)
-      .then((res) => {setRefreshing(false); setHistoryLessons(res)})
+      .then((res) => {setRefreshing(false); setLessons(res)})
       .catch((err) => {setRefreshing(false); console.error(err) });
   }; 
 
@@ -64,10 +52,10 @@ const HomeScreen = () => {
       <StartLevelModal
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}
-        levelTitle={getLessonTitleById(selectedLevelID, historyLessons)}
+        levelTitle={getLessonTitleById(selectedLevelID, lessons)}
       />
       <SectionList
-        sections={historyLessons}
+        sections={lessons}
         keyExtractor={(item) => item.id.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

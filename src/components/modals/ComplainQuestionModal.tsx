@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
+    TouchableWithoutFeedback,
     View,
   } from "react-native";
   import { colors } from "../../styles";
@@ -42,36 +43,40 @@ import userService from "../../services/userService";
         transparent={true}
         visible={props.showComplainModal}
       >
-        <View style={[styles.centeredView]}>
-          <View style={[styles.modalView]}>
-            <Text style={styles.modalText}>Повідомити про помилку</Text>
-            <TextInput
-              multiline={true}
-              numberOfLines={5}
-              style={styles.complaintInput}
-              defaultValue={""}
-              onChangeText={(text) => setComplaintText(text)}
-            />
-            <PressableButton
-              onPress={handleSendComplaint}
-              text="Надіслати"
-              style={{
-                backgroundColor: colors.themeSecondary,
-                height: 40,
-                width: "100%",
-                borderRadius: 20,
-                top: 0
-              }}
-              buttonShadow={colors.themePrimary}
-              textStyle={{
-                color: colors.grays80,
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: 18,
-              }}
-            />
+        <TouchableWithoutFeedback onPress={() => props.setShowComplainModal(false)}>
+          <View
+            style={[styles.centeredView]} 
+          >
+            <View style={[styles.modalView]} onStartShouldSetResponder={event => true}>
+              <Text style={styles.modalText}>Повідомити про помилку</Text>
+              <TextInput
+                multiline={true}
+                numberOfLines={5}
+                style={styles.complaintInput}
+                defaultValue={""}
+                onChangeText={(text) => setComplaintText(text)}
+              />
+              <PressableButton
+                onPress={handleSendComplaint}
+                text="Надіслати"
+                style={{
+                  backgroundColor: colors.themeSecondary,
+                  height: 40,
+                  width: "100%",
+                  borderRadius: 20,
+                  top: 0,
+                }}
+                buttonShadow={colors.themePrimary}
+                textStyle={{
+                  color: colors.grays80,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  fontSize: 18,
+                }}
+              />
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     );
   };

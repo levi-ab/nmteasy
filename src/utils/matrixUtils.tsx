@@ -61,3 +61,30 @@ export const getSelectFillColorForMatrix = (
 
   return colors.themeSecondary;
 };
+export function copyMatrix(matrix: string | any[]) {
+  var copy = [];
+
+  for (var i = 0; i < matrix.length; i++) {
+    copy[i] = matrix[i].slice();
+  }
+
+  return copy;
+}
+
+export const isMatrixSolved = (answerKey: string | any[], matrix: any[]) => {
+  const flattenedMatrix = matrix.flat();
+
+  // Check if lengths match
+  if (answerKey.length !== flattenedMatrix.length) {
+    return false;
+  }
+
+  // Check if each value in the answer key matches the corresponding value in the matrix
+  for (let i = 0; i < answerKey.length; i++) {
+    if (answerKey[i] !== flattenedMatrix[i]) {
+      return false;
+    }
+  }
+
+  return true;
+};

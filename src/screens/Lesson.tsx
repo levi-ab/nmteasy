@@ -3,7 +3,7 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import { useEffect, useState } from "react";
-import { QuestionTypes } from "../utils/constants";
+import { NULL_UUID, QuestionTypes } from "../utils/constants";
 import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import PressableButton from "../components/common/PressableButton";
 import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
@@ -22,6 +22,7 @@ import GlobalLoader from "../components/common/GlobalLoader";
 import ExplainQuestionModal from "../components/modals/ExplainQuestionModal";
 import ComplainQuestionModal from "../components/modals/ComplainQuestionModal";
 import Toast from "react-native-toast-message";
+import { IHistoryQuestionAnalytic } from "../data/models/analytics";
 
 type ParamList = {
   Lesson: {
@@ -38,9 +39,11 @@ const Lesson = () => {
   const [isAnswerRight, setIsAnswerRight] = useState(false);
   const [showLevelFinished, setShowLevelFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [elapsedTimeWithoutCurrentQuestion, setElapsedTimeWithoutCurrentQuestion] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
   const [showExplainModal, setShowExplainModal] = useState(false);
   const [showComplainModal, setShowComplainModal] = useState(false); 
+  const [questionsAnalytics, setQuestionAnalytics] = useState<IHistoryQuestionAnalytic[]>([]);
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >([]);
@@ -145,6 +148,19 @@ const Lesson = () => {
 
     if (answerResultVisible) {
       //answered the question, setting the next question
+      setQuestionAnalytics([
+        ...questionsAnalytics,
+        {
+          id:"",
+          history_question_id: questions[currentQuestionIndex].id,
+          created_at: "",
+          updated_at: "",
+          time_spent: elapsedTime - elapsedTimeWithoutCurrentQuestion,
+          answered_right: isAnswerRight,
+          user_id:"",
+        },
+      ]);
+      setElapsedTimeWithoutCurrentQuestion(elapsedTime);
       setNextQuestionActive(false);
       setAnswerResultVisible(false);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -248,6 +264,7 @@ const Lesson = () => {
             rightAnswersCount={rightAnswersCount}
             questionCount={questions.length}
             lessonID={lessonID}
+            questionsAnalytics={questionsAnalytics}
           />
         </>
       ) : <GlobalLoader isVisible={true}/>}

@@ -34,34 +34,6 @@ export const mapToSingleOrDoubleAnswersQuestion = (
   return mappedQuestion;
 };
 
-export function copyMatrix(matrix: string | any[]) {
-  var copy = [];
-
-  for (var i = 0; i < matrix.length; i++) {
-    copy[i] = matrix[i].slice();
-  }
-
-  return copy;
-}
-
-export const isMatrixSolved = (answerKey: string | any[], matrix: any[]) => {
-  const flattenedMatrix = matrix.flat();
-
-  // Check if lengths match
-  if (answerKey.length !== flattenedMatrix.length) {
-    return false;
-  }
-
-  // Check if each value in the answer key matches the corresponding value in the matrix
-  for (let i = 0; i < answerKey.length; i++) {
-    if (answerKey[i] !== flattenedMatrix[i]) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 export const getLessonTitleById = (
   lessonID: string | null,
   historyLessons: ILessonByGeneralTitle[]
@@ -83,3 +55,15 @@ export const getLessonTitleById = (
 
   return foundTitle;
 };
+
+export const secondsToTime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  const formattedHours = hours > 0 ? hours + 'г ' : '';
+  const formattedMinutes = minutes > 0 ? minutes + 'хв ' : '';
+  const formattedSeconds = remainingSeconds + 'с';
+
+  return formattedHours + formattedMinutes + formattedSeconds;
+}

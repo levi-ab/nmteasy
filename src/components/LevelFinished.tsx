@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Animated, Text, Button, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, Animated, Text, Image } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import Svg, { Defs, G, Path, Rect } from "react-native-svg";
 import { colors } from "../styles";
 import PressableButton from "./common/PressableButton";
 import analyticsService from "../services/analyticsService";
 import { useAuth } from "../data/AuthContext";
+import LessonsContext from "../data/LessonsContext";
+import historyLessonService from "../services/historyLessonService";
+import { IHistoryQuestionAnalytic } from "../data/models/analytics";
 
 interface Props {
   rightAnswersCount: number;
@@ -13,6 +15,7 @@ interface Props {
   isVisible: boolean;
   elapsedTime: number;
   lessonID: string;
+  questionsAnalytics: IHistoryQuestionAnalytic[]
 }
 
 const getResultByPercent = (progress: number) => {
@@ -37,6 +40,7 @@ const LevelFinished = (props: Props) => {
   const {
     state: { token },
   } = useAuth();
+  const { setLessons } = useContext(LessonsContext);
 
   useEffect(() => {
     if (props.isVisible) {
@@ -61,10 +65,15 @@ const LevelFinished = (props: Props) => {
         props.lessonID,
         props.elapsedTime,
         props.rightAnswersCount,
-        props.questionCount
+        props.questionCount,
+        props.questionsAnalytics
       )
+      .then(_ => {
+        historyLessonService.getHistoryLessons(token)
+          .then(res => {setLessons(res); navigation.navigate("Home");})
+          .catch(err => console.error(err))
+      })
       .catch((err) => console.error(err));
-    navigation.navigate("Home", { revalidate: true });
   };
 
   return (
