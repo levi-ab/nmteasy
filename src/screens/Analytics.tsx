@@ -126,6 +126,7 @@ const Analytics = () => {
                 </Text>
               </View>
             </View>
+            <Text style={styles.label}>Статистика питань</Text>
             <AnalyticsChart/>
           </>
         )}

@@ -47,7 +47,7 @@ const AppNavigator: React.FC = () => {
             <Drawer.Screen
               name="Аналітика"
               component={Analytics}
-              options={{ drawerLabel: "Аналітика", title: "Аналітика" }}
+              options={{ drawerLabel: "Аналітика", title: "Аналітика", unmountOnBlur:true }}
             />
             <Drawer.Screen
               name="Settings"

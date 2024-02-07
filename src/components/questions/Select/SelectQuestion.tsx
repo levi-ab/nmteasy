@@ -135,6 +135,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginTop: 20,
-    objectFit: "contain"
+    resizeMode: 'contain'
   }
 });

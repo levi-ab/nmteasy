@@ -33,6 +33,24 @@ class _analyticsService {
       });
     });
   };
+
+  getWeeklyHistoryAnalytic = (
+    token: string
+  ): Promise<any> => {
+    return fetch(`${apiURL}/weekly-history-analytics`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return res.text().then((text) => {
+        throw new Error(text);
+      });
+    });
+  }
 }
 
 const analyticsService = new _analyticsService();
