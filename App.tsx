@@ -17,12 +17,18 @@ export default function App() {
   });
 
   const [lessons, setLessons] = useState<ILessonByGeneralTitle[]>([]);
+  const [lessonTypeSelectorOpen, setLessonTypeSelectorOpen] = useState<boolean>(false);
   const [lessonType, setLessonType] = useState<string>(LessonTypes.History);
 
   return (
     <AuthProvider>
       <LessonTypeContext.Provider
-        value={{ lessonType: lessonType, setLessonType: setLessonType }}
+        value={{
+          lessonType: lessonType,
+          setLessonType: setLessonType,
+          setLessonTypeSelectorOpen: setLessonTypeSelectorOpen,
+          lessonTypeSelectorOpen: lessonTypeSelectorOpen,
+        }}
       >
         <LessonsContext.Provider
           value={{ lessons: lessons, setLessons: setLessons }}

@@ -8,11 +8,12 @@ import {
   View,
 } from "react-native";
 import { colors } from "../../styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PressableButton from "../common/PressableButton";
 import LessonService from "../../services/LessonService";
 import { IExplanation } from "../../data/models/questions";
 import { useAuth } from "../../data/AuthContext";
+import LessonTypeContext from "../../data/LessonsTypeContext";
 
 const ExplainQuestionModal = (props: {
   showExplainModal: boolean;
@@ -22,12 +23,13 @@ const ExplainQuestionModal = (props: {
   const [answerLoading, setAnswerLoading] = useState(false);
   const [explanation, setExplanation] = useState<IExplanation | null>(null)
   const { state: { token } } = useAuth();
+  const { lessonType } = useContext(LessonTypeContext);
 
   useEffect(() => {
     if(props.showExplainModal){
         setExplanation(null);
         // setAnswerLoading(true);
-        LessonService.getExplanationByQuestion(token, props.questionID)
+        LessonService.getExplanationByQuestion(token, props.questionID, lessonType)
           .then(res =>{ setExplanation(res); })
           .catch(err => {console.error(err); })
     }

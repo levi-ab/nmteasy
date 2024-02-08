@@ -15,18 +15,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { AvailableLessons, LessonTypesToUkrainianMap } from "../../utils/constants";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 
-const LessonTypeSlideUp = ({
-  isVisible,
-  setIsVisible,
-}: {
-  isVisible: boolean;
-  setIsVisible: Function;
-}) => {
-  const [slideAnim] = useState(new Animated.Value(-220)); // Initial position off-screen
+const LessonTypeSlideUp = () => {
+  const [slideAnim] = useState(new Animated.Value(-250)); // Initial position off-screen
   const { lessonType, setLessonType } = useContext(LessonTypeContext);
+  const { lessonTypeSelectorOpen, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
 
   useEffect(() => {
-    if (isVisible) {
+    if (lessonTypeSelectorOpen) {
       // Slide up animation
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -36,21 +31,21 @@ const LessonTypeSlideUp = ({
     } else {
       // Slide down animation
       Animated.timing(slideAnim, {
-        toValue: -220,
+        toValue: -250,
         duration: 300,
         useNativeDriver: false,
       }).start();
     }
-  }, [isVisible, slideAnim]);
+  }, [lessonTypeSelectorOpen, slideAnim]);
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return gestureState.dy < -10;
+        return gestureState.dy < 0;
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dy < -10) {
-          setIsVisible(false);
+        if (gestureState.dy < 0) {
+          setLessonTypeSelectorOpen(false);
         }
       },
     })

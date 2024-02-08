@@ -2,7 +2,7 @@ import { Modal, StyleSheet, View } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NULL_UUID, QuestionTypes } from "../utils/constants";
 import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import PressableButton from "../components/common/PressableButton";
@@ -23,6 +23,7 @@ import ExplainQuestionModal from "../components/modals/ExplainQuestionModal";
 import ComplainQuestionModal from "../components/modals/ComplainQuestionModal";
 import Toast from "react-native-toast-message";
 import { IQuestionAnalytic } from "../data/models/analytics";
+import LessonTypeContext from "../data/LessonsTypeContext";
 
 type ParamList = {
   Lesson: {
@@ -49,10 +50,11 @@ const Lesson = () => {
   >([]);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
   const { state: { token } } = useAuth();
+  const { lessonType } = useContext(LessonTypeContext);
 
   useEffect(() => {
     LessonService
-      .getQuestionsByLesson(lessonID, token)
+      .getQuestionsByLesson(token, lessonType, lessonID)
       .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
       .catch((err) => console.error(err));
   }, []);

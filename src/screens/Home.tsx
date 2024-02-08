@@ -1,5 +1,18 @@
-import { RefreshControl, ScrollView, SectionList, Text, View } from "react-native";
-import { SetStateAction, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  SectionList,
+  Text,
+  View,
+} from "react-native";
+import {
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { colors } from "../styles";
 import StartLevelModal from "../components/modals/StartLevelModal";
 import LessonService from "../services/LessonService";
@@ -10,6 +23,8 @@ import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem"
 import { useAuth } from "../data/AuthContext";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import LessonsContext from "../data/LessonsContext";
+import LessonTypeContext from "../data/LessonsTypeContext";
+import GlobalLoader from "../components/common/GlobalLoader";
 
 type ParamList = {
   Home: {
@@ -20,17 +35,19 @@ type ParamList = {
 const HomeScreen = () => {
   const [selectedLevelID, setSelectedLevelID] = useState<null | string>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const {lessons, setLessons} = useContext(LessonsContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const { lessons, setLessons } = useContext(LessonsContext);
+  const { lessonTypeSelectorOpen, lessonType } = useContext(LessonTypeContext);
   const {
     state: { token },
   } = useAuth();
 
   useEffect(() => {
-    LessonService
-      .getLessons(token)
-      .then((res) => setLessons(res))
-      .catch((err) => console.error(err));
-  }, []);
+    setIsLoading(true);
+    LessonService.getLessons(token, lessonType)
+      .then((res) => {setLessons(res); setIsLoading(false)})
+      .catch((err) => {console.error(err); setIsLoading(false)});
+  }, [lessonType]);
 
   const handleLevelPress = useCallback(
     (id: SetStateAction<string | null>) => {
@@ -39,13 +56,21 @@ const HomeScreen = () => {
     [setSelectedLevelID]
   );
 
-  const onRefresh = () => { 
-    setRefreshing(true); 
-    LessonService
-    .getLessons(token)
-      .then((res) => {setRefreshing(false); setLessons(res)})
-      .catch((err) => {setRefreshing(false); console.error(err) });
-  }; 
+  const onRefresh = () => {
+    setRefreshing(true);
+    setIsLoading(true);
+    LessonService.getLessons(token, lessonType)
+      .then((res) => {
+        setRefreshing(false);
+        setIsLoading(false);
+        setLessons(res);
+      })
+      .catch((err) => {
+        setIsLoading(false)
+        setRefreshing(false);
+        console.error(err);
+      });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.basicGray }}>
@@ -56,6 +81,7 @@ const HomeScreen = () => {
       />
       <SectionList
         sections={lessons}
+        scrollEnabled={!lessonTypeSelectorOpen}
         keyExtractor={(item) => item.id.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -77,6 +103,7 @@ const HomeScreen = () => {
           backgroundColor: colors.basicGray,
         }}
       />
+      <GlobalLoader isVisible={isLoading}/>
     </View>
   );
 };

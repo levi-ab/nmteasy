@@ -2,13 +2,12 @@ import { useContext, useState } from "react";
 import { useAuth } from "../data/AuthContext";
 import Toast from "react-native-toast-message";
 import { colors } from "../styles";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import GlobalLoader from "../components/common/GlobalLoader";
 import LessonsContext from "../data/LessonsContext";
 import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
 import AnimatedProgressBar from "../components/common/ProgressItem";
 import { secondsToTime } from "../utils/utils";
-import GradientLineExample from "../components/analytics/AnalyticsChart";
 import AnalyticsChart from "../components/analytics/AnalyticsChart";
 
 const Analytics = () => {

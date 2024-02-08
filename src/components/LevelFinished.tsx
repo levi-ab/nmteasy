@@ -8,6 +8,7 @@ import { useAuth } from "../data/AuthContext";
 import LessonsContext from "../data/LessonsContext";
 import LessonService from "../services/LessonService";
 import { IQuestionAnalytic } from "../data/models/analytics";
+import LessonTypeContext from "../data/LessonsTypeContext";
 
 interface Props {
   rightAnswersCount: number;
@@ -37,6 +38,7 @@ const getResultByPercent = (progress: number) => {
 const LevelFinished = (props: Props) => {
   const [slideAnim] = useState(new Animated.Value(1));
   const navigation = useNavigation<NavigationProp<any>>();
+  const { lessonType } = useContext(LessonTypeContext);
   const {
     state: { token },
   } = useAuth();
@@ -66,10 +68,11 @@ const LevelFinished = (props: Props) => {
         props.elapsedTime,
         props.rightAnswersCount,
         props.questionCount,
-        props.questionsAnalytics
+        props.questionsAnalytics,
+        lessonType
       )
       .then(_ => {
-        LessonService.getLessons(token)
+        LessonService.getLessons(token, lessonType)
           .then(res => {setLessons(res); navigation.navigate("Home");})
           .catch(err => console.error(err))
       })

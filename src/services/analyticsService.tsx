@@ -8,9 +8,10 @@ class _analyticsService {
     time_spent: number,
     right_answers_count: number,
     questions_count: number,
-    questionsAnalytics: IQuestionAnalytic[]
+    questionsAnalytics: IQuestionAnalytic[],
+    lessonType: string
   ): Promise<null> => {
-    return fetch(`${apiURL}/history-lessons/analytic`, {
+    return fetch(`${apiURL}/lessons-analytic/${lessonType}`, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,
@@ -35,9 +36,10 @@ class _analyticsService {
   };
 
   getWeeklyAnalytic = (
-    token: string
+    token: string,
+    lessonType: string
   ): Promise<any> => {
-    return fetch(`${apiURL}/weekly-history-analytics`, {
+    return fetch(`${apiURL}/weekly-analytics/${lessonType}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token,

@@ -1,9 +1,10 @@
 import { IExplanation, IQuestion } from "../data/models/questions";
+import { LessonTypes } from "../utils/constants";
 const apiURL = process.env.EXPO_PUBLIC_API_URL
 class _LessonService {
-   getQuestionsByLesson = (lessonID: string, token: string): Promise<IQuestion[]> => {
+   getQuestionsByLesson = (token: string, lessonType: string, lessonID: string,): Promise<IQuestion[]> => {
     return fetch(
-      `${apiURL}/history-questions/${lessonID}`,{
+      `${apiURL}/questions/${lessonType}/${lessonID}`,{
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
@@ -19,9 +20,9 @@ class _LessonService {
     });
   };
 
-  getLessons = (token: string): Promise<any> => {
+  getLessons = (token: string, lessonType: string): Promise<any> => {
     return fetch(
-      `${apiURL}/history-lessons`,{
+      `${apiURL}/lessons/${lessonType}`,{
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
@@ -37,9 +38,9 @@ class _LessonService {
     });
   };
 
-  getExplanationByQuestion = (token: string, questionID: string): Promise<IExplanation> => {
+  getExplanationByQuestion = (token: string, questionID: string, lessonType: string): Promise<IExplanation> => {
     return fetch(
-      `${apiURL}/history-question-explanation/${questionID}`,{
+      `${apiURL}/question-explanation/${lessonType}/${questionID}`,{
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,

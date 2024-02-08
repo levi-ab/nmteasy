@@ -1,10 +1,7 @@
-import { NavigationProp } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../styles";
 import { G, Path, Svg } from "react-native-svg";
 import LessonTypeSelector from "./LessonTypeSelector";
-import { useContext, useState } from "react";
-import LessonTypeContext from "../../data/LessonsTypeContext";
 import LessonTypeSlideUp from "./LessonTypeSlideUp";
 
 const AppHeader = ({
@@ -14,8 +11,6 @@ const AppHeader = ({
   title: string;
   navigation: any;
 }) => {
-
-  const [showLessonTypeSelector, setShowLessonTypeSelector] = useState(false);
 
   return (
     <View style={styles.headerContainer}>
@@ -68,8 +63,14 @@ const AppHeader = ({
         }}
       >
         <Text style={styles.textStyle}>{title}</Text>
-        <LessonTypeSelector setShowLessonTypeSelector={setShowLessonTypeSelector} showLessonTypeSelector={showLessonTypeSelector}/>
-        <LessonTypeSlideUp setIsVisible={setShowLessonTypeSelector} isVisible={showLessonTypeSelector} />
+        {title === "Аналітика" ? (
+          <View />
+        ) : (
+          <>
+            <LessonTypeSelector />
+            <LessonTypeSlideUp />
+          </>
+        )}
       </View>
     </View>
   );

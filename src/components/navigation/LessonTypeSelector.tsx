@@ -5,17 +5,12 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 import { LessonTypes, LessonTypesToUkrainianMap } from "../../utils/constants";
 
-const LessonTypeSelectorButton = ({
-  setShowLessonTypeSelector,
-  showLessonTypeSelector,
-}: {
-  setShowLessonTypeSelector: Dispatch<SetStateAction<boolean>>;
-  showLessonTypeSelector: boolean
-}) => {
+const LessonTypeSelectorButton = () => {
   const { lessonType } = useContext(LessonTypeContext);
+  const { lessonTypeSelectorOpen, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
 
   return (
-    <TouchableOpacity style={styles.lessonTypeContainer} onPress={() => setShowLessonTypeSelector(!showLessonTypeSelector)}>
+    <TouchableOpacity style={styles.lessonTypeContainer} onPress={() => setLessonTypeSelectorOpen(!lessonTypeSelectorOpen)}>
       <Text style={styles.text}>{LessonTypesToUkrainianMap[lessonType]}</Text>
       <HistorySVG width={30} height={30}/>
     </TouchableOpacity>

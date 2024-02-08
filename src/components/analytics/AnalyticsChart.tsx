@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { LineChart, Grid, YAxis, XAxis } from "react-native-svg-charts";
 import { colors } from "../../styles";
 import analyticsService from "../../services/analyticsService";
 import { useAuth } from "../../data/AuthContext";
+import LessonTypeContext from "../../data/LessonsTypeContext";
 
 const AnalyticsChart = () => {
   const {
@@ -12,10 +13,11 @@ const AnalyticsChart = () => {
 
   const [weekDays, setWeekDays] = useState<string[]>([]);
   const [questionNums, setQuestionNums] = useState<number[]>([]);
+  const { lessonType } = useContext(LessonTypeContext);
 
   useEffect(() => {
     analyticsService
-      .getWeeklyAnalytic(token)
+      .getWeeklyAnalytic(token, lessonType)
       .then((res) => {
         const datesArray = [];
         const numbersArray: number[] = [];
