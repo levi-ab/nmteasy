@@ -4,12 +4,16 @@ import * as Progress from "react-native-progress";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Circle, Line, Svg } from "react-native-svg";
+import { getThemePrimaryColor } from "../utils/themes";
+import { useContext } from "react";
+import LessonTypeContext from "../data/LessonsTypeContext";
 
 const LessonHeader = (props: { progress: number; }) => {
   const navigation = useNavigation<NavigationProp<any>>();
+  const { lessonType } = useContext(LessonTypeContext);
 
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, {backgroundColor: getThemePrimaryColor(lessonType)}]}>
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <Svg width="30" height="30" viewBox="0 0 30 30">
           <Circle
@@ -61,7 +65,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: colors.themeSecondary, // Custom background color
     paddingTop: 47,
     paddingBottom: 10,
     width: "100%",

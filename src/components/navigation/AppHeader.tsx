@@ -3,6 +3,9 @@ import { colors } from "../../styles";
 import { G, Path, Svg } from "react-native-svg";
 import LessonTypeSelector from "./LessonTypeSelector";
 import LessonTypeSlideUp from "./LessonTypeSlideUp";
+import { getThemePrimaryColor } from "../../utils/themes";
+import { useContext } from "react";
+import LessonTypeContext from "../../data/LessonsTypeContext";
 
 const AppHeader = ({
   title,
@@ -12,8 +15,15 @@ const AppHeader = ({
   navigation: any;
 }) => {
 
+  const { lessonType } = useContext(LessonTypeContext);
+
   return (
-    <View style={styles.headerContainer}>
+    <View
+      style={[
+        styles.headerContainer,
+        { backgroundColor: getThemePrimaryColor(lessonType) },
+      ]}
+    >
       <TouchableOpacity
         onPress={() => {
           navigation.openDrawer();
@@ -63,7 +73,7 @@ const AppHeader = ({
         }}
       >
         <Text style={styles.textStyle}>{title}</Text>
-        {title === "Аналітика" ? (
+        {title !== "Головна" ? (
           <View />
         ) : (
           <>
@@ -84,7 +94,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     width: "100%",
     height: 90,
-    backgroundColor: colors.themePrimary,
     flexDirection: "row",
     alignItems: "center",
   },

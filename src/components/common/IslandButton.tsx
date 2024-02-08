@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -7,6 +7,8 @@ import {
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import { colors } from "../../styles";
+import { getThemePrimaryColor, getThemeSecondaryColor } from "../../utils/themes";
+import LessonTypeContext from "../../data/LessonsTypeContext";
 
 interface Props {
   percentage: number;
@@ -20,6 +22,8 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}:
   const [animation, _] = useState(new Animated.Value(0));
   const [color, setColor] = useState(colors.gray);
   const [filledLength, setFilledLength] = useState(0);
+  const { lessonType } = useContext(LessonTypeContext);
+
   const radius = 38;
   const circumference = 2 * Math.PI * radius;
 
@@ -96,8 +100,8 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}:
         <View style={styles.button}>
           <View style={styles.outerProgress}>
             <View>
-              <Animated.View style={[styles.height, heightStyle]}>
-                <Animated.View style={[styles.inner]}></Animated.View>
+              <Animated.View style={[styles.height, heightStyle, {backgroundColor: getThemeSecondaryColor(lessonType)}]}>
+                <Animated.View style={[styles.inner, {backgroundColor: getThemePrimaryColor(lessonType)}]}></Animated.View>
               </Animated.View>
             </View>
           </View>
@@ -125,13 +129,11 @@ const styles = StyleSheet.create({
     left: 12,
   },
   height: {
-    backgroundColor: "#55a310",
     borderRadius: 70,
     width: 65,
   },
   inner: {
     height: "100%",
-    backgroundColor: colors.themeSecondary,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 70,

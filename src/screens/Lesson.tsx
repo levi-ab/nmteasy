@@ -24,6 +24,7 @@ import ComplainQuestionModal from "../components/modals/ComplainQuestionModal";
 import Toast from "react-native-toast-message";
 import { IQuestionAnalytic } from "../data/models/analytics";
 import LessonTypeContext from "../data/LessonsTypeContext";
+import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 
 type ParamList = {
   Lesson: {
@@ -240,7 +241,7 @@ const Lesson = () => {
                 backgroundColor:
                   !isAnswerRight && answerResultVisible
                     ? colors.red
-                    : colors.themeSecondary,
+                    : getThemePrimaryColor(lessonType),
                 height: 50,
                 width: "100%",
                 borderRadius: 20,
@@ -249,7 +250,7 @@ const Lesson = () => {
               buttonShadow={
                 !isAnswerRight && answerResultVisible
                   ? colors.redShadow
-                  : colors.themePrimary
+                  : getThemeSecondaryColor(lessonType)
               }
               textStyle={{
                 color: colors.grays80,

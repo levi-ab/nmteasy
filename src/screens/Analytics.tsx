@@ -2,13 +2,15 @@ import { useContext, useState } from "react";
 import { useAuth } from "../data/AuthContext";
 import Toast from "react-native-toast-message";
 import { colors } from "../styles";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, TextStyle, View } from "react-native";
 import GlobalLoader from "../components/common/GlobalLoader";
 import LessonsContext from "../data/LessonsContext";
 import { ILesson, ILessonByGeneralTitle } from "../data/models/lessons";
 import AnimatedProgressBar from "../components/common/ProgressItem";
 import { secondsToTime } from "../utils/utils";
 import AnalyticsChart from "../components/analytics/AnalyticsChart";
+import { getThemePrimaryColor } from "../utils/themes";
+import LessonTypeContext from "../data/LessonsTypeContext";
 
 const Analytics = () => {
   const {
@@ -17,6 +19,7 @@ const Analytics = () => {
   } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const { lessons } = useContext(LessonsContext);
+  const { lessonType } = useContext(LessonTypeContext);
 
   const flattenedLessons: ILesson[] = lessons.reduce(
     (acc: ILesson[], curr: ILessonByGeneralTitle) => {
@@ -53,7 +56,14 @@ const Analytics = () => {
         }}
         ListHeaderComponent={() => (
           <>
-            <Text style={styles.header}>Аналітика</Text>
+            <Text
+              style={[
+                styles.header,
+                { color: getThemePrimaryColor(lessonType) },
+              ]}
+            >
+              Аналітика
+            </Text>
             <Text style={styles.smallLabel}>Тут зібраний твій прогрес</Text>
             <View
               style={{
@@ -65,10 +75,23 @@ const Analytics = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <View style={styles.analyticsBox}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  { borderColor: getThemePrimaryColor(lessonType) },
+                ]}
+              >
                 <Text style={styles.smallLabel}>Почато Уроків: </Text>
               </View>
-              <View style={[styles.analyticsBox, {width: "35%"}]}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  {
+                    width: "35%",
+                    borderColor: getThemePrimaryColor(lessonType),
+                  },
+                ]}
+              >
                 <Text style={styles.smallLabel}>
                   {
                     flattenedLessons.filter(
@@ -81,20 +104,46 @@ const Analytics = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <View style={styles.analyticsBox}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  { borderColor: getThemePrimaryColor(lessonType) },
+                ]}
+              >
                 <Text style={styles.smallLabel}>Усього Уроків: </Text>
               </View>
-              <View style={[styles.analyticsBox, {width: "35%"}]}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  {
+                    width: "35%",
+                    borderColor: getThemePrimaryColor(lessonType),
+                  },
+                ]}
+              >
                 <Text style={styles.smallLabel}>{flattenedLessons.length}</Text>
               </View>
             </View>
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <View style={styles.analyticsBox}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  { borderColor: getThemePrimaryColor(lessonType) },
+                ]}
+              >
                 <Text style={styles.smallLabel}>Пройдено Уроків: </Text>
               </View>
-              <View style={[styles.analyticsBox, {width: "35%"}]}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  {
+                    width: "35%",
+                    borderColor: getThemePrimaryColor(lessonType),
+                  },
+                ]}
+              >
                 <Text style={styles.smallLabel}>
                   {
                     flattenedLessons.filter(
@@ -110,10 +159,23 @@ const Analytics = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <View style={styles.analyticsBox}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  { borderColor: getThemePrimaryColor(lessonType) },
+                ]}
+              >
                 <Text style={styles.smallLabel}>Часу витрачено: </Text>
               </View>
-              <View style={[styles.analyticsBox, {width: "35%"}]}>
+              <View
+                style={[
+                  styles.analyticsBox,
+                  {
+                    width: "35%",
+                    borderColor: getThemePrimaryColor(lessonType),
+                  },
+                ]}
+              >
                 <Text style={styles.smallLabel}>
                   {secondsToTime(
                     flattenedLessons.reduce(
@@ -125,8 +187,17 @@ const Analytics = () => {
                 </Text>
               </View>
             </View>
-            <Text style={styles.label}>Статистика питань</Text>
-            <AnalyticsChart/>
+            <Text
+              style={
+                [
+                  styles.label,
+                  { color: getThemePrimaryColor(lessonType) },
+                ] as TextStyle
+              }
+            >
+              Статистика питань
+            </Text>
+            <AnalyticsChart />
           </>
         )}
         data={flattenedLessons}
@@ -164,7 +235,6 @@ const styles = StyleSheet.create({
   },
   analyticsBox: {
     flexDirection: "row",
-    borderColor: colors.themeSecondary,
     borderWidth: 2,
     padding: 5,
     borderRadius: 5,
@@ -177,16 +247,9 @@ const styles = StyleSheet.create({
     color: colors.grays30,
     fontFamily: "Inter-Black",
   },
-  signUpLabel: {
-    fontWeight: "400",
-    fontSize: 14,
-    color: colors.themePrimary,
-    fontFamily: "Inter-Black",
-  },
   header: {
     fontSize: 22,
     marginBottom: 10,
-    color: colors.themePrimary,
     fontFamily: "Inter-Black",
     textAlign: "left",
     width: "100%",
@@ -194,7 +257,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Inter-Black",
     fontWeight: "500",
-    color: colors.themePrimary,
   },
   input: {
     height: 45,

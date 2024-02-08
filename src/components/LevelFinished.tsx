@@ -9,6 +9,7 @@ import LessonsContext from "../data/LessonsContext";
 import LessonService from "../services/LessonService";
 import { IQuestionAnalytic } from "../data/models/analytics";
 import LessonTypeContext from "../data/LessonsTypeContext";
+import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 
 interface Props {
   rightAnswersCount: number;
@@ -43,6 +44,7 @@ const LevelFinished = (props: Props) => {
     state: { token },
   } = useAuth();
   const { setLessons } = useContext(LessonsContext);
+
 
   useEffect(() => {
     if (props.isVisible) {
@@ -176,12 +178,12 @@ const LevelFinished = (props: Props) => {
           onPress={() => handleGoHome()}
           text="До уроків"
           style={{
-            backgroundColor: colors.themeSecondary,
+            backgroundColor: getThemePrimaryColor(lessonType),
             height: 50,
             width: "100%",
             borderRadius: 20,
           }}
-          buttonShadow={colors.themePrimary}
+          buttonShadow={getThemeSecondaryColor(lessonType)}
           textStyle={{
             color: colors.grays80,
             fontWeight: "bold",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createDrawerNavigator,
@@ -16,11 +16,14 @@ import Settings from "../../screens/Settings";
 import Analytics from "../../screens/Analytics";
 import { getHeaderTitle } from '@react-navigation/elements';
 import AppHeader from "./AppHeader";
+import LessonTypeContext from "../../data/LessonsTypeContext";
+import { getThemePrimaryColor, getThemeSecondaryColor } from "../../utils/themes";
 
 const Drawer = createDrawerNavigator<any>();
 
 const AppNavigator: React.FC = () => {
   const { state } = useAuth();
+  const { lessonType } = useContext(LessonTypeContext);
 
   return (
     <NavigationContainer>
@@ -30,8 +33,8 @@ const AppNavigator: React.FC = () => {
         screenOptions={{
           swipeEnabled: false,
           headerShown: !!state.user,
-          headerStyle: { backgroundColor: colors.themeSecondary },
-          drawerActiveTintColor: colors.themeSecondary,
+          headerStyle: { backgroundColor: getThemePrimaryColor(lessonType) },
+          drawerActiveTintColor: getThemePrimaryColor(lessonType),
           drawerInactiveTintColor: colors.white,
           drawerItemStyle: {},
           header: ({ navigation, route, options }) => {

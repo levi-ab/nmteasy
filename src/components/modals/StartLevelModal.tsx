@@ -2,6 +2,9 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../styles";
 import PressableButton from "../common/PressableButton";
 import { useNavigation, NavigationProp  } from "@react-navigation/native";
+import { useContext } from "react";
+import LessonTypeContext from "../../data/LessonsTypeContext";
+import { getThemeSecondaryColor } from "../../utils/themes";
 
 export interface IStartLevelModal {
     setSelectedLevelID: React.Dispatch<React.SetStateAction<string | null>>
@@ -11,6 +14,7 @@ export interface IStartLevelModal {
 
 const StartLevelModal = (props: IStartLevelModal) => {
   const navigation = useNavigation<NavigationProp<any>>();
+  const { lessonType } = useContext(LessonTypeContext);
 
   return (
     <Modal
@@ -26,7 +30,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
         onTouchEnd={() => props.setSelectedLevelID(null)}
       >
         <View
-          style={[styles.modalView, { backgroundColor: colors.themeSecondary }]}
+          style={[styles.modalView, { backgroundColor: getThemeSecondaryColor(lessonType) }]}
         >
           <Text
             style={[
@@ -48,7 +52,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
             }}
             buttonShadow={colors.grays20}
             textStyle={{
-              color: colors.themeSecondary,
+              color: getThemeSecondaryColor(lessonType),
               fontWeight: "bold",
               textAlign: "center",
               fontSize: 16,

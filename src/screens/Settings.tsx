@@ -1,13 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextStyle, View } from "react-native";
 import { colors } from "../styles";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
 import { useAuth } from "../data/AuthContext";
 import PressableButton from "../components/common/PressableButton";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Toast from "react-native-toast-message";
 import userService from "../services/userService";
 import { ErrorsMap } from "../utils/constants";
 import GlobalLoader from "../components/common/GlobalLoader";
+import LessonTypeContext from "../data/LessonsTypeContext";
+import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 
 const Settings = () => {
   const {
@@ -19,6 +21,7 @@ const Settings = () => {
   const [firstName, setFirstName] = useState(user?.first_name ?? "");
   const [lastName, setLastName] = useState(user?.last_name ?? "");
   const [isLoading, setIsLoading] = useState(false);
+  const { lessonType } = useContext(LessonTypeContext);
 
 
   const showToast = (text: string, type: "success" | "error") => {
@@ -59,15 +62,31 @@ const Settings = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.basicGray }}>
-      <ScrollView style={{ flex: 1, backgroundColor: colors.basicGray, padding: 20 }}>
-        <Text style={styles.header}>Налаштування</Text>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.basicGray, padding: 20 }}
+      >
+        <Text
+          style={[styles.header, { color: getThemePrimaryColor(lessonType) }]}
+        >
+          Налаштування
+        </Text>
         <Text style={styles.smallLabel}>Змінюй деталі свого акаунту тут</Text>
         <TextInputWithLabel
           style={{ width: "100%", marginTop: 20 }}
           label={"Ім'я"}
-          labelStyle={styles.label}
-          textInputStyle={styles.input}
-          focusBorderColor={colors.themePrimary}
+          labelStyle={
+            [
+              styles.label,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          textInputStyle={
+            [
+              styles.input,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          focusBorderColor={getThemePrimaryColor(lessonType)}
           notFocusedBorderColor={colors.grays50}
           defaultValue={user?.first_name}
           onChangeText={(text) => setFirstName(text)}
@@ -75,9 +94,19 @@ const Settings = () => {
         <TextInputWithLabel
           style={{ width: "100%", marginTop: -10 }}
           label={"Прізвище"}
-          labelStyle={styles.label}
-          textInputStyle={styles.input}
-          focusBorderColor={colors.themePrimary}
+          labelStyle={
+            [
+              styles.label,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          textInputStyle={
+            [
+              styles.input,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          focusBorderColor={getThemePrimaryColor(lessonType)}
           notFocusedBorderColor={colors.grays50}
           defaultValue={user?.last_name}
           onChangeText={(text) => setLastName(text)}
@@ -92,9 +121,19 @@ const Settings = () => {
         <TextInputWithLabel
           style={{ width: "100%", marginTop: 10 }}
           label={"Пошта"}
-          labelStyle={styles.label}
-          textInputStyle={styles.input}
-          focusBorderColor={colors.themePrimary}
+          labelStyle={
+            [
+              styles.label,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          textInputStyle={
+            [
+              styles.input,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          focusBorderColor={getThemePrimaryColor(lessonType)}
           notFocusedBorderColor={colors.grays50}
           defaultValue={user?.email}
           onChangeText={(text) => setEmail(text)}
@@ -102,9 +141,19 @@ const Settings = () => {
         <TextInputWithLabel
           style={{ width: "100%", marginTop: 10 }}
           label={"Юзернейм"}
-          labelStyle={styles.label}
-          textInputStyle={styles.input}
-          focusBorderColor={colors.themePrimary}
+          labelStyle={
+            [
+              styles.label,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          textInputStyle={
+            [
+              styles.input,
+              { color: getThemePrimaryColor(lessonType) },
+            ] as TextStyle
+          }
+          focusBorderColor={getThemePrimaryColor(lessonType)}
           notFocusedBorderColor={colors.grays50}
           defaultValue={user?.username}
           onChangeText={(text) => setUsername(text)}
@@ -115,11 +164,11 @@ const Settings = () => {
             height: 50,
             width: "60%",
             borderRadius: 20,
-            backgroundColor: colors.themeSecondary,
+            backgroundColor: getThemePrimaryColor(lessonType),
             marginTop: 20,
           }}
           onPress={handleEdit}
-          buttonShadow={colors.themePrimary}
+          buttonShadow={getThemeSecondaryColor(lessonType)}
           text={"Зберегти"}
           disabled={isEditDisabled}
           textStyle={{
@@ -131,7 +180,7 @@ const Settings = () => {
         />
       </ScrollView>
       <Toast />
-      <GlobalLoader isVisible={isLoading}/>
+      <GlobalLoader isVisible={isLoading} />
     </View>
   );
 };
@@ -145,16 +194,9 @@ const styles = StyleSheet.create({
     color: colors.grays30,
     fontFamily: "Inter-Black",
   },
-  signUpLabel: {
-    fontWeight: "400",
-    fontSize: 14,
-    color: colors.themePrimary,
-    fontFamily: "Inter-Black",
-  },
   header: {
     fontSize: 22,
     marginBottom: 10,
-    color: colors.themePrimary,
     fontFamily: "Inter-Black",
     textAlign: "left",
     width: "100%",
@@ -162,18 +204,15 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Inter-Black",
     fontWeight: "500",
-    color: colors.themePrimary,
   },
   input: {
     height: 45,
-    color: colors.themeSecondary,
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 10,
   },
   button: {
-    backgroundColor: colors.themePrimary,
     padding: 10,
     borderRadius: 5,
   },
