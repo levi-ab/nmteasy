@@ -1,6 +1,6 @@
 import { IExplanation, IQuestion } from "../data/models/questions";
 const apiURL = process.env.EXPO_PUBLIC_API_URL
-class _historyLessonService {
+class _LessonService {
    getQuestionsByLesson = (lessonID: string, token: string): Promise<IQuestion[]> => {
     return fetch(
       `${apiURL}/history-questions/${lessonID}`,{
@@ -19,7 +19,7 @@ class _historyLessonService {
     });
   };
 
-  getHistoryLessons = (token: string): Promise<any> => {
+  getLessons = (token: string): Promise<any> => {
     return fetch(
       `${apiURL}/history-lessons`,{
           method: "GET",
@@ -56,5 +56,5 @@ class _historyLessonService {
   };
 }
 
-const historyLessonService = new _historyLessonService();
-export default historyLessonService;
+const LessonService = new _LessonService();
+export default LessonService;

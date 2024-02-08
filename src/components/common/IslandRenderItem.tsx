@@ -18,9 +18,9 @@ const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({
     <View>
       <IslandButton
         percentage={
-          item.history_lesson_analytic.right_answers_count !== 0
-            ? (item.history_lesson_analytic.right_answers_count /
-                item.history_lesson_analytic.questions_count) *
+          item.lesson_analytic.right_answers_count !== 0
+            ? (item.lesson_analytic.right_answers_count /
+                item.lesson_analytic.questions_count) *
               100
             : 0
         }

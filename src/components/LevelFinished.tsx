@@ -6,8 +6,8 @@ import PressableButton from "./common/PressableButton";
 import analyticsService from "../services/analyticsService";
 import { useAuth } from "../data/AuthContext";
 import LessonsContext from "../data/LessonsContext";
-import historyLessonService from "../services/historyLessonService";
-import { IHistoryQuestionAnalytic } from "../data/models/analytics";
+import LessonService from "../services/LessonService";
+import { IQuestionAnalytic } from "../data/models/analytics";
 
 interface Props {
   rightAnswersCount: number;
@@ -15,7 +15,7 @@ interface Props {
   isVisible: boolean;
   elapsedTime: number;
   lessonID: string;
-  questionsAnalytics: IHistoryQuestionAnalytic[]
+  questionsAnalytics: IQuestionAnalytic[]
 }
 
 const getResultByPercent = (progress: number) => {
@@ -60,7 +60,7 @@ const LevelFinished = (props: Props) => {
 
   const handleGoHome = () => {
     analyticsService
-      .addHistoryAnalytic(
+      .addAnalytic(
         token,
         props.lessonID,
         props.elapsedTime,
@@ -69,7 +69,7 @@ const LevelFinished = (props: Props) => {
         props.questionsAnalytics
       )
       .then(_ => {
-        historyLessonService.getHistoryLessons(token)
+        LessonService.getLessons(token)
           .then(res => {setLessons(res); navigation.navigate("Home");})
           .catch(err => console.error(err))
       })

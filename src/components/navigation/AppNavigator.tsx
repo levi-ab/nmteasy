@@ -4,16 +4,18 @@ import {
   createDrawerNavigator,
   DrawerScreenProps,
 } from "@react-navigation/drawer";
-import { useAuth } from "../data/AuthContext";
+import { useAuth } from "../../data/AuthContext";
 import CustomDrawer from "./Drawer";
-import HomeScreen from "../screens/Home";
-import Lesson from "../screens/Lesson";
-import SignIn from "../screens/SignIn";
-import { colors } from "../styles";
+import HomeScreen from "../../screens/Home";
+import Lesson from "../../screens/Lesson";
+import SignIn from "../../screens/SignIn";
+import { colors } from "../../styles";
 import { View } from "react-native";
-import SignUp from "../screens/SignUp";
-import Settings from "../screens/Settings";
-import Analytics from "../screens/Analytics";
+import SignUp from "../../screens/SignUp";
+import Settings from "../../screens/Settings";
+import Analytics from "../../screens/Analytics";
+import { getHeaderTitle } from '@react-navigation/elements';
+import AppHeader from "./AppHeader";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -26,12 +28,16 @@ const AppNavigator: React.FC = () => {
         initialRouteName={state.user ? "Home" : "SignIn"}
         drawerContent={(props) => <CustomDrawer {...props} />}
         screenOptions={{
+          swipeEnabled: false,
           headerShown: !!state.user,
           headerStyle: { backgroundColor: colors.themeSecondary },
           drawerActiveTintColor: colors.themeSecondary,
           drawerInactiveTintColor: colors.white,
           drawerItemStyle: {},
-
+          header: ({ navigation, route, options }) => {
+            const title = getHeaderTitle(options, route.name);
+            return <AppHeader title={title} navigation={navigation}/>;
+          },
           drawerLabelStyle: {
             fontSize: 15,
           },

@@ -1,8 +1,8 @@
 import { RefreshControl, ScrollView, SectionList, Text, View } from "react-native";
-import { SetStateAction, useCallback, useContext, useEffect, useState } from "react";
+import { SetStateAction, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { colors } from "../styles";
 import StartLevelModal from "../components/modals/StartLevelModal";
-import historyLessonService from "../services/historyLessonService";
+import LessonService from "../services/LessonService";
 import { ILessonByGeneralTitle } from "../data/models/lessons";
 import { getLessonTitleById } from "../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
@@ -26,8 +26,8 @@ const HomeScreen = () => {
   } = useAuth();
 
   useEffect(() => {
-    historyLessonService
-      .getHistoryLessons(token)
+    LessonService
+      .getLessons(token)
       .then((res) => setLessons(res))
       .catch((err) => console.error(err));
   }, []);
@@ -41,8 +41,8 @@ const HomeScreen = () => {
 
   const onRefresh = () => { 
     setRefreshing(true); 
-    historyLessonService
-    .getHistoryLessons(token)
+    LessonService
+    .getLessons(token)
       .then((res) => {setRefreshing(false); setLessons(res)})
       .catch((err) => {setRefreshing(false); console.error(err) });
   }; 

@@ -12,7 +12,7 @@ import {
   import { colors } from "../../styles";
   import { useEffect, useState } from "react";
   import PressableButton from "../common/PressableButton";
-  import historyLessonService from "../../services/historyLessonService";
+  import LessonService from "../../services/LessonService";
   import { IExplanation } from "../../data/models/questions";
   import { useAuth } from "../../data/AuthContext";
 import TextInputWithLabel from "../text/TextInputWithLabel";

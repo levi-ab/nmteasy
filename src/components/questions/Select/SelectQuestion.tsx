@@ -57,41 +57,45 @@ const SelectQuestion = (props: ISelectQuestionProps) => {
         contentContainerStyle={{ alignItems: "center" }}
       >
         <Text style={styles.questionText}>{props.question.question_text}</Text>
-        {props.question.question_image !== "" && (
+        {props.question.question_image !== "" ? (
           <Image
             source={{ uri: props.question.question_image }}
             style={styles.questionImage}
           />
-        )}
+        ) : null}
       </ScrollView>
       <ScrollView
         style={styles.optionsContainer}
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        {props.question.answers &&
-          props.question.answers.map((answer) => (
-            <View key={answer.text} style={styles.option}>
-              <BouncyCheckbox
-                size={25}
-                fillColor={getSelectFillColor(answer.text)}
-                unfillColor={getUnCheckedFillColor(answer.text)}
-                disableBuiltInState={true}
-                text={answer.type === QuestionTypes.Image ? "" : answer.text}
-                isChecked={selectedOption === answer.text}
-                innerIconStyle={{ borderWidth: 2 }}
-                textStyle={{ textDecorationLine: "none", color: colors.white }}
-                onPress={(_) => handleOptionClicked(answer.text)}
-              />
-              {answer.type === QuestionTypes.Image && (
-                <Pressable onPress={(_) => handleOptionClicked(answer.text)}>
-                  <Image
-                    source={{ uri: answer.text }}
-                    style={styles.questionImage}
-                  />
-                </Pressable>
-              )}
-            </View>
-          ))}
+        {props.question.answers
+          ? props.question.answers.map((answer) => (
+              <View key={answer.text} style={styles.option}>
+                <BouncyCheckbox
+                  size={25}
+                  fillColor={getSelectFillColor(answer.text)}
+                  unfillColor={getUnCheckedFillColor(answer.text)}
+                  disableBuiltInState={true}
+                  text={answer.type === QuestionTypes.Image ? "" : answer.text}
+                  isChecked={selectedOption === answer.text}
+                  innerIconStyle={{ borderWidth: 2 }}
+                  textStyle={{
+                    textDecorationLine: "none",
+                    color: colors.white,
+                  }}
+                  onPress={(_) => handleOptionClicked(answer.text)}
+                />
+                {answer.type === QuestionTypes.Image ? (
+                  <Pressable onPress={(_) => handleOptionClicked(answer.text)}>
+                    <Image
+                      source={{ uri: answer.text }}
+                      style={styles.questionImage}
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
+            ))
+          : null}
       </ScrollView>
     </View>
   );

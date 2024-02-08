@@ -15,14 +15,14 @@ import {
   IDoubleAnswersQuestion,
   ISingleAnswersQuestion,
 } from "../data/models/questions";
-import historyLessonService from "../services/historyLessonService";
+import LessonService from "../services/LessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
 import GlobalLoader from "../components/common/GlobalLoader";
 import ExplainQuestionModal from "../components/modals/ExplainQuestionModal";
 import ComplainQuestionModal from "../components/modals/ComplainQuestionModal";
 import Toast from "react-native-toast-message";
-import { IHistoryQuestionAnalytic } from "../data/models/analytics";
+import { IQuestionAnalytic } from "../data/models/analytics";
 
 type ParamList = {
   Lesson: {
@@ -43,7 +43,7 @@ const Lesson = () => {
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
   const [showExplainModal, setShowExplainModal] = useState(false);
   const [showComplainModal, setShowComplainModal] = useState(false); 
-  const [questionsAnalytics, setQuestionAnalytics] = useState<IHistoryQuestionAnalytic[]>([]);
+  const [questionsAnalytics, setQuestionAnalytics] = useState<IQuestionAnalytic[]>([]);
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >([]);
@@ -51,7 +51,7 @@ const Lesson = () => {
   const { state: { token } } = useAuth();
 
   useEffect(() => {
-    historyLessonService
+    LessonService
       .getQuestionsByLesson(lessonID, token)
       .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
       .catch((err) => console.error(err));
@@ -152,7 +152,7 @@ const Lesson = () => {
         ...questionsAnalytics,
         {
           id:"",
-          history_question_id: questions[currentQuestionIndex].id,
+          question_id: questions[currentQuestionIndex].id,
           created_at: "",
           updated_at: "",
           time_spent: elapsedTime - elapsedTimeWithoutCurrentQuestion,

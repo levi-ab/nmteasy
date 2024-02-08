@@ -11,8 +11,8 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { colors } from "../styles";
-import { useAuth } from "../data/AuthContext";
+import { colors } from "../../styles";
+import { useAuth } from "../../data/AuthContext";
 import Svg, { Path, G } from 'react-native-svg';
 
 const CustomDrawer = (props: any) => {
@@ -40,7 +40,7 @@ const CustomDrawer = (props: any) => {
         }}
       >
         <ImageBackground
-          source={require("../assets/gradient.png")}
+          source={require("../../assets/gradient.png")}
           style={{
             flex: 1,
             alignItems: "center",
@@ -83,10 +83,10 @@ const CustomDrawer = (props: any) => {
             </TouchableOpacity>
           </View>
           <Image
-            source={require("../assets/user-icon.png")}
+            source={require("../../assets/user-icon.png")}
             style={{ width: 100, height: 100 }}
           />
-          {user && (
+          {user ? (
             <Text
               style={{
                 color: "#fff",
@@ -96,7 +96,7 @@ const CustomDrawer = (props: any) => {
             >
               {user.first_name + " " + user.last_name}
             </Text>
-          )}
+          ) : null}
           <View style={{ flexDirection: "row" }}>
             <Text
               style={{
@@ -135,7 +135,7 @@ const CustomDrawer = (props: any) => {
             </Text>
           </View>
         </TouchableOpacity>
-        {user && (
+        {user ? (
           <TouchableOpacity
             onPress={() => handleSignOut()}
             style={{ paddingVertical: 15 }}
@@ -152,7 +152,7 @@ const CustomDrawer = (props: any) => {
               </Text>
             </View>
           </TouchableOpacity>
-        )}
+        ): null}
       </View>
     </View>
   );

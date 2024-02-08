@@ -44,6 +44,6 @@ export interface IAnswer {
 
 export interface IExplanation {
   id: string;
-  history_question_id: string;
+  question_id: string;
   explanation: string;
 };

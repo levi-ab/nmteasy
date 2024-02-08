@@ -36,14 +36,14 @@ export const mapToSingleOrDoubleAnswersQuestion = (
 
 export const getLessonTitleById = (
   lessonID: string | null,
-  historyLessons: ILessonByGeneralTitle[]
+  lessons: ILessonByGeneralTitle[]
 ): string => {
   let foundTitle = "";
-  if (!lessonID || !historyLessons) {
+  if (!lessonID || !lessons) {
     return "";
   }
 
-  historyLessons.some((lessonGroup) =>
+  lessons.some((lessonGroup) =>
     lessonGroup.data.some((lesson) => {
       if (lesson.id === lessonID) {
         foundTitle = lesson.proper_title;

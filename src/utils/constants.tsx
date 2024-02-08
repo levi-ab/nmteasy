@@ -17,11 +17,11 @@ export const LetterOptions = [
 
 export const StorageUserKey = "nmteasy_user"
 
-interface ErrorsMapType {
+interface StringMapType {
   [key: string]: string;
 }
 
-export const ErrorsMap: ErrorsMapType = {
+export const ErrorsMap: StringMapType = {
   "name is not correct": "Ім'я неправильне",
   "email is not correct": "Пошта неправильна",
   "username is not correct": "Юзернейм неправильний",
@@ -36,6 +36,17 @@ export const ErrorsMap: ErrorsMapType = {
 
 export enum LessonTypes {
   History = "history",
+  Ukrainian = "ukrainian"
 }
+
+export const LessonTypesToUkrainianMap: StringMapType = {
+  "history": "Історія",
+  "ukrainian": "Українська мова"
+}
+
+export const AvailableLessons = [
+  LessonTypes.History,
+  LessonTypes.Ukrainian
+]
 
 export const NULL_UUID = "00000000-0000-0000-0000-000000000000"

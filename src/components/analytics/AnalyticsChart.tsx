@@ -15,7 +15,7 @@ const AnalyticsChart = () => {
 
   useEffect(() => {
     analyticsService
-      .getWeeklyHistoryAnalytic(token)
+      .getWeeklyAnalytic(token)
       .then((res) => {
         const datesArray = [];
         const numbersArray: number[] = [];

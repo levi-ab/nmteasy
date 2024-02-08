@@ -27,7 +27,7 @@ const Analytics = () => {
           title: lesson.title,
           questions: lesson.questions,
           proper_title: lesson.proper_title,
-          history_lesson_analytic: lesson.history_lesson_analytic,
+          lesson_analytic: lesson.lesson_analytic,
         }))
       );
       return acc;
@@ -73,7 +73,7 @@ const Analytics = () => {
                 <Text style={styles.smallLabel}>
                   {
                     flattenedLessons.filter(
-                      (lesson) => lesson.history_lesson_analytic.time_spent != 0
+                      (lesson) => lesson.lesson_analytic.time_spent != 0
                     ).length
                   }
                 </Text>
@@ -100,9 +100,9 @@ const Analytics = () => {
                   {
                     flattenedLessons.filter(
                       (lesson) =>
-                        lesson.history_lesson_analytic.right_answers_count ===
-                          lesson.history_lesson_analytic.questions_count &&
-                        lesson.history_lesson_analytic.right_answers_count !== 0
+                        lesson.lesson_analytic.right_answers_count ===
+                          lesson.lesson_analytic.questions_count &&
+                        lesson.lesson_analytic.right_answers_count !== 0
                     ).length
                   }
                 </Text>
@@ -119,7 +119,7 @@ const Analytics = () => {
                   {secondsToTime(
                     flattenedLessons.reduce(
                       (accumulator, lesson) =>
-                        accumulator + lesson.history_lesson_analytic.time_spent,
+                        accumulator + lesson.lesson_analytic.time_spent,
                       0
                     )
                   )}
@@ -137,10 +137,10 @@ const Analytics = () => {
             <View>
               <AnimatedProgressBar
                 progress={
-                  item.history_lesson_analytic.right_answers_count /
-                  (item.history_lesson_analytic.questions_count === 0
+                  item.lesson_analytic.right_answers_count /
+                  (item.lesson_analytic.questions_count === 0
                     ? 1
-                    : item.history_lesson_analytic.questions_count)
+                    : item.lesson_analytic.questions_count)
                 }
               />
             </View>

@@ -1,6 +1,6 @@
-export interface IHistoryLessonAnalytic {
+export interface ILessonAnalytic {
     id: string,
-    history_lesson_id: string,
+    lesson_id: string,
     created_at:string,
     updated_at: string,
     time_spent: number,
@@ -8,9 +8,9 @@ export interface IHistoryLessonAnalytic {
     right_answers_count: number,
 }
 
-export interface IHistoryQuestionAnalytic {
+export interface IQuestionAnalytic {
     id: string,
-    history_question_id: string,
+    question_id: string,
     created_at:string,
     updated_at: string,
     time_spent: number,
