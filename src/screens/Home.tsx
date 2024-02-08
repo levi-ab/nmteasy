@@ -1,4 +1,5 @@
 import {
+  Pressable,
   RefreshControl,
   ScrollView,
   SectionList,
@@ -37,7 +38,7 @@ const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { lessons, setLessons } = useContext(LessonsContext);
-  const { lessonTypeSelectorOpen, lessonType } = useContext(LessonTypeContext);
+  const { lessonTypeSelectorOpen, lessonType, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
   const {
     state: { token },
   } = useAuth();
@@ -103,7 +104,13 @@ const HomeScreen = () => {
           backgroundColor: colors.basicGray,
         }}
       />
-      <GlobalLoader isVisible={isLoading}/>
+      {lessonTypeSelectorOpen ? (
+        <Pressable
+          style={{ position: "absolute", width: "100%", height: "100%", backgroundColor: colors.gray, opacity: 0.5 }}
+          onPress={() => setLessonTypeSelectorOpen(false)}
+        />
+      ) : null}
+      <GlobalLoader isVisible={isLoading} />
     </View>
   );
 };

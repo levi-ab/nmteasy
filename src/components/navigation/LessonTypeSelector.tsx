@@ -12,7 +12,7 @@ const LessonTypeSelectorButton = () => {
   return (
     <TouchableOpacity style={styles.lessonTypeContainer} onPress={() => setLessonTypeSelectorOpen(!lessonTypeSelectorOpen)}>
       <Text style={styles.text}>{LessonTypesToUkrainianMap[lessonType]}</Text>
-      <HistorySVG width={30} height={30}/>
+      <LessonTypeToSvg width={30} height={30} lessonType={lessonType as LessonTypes}/>
     </TouchableOpacity>
   );
 };

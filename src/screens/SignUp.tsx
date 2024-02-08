@@ -120,11 +120,11 @@ const SignUp = ({ navigation }: { navigation: NavigationProp<any> }) => {
           height: 50,
           width: "80%",
           borderRadius: 20,
-          backgroundColor: colors.themeSecondary,
+          backgroundColor: colors.themePrimary,
           marginTop: 20,
         }}
         onPress={handleSignUp}
-        buttonShadow={colors.themePrimary}
+        buttonShadow={colors.themeSecondary}
         text={"Зареєструватись"}
         textStyle={{
           color: colors.grays80,

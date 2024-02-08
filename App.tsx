@@ -1,4 +1,3 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useFonts } from "expo-font";
 import { AuthProvider } from "./src/data/AuthContext";
 import AppNavigator from "./src/components/navigation/AppNavigator";
@@ -7,8 +6,7 @@ import { useState } from "react";
 import { ILessonByGeneralTitle } from "./src/data/models/lessons";
 import { LessonTypes } from "./src/utils/constants";
 import LessonTypeContext from "./src/data/LessonsTypeContext";
-
-const Drawer = createDrawerNavigator();
+import GlobalLoader from "./src/components/common/GlobalLoader";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -20,7 +18,7 @@ export default function App() {
   const [lessonTypeSelectorOpen, setLessonTypeSelectorOpen] = useState<boolean>(false);
   const [lessonType, setLessonType] = useState<string>(LessonTypes.History);
 
-  return (
+  return fontsLoaded ? (
     <AuthProvider>
       <LessonTypeContext.Provider
         value={{
@@ -37,5 +35,7 @@ export default function App() {
         </LessonsContext.Provider>
       </LessonTypeContext.Provider>
     </AuthProvider>
+  ) : (
+    <GlobalLoader isVisible={true} />
   );
 }

@@ -104,26 +104,36 @@ const CustomDrawer = (props: any) => {
               style={{ width: 100, height: 100 }}
             />
             {user ? (
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  marginBottom: 5,
-                }}
-              >
-                {user.first_name + " " + user.last_name}
-              </Text>
+              <>
+                <Text
+                  style={{
+                    color: colors.grays10,
+                    fontSize: 18,
+                  }}
+                >
+                  {user.first_name + " " + user.last_name}
+                </Text>
+                <Text
+                  style={{
+                    color: colors.grays10,
+                    fontSize: 14,
+                    marginBottom: 10,
+                  }}
+                >
+                  @{user.username}
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      color: colors.grays10,
+                      marginRight: 5,
+                    }}
+                  >
+                    280 Монет
+                  </Text>
+                </View>
+              </>
             ) : null}
-            <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{
-                  color: "#fff",
-                  marginRight: 5,
-                }}
-              >
-                280 Монет
-              </Text>
-            </View>
           </View>
         </Background>
         <View
