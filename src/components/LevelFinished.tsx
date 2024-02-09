@@ -10,6 +10,7 @@ import LessonService from "../services/LessonService";
 import { IQuestionAnalytic } from "../data/models/analytics";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
+import IUser from "../data/models/user";
 
 interface Props {
   rightAnswersCount: number;
@@ -41,7 +42,8 @@ const LevelFinished = (props: Props) => {
   const navigation = useNavigation<NavigationProp<any>>();
   const { lessonType } = useContext(LessonTypeContext);
   const {
-    state: { token },
+    state: { token, user },
+    dispatch
   } = useAuth();
   const { setLessons } = useContext(LessonsContext);
 
@@ -74,6 +76,8 @@ const LevelFinished = (props: Props) => {
         lessonType
       )
       .then(_ => {
+        const updatedUserData = {...user, points: user?.points as number  + props.rightAnswersCount}
+        dispatch({ type: 'SIGN_IN', payload: {user: updatedUserData as IUser, token: token} });
         LessonService.getLessons(token, lessonType)
           .then(res => {setLessons(res); navigation.navigate("Home");})
           .catch(err => console.error(err))

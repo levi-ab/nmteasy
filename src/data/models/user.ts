@@ -12,4 +12,6 @@ export interface ILeague {
 	id: string
 	title: string
 	points: string
+
+	users?: IUser[]
 }

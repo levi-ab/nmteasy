@@ -52,6 +52,13 @@ export const AvailableLessons = [
   LessonTypes.Biology
 ]
 
+export enum LeagueTypes {
+  Wooden = "wooden",
+  Bronze = "bronze",
+  Silver = "silver",
+  Golden = "golden"
+}
+
 export const LeaguesToUkrainianMap: StringMapType = {
   "wooden": "Дерев'яна",
   "bronze": "Мідна",
