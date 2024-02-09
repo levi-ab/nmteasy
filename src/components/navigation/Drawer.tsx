@@ -129,7 +129,7 @@ const CustomDrawer = (props: any) => {
                       marginRight: 5,
                     }}
                   >
-                    280 Монет
+                    {user.points} xp
                   </Text>
                 </View>
               </>

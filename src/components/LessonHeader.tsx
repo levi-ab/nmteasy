@@ -20,7 +20,7 @@ const LessonHeader = (props: { progress: number; }) => {
             cx="15"
             cy="15"
             r="14"
-            stroke={colors.grays50}
+            stroke={colors.black}
             strokeWidth="2.5"
             fill="transparent"
           />
@@ -29,7 +29,7 @@ const LessonHeader = (props: { progress: number; }) => {
             y1="7"
             x2="23"
             y2="23"
-            stroke={colors.grays50}
+            stroke={colors.black}
             strokeWidth="2.5"
           />
           <Line
@@ -37,7 +37,7 @@ const LessonHeader = (props: { progress: number; }) => {
             y1="7"
             x2="7"
             y2="23"
-            stroke={colors.grays50}
+            stroke={colors.black}
             strokeWidth="2.5"
           />
         </Svg>
@@ -50,7 +50,7 @@ const LessonHeader = (props: { progress: number; }) => {
         borderRadius={20}
         borderWidth={2}
         color={colors.themePrimary}
-        borderColor={colors.grays50}
+        borderColor={colors.grays80}
         unfilledColor={colors.grays70}
       />
     </View>

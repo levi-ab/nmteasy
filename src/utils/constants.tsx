@@ -52,4 +52,11 @@ export const AvailableLessons = [
   LessonTypes.Biology
 ]
 
+export const LeaguesToUkrainianMap: StringMapType = {
+  "wooden": "Дерев'яна",
+  "bronze": "Мідна",
+  "silver": "Срібна",
+  "golden": "Золота",
+}
+
 export const NULL_UUID = "00000000-0000-0000-0000-000000000000"

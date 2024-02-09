@@ -13,6 +13,7 @@ export const colors = {
   red: "#e74c3c",
   redShadow: "#9c2c22",
   orange: "#f39c12",
+  gold: "#FFD700",
   green: "#2ecc71",
   basicGray: "#202124",
   "grays100": "#191B1F",

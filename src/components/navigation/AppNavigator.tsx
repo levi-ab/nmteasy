@@ -17,7 +17,8 @@ import Analytics from "../../screens/Analytics";
 import { getHeaderTitle } from '@react-navigation/elements';
 import AppHeader from "./AppHeader";
 import LessonTypeContext from "../../data/LessonsTypeContext";
-import { getThemePrimaryColor, getThemeSecondaryColor } from "../../utils/themes";
+import { getThemePrimaryColor } from "../../utils/themes";
+import Leagues from "../../screens/Leagues";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -39,7 +40,7 @@ const AppNavigator: React.FC = () => {
           drawerItemStyle: {},
           header: ({ navigation, route, options }) => {
             const title = getHeaderTitle(options, route.name);
-            return <AppHeader title={title} navigation={navigation}/>;
+            return <AppHeader title={title} navigation={navigation} />;
           },
           drawerLabelStyle: {
             fontSize: 15,
@@ -54,10 +55,24 @@ const AppNavigator: React.FC = () => {
               options={{ drawerLabel: "Головна", title: "Головна" }}
             />
             <Drawer.Screen
+              name="Ліга"
+              component={Leagues}
+              options={{
+                drawerLabel: "Ліга",
+                title: "Ліга",
+                unmountOnBlur: true,
+              }}
+            />
+            <Drawer.Screen
               name="Аналітика"
               component={Analytics}
-              options={{ drawerLabel: "Аналітика", title: "Аналітика", unmountOnBlur:true }}
+              options={{
+                drawerLabel: "Аналітика",
+                title: "Аналітика",
+                unmountOnBlur: true,
+              }}
             />
+
             <Drawer.Screen
               name="Settings"
               component={Settings}
