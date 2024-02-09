@@ -36,17 +36,20 @@ export const ErrorsMap: StringMapType = {
 
 export enum LessonTypes {
   History = "history",
-  Ukrainian = "ukrainian"
+  Ukrainian = "ukrainian",
+  Biology = "biology"
 }
 
 export const LessonTypesToUkrainianMap: StringMapType = {
   "history": "Історія",
-  "ukrainian": "Українська мова"
+  "ukrainian": "Українська",
+  "biology": "Біологія"
 }
 
 export const AvailableLessons = [
   LessonTypes.History,
-  LessonTypes.Ukrainian
+  LessonTypes.Ukrainian,
+  LessonTypes.Biology
 ]
 
 export const NULL_UUID = "00000000-0000-0000-0000-000000000000"

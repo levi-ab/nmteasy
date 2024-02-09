@@ -75,9 +75,17 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}:
     <TouchableWithoutFeedback
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={{backgroundColor:"red"}}
+      style={{ backgroundColor: "red" }}
     >
-      <Svg height="100" width="100" style={{marginLeft: marginLeft, marginRight: marginRight, marginTop: marginTop}}>
+      <Svg
+        height="100"
+        width="100"
+        style={{
+          marginLeft: marginLeft,
+          marginRight: marginRight,
+          marginTop: marginTop,
+        }}
+      >
         <Circle
           cx="50"
           cy="50"
@@ -100,8 +108,19 @@ const IslandButton = ({percentage, marginLeft, marginRight, marginTop, onPress}:
         <View style={styles.button}>
           <View style={styles.outerProgress}>
             <View>
-              <Animated.View style={[styles.height, heightStyle, {backgroundColor: getThemeSecondaryColor(lessonType)}]}>
-                <Animated.View style={[styles.inner, {backgroundColor: getThemePrimaryColor(lessonType)}]}></Animated.View>
+              <Animated.View
+                style={[
+                  styles.height,
+                  heightStyle,
+                  { backgroundColor: getThemeSecondaryColor(lessonType) },
+                ]}
+              >
+                <Animated.View
+                  style={[
+                    styles.inner,
+                    { backgroundColor: getThemePrimaryColor(lessonType) },
+                  ]}
+                ></Animated.View>
               </Animated.View>
             </View>
           </View>
