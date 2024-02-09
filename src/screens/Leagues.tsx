@@ -2,13 +2,13 @@ import { StyleSheet, Text, View,ScrollView, Dimensions } from "react-native";
 import { colors } from "../styles";
 import { useAuth } from "../data/AuthContext";
 import { LeaguesToUkrainianMap } from "../utils/constants";
-import { G, Path, Svg, Text as SvgText } from "react-native-svg";
+import { Defs, G, LinearGradient, Path, Stop, Svg, Text as SvgText } from "react-native-svg";
 import { Circle } from "react-native-svg";
 import { useEffect, useState } from "react";
 import { ILeague } from "../data/models/user";
 import leagueService from "../services/leagueService";
 import GlobalLoader from "../components/common/GlobalLoader";
-import { getColorForLeague, getColorForPlace } from "../utils/themes";
+import { getColorForLeague, getColorForPlace, getShieldSvgForLeague } from "../utils/themes";
 
 const Leagues = () => {
   const {
@@ -144,11 +144,20 @@ const Leagues = () => {
               {LeaguesToUkrainianMap[league.title ?? ""]}
             </Text>
             <Svg height={100} width={100}>
-              <Circle cx={100 / 2} cy={100 / 2} r={100 / 2} fill={getColorForLeague(league.title)} />
-              <Svg
-                viewBox="0 0 24 24"
-                fill="none"
-              >
+              <Defs>
+                <LinearGradient id="gradient" x1="0%" y1="99%" x2="0%" y2="0%">
+                  <Stop offset="0%" stopColor={colors.grays30} stopOpacity={1} />
+                  <Stop offset="0%" stopColor={colors.grays40} stopOpacity={1} />
+                  <Stop offset="100%" stopColor={getColorForLeague(league.title)} stopOpacity={1} />
+                </LinearGradient>
+              </Defs>
+              <Circle
+                cx={100 / 2}
+                cy={100 / 2}
+                r={100 / 2}
+                fill="url(#gradient)" 
+              />
+              <Svg viewBox="0 0 24 24" fill="none">
                 <G id="SVGRepo_bgCarrier" stroke-width="0"></G>
                 <G
                   id="SVGRepo_tracerCarrier"
@@ -162,10 +171,12 @@ const Leagues = () => {
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                  ></Path>
+                  >
+                  </Path>
                 </G>
               </Svg>
             </Svg>
+            {getShieldSvgForLeague(league.title)}
           </View>
         ))}
       </ScrollView>
@@ -215,6 +226,7 @@ const styles = StyleSheet.create({
   },
 
   leagueBatchContainer: {
+    position:"relative",
     width: Dimensions.get("window").width,
     alignItems: "center",
     flexDirection: "column",
