@@ -59,6 +59,13 @@ export enum LeagueTypes {
   Golden = "golden"
 }
 
+export const AvailableLeagues = [
+  LeagueTypes.Wooden,
+  LeagueTypes.Bronze,
+  LeagueTypes.Silver,
+  LeagueTypes.Golden,
+]
+
 export const LeaguesToUkrainianMap: StringMapType = {
   "wooden": "Дерев'яна",
   "bronze": "Мідна",

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View,ScrollView, Dimensions } from "react-native";
 import { colors } from "../styles";
 import { useAuth } from "../data/AuthContext";
-import { LeaguesToUkrainianMap } from "../utils/constants";
+import { AvailableLeagues, LeaguesToUkrainianMap } from "../utils/constants";
 import { Defs, G, LinearGradient, Path, Stop, Svg, Text as SvgText } from "react-native-svg";
 import { Circle } from "react-native-svg";
 import { useEffect, useState } from "react";
@@ -16,7 +16,6 @@ const Leagues = () => {
     dispatch,
   } = useAuth();
 
-  const [leagues, setLeagues] = useState<ILeague[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentLeague, setCurrentLeague] = useState<ILeague>();
 
@@ -97,17 +96,6 @@ const Leagues = () => {
   useEffect(() => {
     setLoading(true);
     leagueService
-      .getLeagues(token)
-      .then((res) => {
-        setLeagues(res);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-
-    leagueService
       .getCurrentLeague(token)
       .then((res) => {
         setCurrentLeague(res);
@@ -119,15 +107,7 @@ const Leagues = () => {
       });
   }, []);
 
-  const getDefaultScrollOffset = () => {
-    for (let index = 0; index < leagues.length; index++) {
-        if(user?.league.id === leagues[index].id){
-            return index * Dimensions.get("window").width
-        }
-    }
-
-    return 0;
-  }
+  const userLeagueIndex = AvailableLeagues.findIndex(x => x === user?.league.title)
 
   return (
     <View style={styles.container}>
@@ -136,26 +116,66 @@ const Leagues = () => {
         style={{ height: 250 }}
         snapToAlignment="center"
         snapToInterval={Dimensions.get("window").width}
-        contentOffset={{ x: getDefaultScrollOffset(), y: 0 }}
+        contentOffset={{
+          x: userLeagueIndex * Dimensions.get("window").width,
+          y: 0,
+        }}
       >
-        {leagues.map((league) => (
-          <View style={styles.leagueBatchContainer} key={league.id}>
+        {AvailableLeagues.map((league, index) => (
+          <View style={styles.leagueBatchContainer} key={league + index}>
             <Text style={styles.text}>
-              {LeaguesToUkrainianMap[league.title ?? ""]}
+              {LeaguesToUkrainianMap[league ?? ""]}
             </Text>
+            {index > userLeagueIndex && (
+              <Svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width={70}
+                height={70}
+                style={{position: "absolute", top: 80, zIndex: 10}}
+              >
+                <G id="SVGRepo_bgCarrier" stroke-width="0"></G>
+                <G
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></G>
+                <G id="SVGRepo_iconCarrier">
+                  <Path
+                    d="M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288"
+                    stroke={colors.grays60}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></Path>
+                </G>
+              </Svg>
+            )}
             <Svg height={100} width={100}>
               <Defs>
                 <LinearGradient id="gradient" x1="0%" y1="99%" x2="0%" y2="0%">
-                  <Stop offset="0%" stopColor={colors.grays30} stopOpacity={1} />
-                  <Stop offset="0%" stopColor={colors.grays40} stopOpacity={1} />
-                  <Stop offset="100%" stopColor={getColorForLeague(league.title)} stopOpacity={1} />
+                  <Stop
+                    offset="0%"
+                    stopColor={colors.grays30}
+                    stopOpacity={1}
+                  />
+                  <Stop
+                    offset="0%"
+                    stopColor={colors.grays40}
+                    stopOpacity={1}
+                  />
+                  <Stop
+                    offset="100%"
+                    stopColor={getColorForLeague(league)}
+                    stopOpacity={1}
+                  />
                 </LinearGradient>
               </Defs>
               <Circle
                 cx={100 / 2}
                 cy={100 / 2}
                 r={100 / 2}
-                fill="url(#gradient)" 
+                fill="url(#gradient)"
               />
               <Svg viewBox="0 0 24 24" fill="none">
                 <G id="SVGRepo_bgCarrier" stroke-width="0"></G>
@@ -171,12 +191,11 @@ const Leagues = () => {
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                  >
-                  </Path>
+                  ></Path>
                 </G>
               </Svg>
             </Svg>
-            {getShieldSvgForLeague(league.title)}
+            {getShieldSvgForLeague(league)}
           </View>
         ))}
       </ScrollView>
