@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { colors } from '../../styles';
 import { getThemePrimaryColor } from '../../utils/themes';
 import LessonTypeContext from '../../data/LessonsTypeContext';

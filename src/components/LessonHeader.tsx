@@ -1,8 +1,7 @@
-import { Button, Dimensions, StyleSheet, Text, View } from "react-native";
+import { Button, Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../styles";
 import * as Progress from "react-native-progress";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Circle, Line, Svg } from "react-native-svg";
 import { getThemePrimaryColor } from "../utils/themes";
 import { useContext } from "react";

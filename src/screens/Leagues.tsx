@@ -204,6 +204,7 @@ const Leagues = () => {
           ?.sort((a, b) => b.points - a.points)
           .map((x, index) => (
             <View
+              key={index}
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",

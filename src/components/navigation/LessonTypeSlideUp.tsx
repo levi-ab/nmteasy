@@ -8,10 +8,10 @@ import {
   Pressable,
   Touchable,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { colors } from "../../styles";
 import { LessonTypeToSvg } from "./LessonTypeSelector";
-import { ScrollView } from 'react-native-gesture-handler';
 import { AvailableLessons, LessonTypesToUkrainianMap } from "../../utils/constants";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 

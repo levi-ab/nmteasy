@@ -4,10 +4,15 @@
     "slug": "nmteasy",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF",
+      "translucent": false
+    },
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./src/assets/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,23 +24,29 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.leviab.nmteasy"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
       [
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Inter-Black.otf",
-            "./assets/fonts/Marlboro.ttf"
+            "./src/assets/fonts/Inter-Black.otf",
+            "./src/assets/fonts/Marlboro.ttf"
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "80b5a1b2-e8ff-4e3d-bb40-57c612ab1364"
+      }
+    }
   }
 }
