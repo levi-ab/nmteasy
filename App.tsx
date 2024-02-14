@@ -8,7 +8,7 @@ import { LessonTypes } from "./src/utils/constants";
 import LessonTypeContext from "./src/data/LessonsTypeContext";
 import GlobalLoader from "./src/components/common/GlobalLoader";
 import { SafeAreaView, StatusBar } from "react-native";
-import SafeViewAndroid from "./src/components/common/AndroidSafeArea"
+import { LessonSearchProvider } from "./src/data/LessonSearchContext";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -33,12 +33,13 @@ export default function App() {
         <LessonsContext.Provider
           value={{ lessons: lessons, setLessons: setLessons }}
         >
+          <LessonSearchProvider>
             <AppNavigator />
+          </LessonSearchProvider>
         </LessonsContext.Provider>
       </LessonTypeContext.Provider>
-      <StatusBar backgroundColor={'transparent'} translucent/>
+      <StatusBar backgroundColor={"transparent"} translucent />
     </AuthProvider>
-    
   ) : (
     <GlobalLoader isVisible={true} />
   );

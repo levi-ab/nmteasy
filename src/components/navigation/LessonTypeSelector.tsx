@@ -1,19 +1,30 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { G, Path, Polygon, Svg } from "react-native-svg";
 import { colors } from "../../styles";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { useContext } from "react";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 import { LessonTypes, LessonTypesToUkrainianMap } from "../../utils/constants";
+import LessonSearch from "./LessonSearch";
 
 const LessonTypeSelectorButton = () => {
   const { lessonType } = useContext(LessonTypeContext);
   const { lessonTypeSelectorOpen, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
 
   return (
-    <TouchableOpacity style={styles.lessonTypeContainer} onPress={() => setLessonTypeSelectorOpen(!lessonTypeSelectorOpen)}>
-      <Text style={styles.text}>{LessonTypesToUkrainianMap[lessonType]}</Text>
-      <LessonTypeToSvg width={30} height={30} lessonType={lessonType as LessonTypes}/>
-    </TouchableOpacity>
+    <View style={{flexDirection:"row", alignItems:"center", gap: 5 }}>
+      <LessonSearch />
+      <TouchableOpacity
+        style={styles.lessonTypeContainer}
+        onPress={() => setLessonTypeSelectorOpen(!lessonTypeSelectorOpen)}
+      >
+        <Text style={styles.text}>{LessonTypesToUkrainianMap[lessonType]}</Text>
+        <LessonTypeToSvg
+          width={30}
+          height={30}
+          lessonType={lessonType as LessonTypes}
+        />
+      </TouchableOpacity>
+    </View>
   );
 };
 

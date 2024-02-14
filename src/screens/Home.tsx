@@ -1,9 +1,14 @@
 import {
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
   SectionList,
+  SectionListScrollParams,
+  StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import {
@@ -26,6 +31,8 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import LessonsContext from "../data/LessonsContext";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
+import { useLessonSearch } from "../data/LessonSearchContext";
+import { getThemePrimaryColor } from "../utils/themes";
 
 type ParamList = {
   Home: {
@@ -39,6 +46,8 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { lessons, setLessons } = useContext(LessonsContext);
   const { lessonTypeSelectorOpen, lessonType, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
+  const { lessonSearch } = useLessonSearch();
+  const sectionListRef = useRef<SectionList>(null);
   const {
     state: { token },
   } = useAuth();
@@ -73,6 +82,10 @@ const HomeScreen = () => {
       });
   };
 
+  const filteredLessons = lessons.filter((lesson) =>
+    lesson.title.toLocaleLowerCase().includes(lessonSearch.toLocaleLowerCase())
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.basicGray }}>
       <StartLevelModal
@@ -80,39 +93,82 @@ const HomeScreen = () => {
         selectedLevelID={selectedLevelID}
         levelTitle={getLessonTitleById(selectedLevelID, lessons)}
       />
-      <SectionList
-        sections={lessons}
-        scrollEnabled={!lessonTypeSelectorOpen}
-        keyExtractor={(item) => item.id.toString()}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        renderItem={({ item, index }) => (
-          <MemoizedIsLandRenderItem
-            item={item}
-            index={index}
-            handleLevelPress={handleLevelPress}
+      {filteredLessons.length ? (
+        <SectionList
+          ref={sectionListRef}
+          sections={filteredLessons}
+          scrollEnabled={!lessonTypeSelectorOpen}
+          keyExtractor={(item) => item.id.toString()}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          renderItem={({ item, index }) => (
+            <MemoizedIsLandRenderItem
+              item={item}
+              index={index}
+              handleLevelPress={handleLevelPress}
+            />
+          )}
+          initialNumToRender={5}
+          renderSectionHeader={({ section: { title } }) => (
+            <CloudTitleBanner title={title} />
+          )}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.basicGray,
+          }}
+        />
+      ) : (
+        <View style={styles.container}>
+          <Image
+            source={require("../assets/nothing-to-see.png")}
+            style={{ width: 120, height: 120 }}
           />
-        )}
-        initialNumToRender={5}
-        renderSectionHeader={({ section: { title } }) => (
-          <CloudTitleBanner title={title} />
-        )}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: colors.basicGray,
-        }}
-      />
+          <Text
+            style={[
+              styles.notFoundText,
+              { color: getThemePrimaryColor(lessonType) },
+            ]}
+          >
+            Нічого не знайдено
+          </Text>
+        </View>
+      )}
+
       {lessonTypeSelectorOpen ? (
         <Pressable
-          style={{ position: "absolute", width: "100%", height: "100%", backgroundColor: colors.gray, opacity: 0.5 }}
+          style={styles.selectorOpenBackGround}
           onPress={() => setLessonTypeSelectorOpen(false)}
         />
       ) : null}
+
       <GlobalLoader isVisible={isLoading} />
     </View>
   );
 };
 
 export default HomeScreen;
+
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    gap: 50
+  },
+
+  selectorOpenBackGround: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.gray,
+    opacity: 0.5,
+  },
+
+  notFoundText: {
+    fontSize: 20,
+    fontFamily: "Inter-Black"
+  }
+});
