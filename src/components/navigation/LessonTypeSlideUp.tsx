@@ -5,15 +5,13 @@ import {
   StyleSheet,
   Animated,
   PanResponder,
-  Pressable,
-  Touchable,
-  TouchableOpacity,
-  ScrollView,
+  Pressable
 } from "react-native";
 import { colors } from "../../styles";
 import { LessonTypeToSvg } from "./LessonTypeSelector";
 import { AvailableLessons, LessonTypesToUkrainianMap } from "../../utils/constants";
 import LessonTypeContext from "../../data/LessonsTypeContext";
+import { ScrollView } from "react-native-gesture-handler";
 
 const LessonTypeSlideUp = () => {
   const [slideAnim] = useState(new Animated.Value(-250)); // Initial position off-screen

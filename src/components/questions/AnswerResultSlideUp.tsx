@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     elevation: 4,
-    height: 280,
+    height: 250,
   },
 
   rightStyle: {

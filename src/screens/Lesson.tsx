@@ -232,7 +232,7 @@ const Lesson = () => {
               isVisible={answerResultVisible}
               isRight={isAnswerRight}
               isFinished={lastQuestionFinished}
-              rightText={"Чудово! Це правильна відповідь"}
+              rightText={"Чудово! Це правильно!"}
               wrongText="Отакої( Це неправильно"
             />
             <PressableButton
