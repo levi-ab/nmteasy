@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { LetterOptions, QuestionTypes } from "../../../utils/constants";
 import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";
 import { checkIfMatchQuestionMatrixIsCorrect } from "../../../utils/matrixUtils";
+import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 
 export interface IMatchQuestionProps {
   question: ISingleAnswersQuestion;
@@ -110,10 +111,7 @@ const MatchQuestion = (props: IMatchQuestionProps) => {
             {props.question.answers?.map((answer, index) => {
               return answer.type === QuestionTypes.Image ? (
                 <Pressable onPress={null} key={index}>
-                  <Image
-                    source={{ uri: answer.text }}
-                    style={styles.questionImage}
-                  />
+                  <ImageZoom uri={answer.text} style={styles.questionImage}/>
                 </Pressable>
               ) : (
                 <Text style={styles.answerText} key={index}>

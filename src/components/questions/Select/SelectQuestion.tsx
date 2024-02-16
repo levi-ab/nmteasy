@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { ISingleAnswersQuestion } from "../../../data/models/questions";
 import { QuestionTypes } from "../../../utils/constants";
+import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 
 export interface ISelectQuestionProps {
   question: ISingleAnswersQuestion;
@@ -58,8 +59,8 @@ const SelectQuestion = (props: ISelectQuestionProps) => {
       >
         <Text style={styles.questionText}>{props.question.question_text}</Text>
         {props.question.question_image !== "" ? (
-          <Image
-            source={{ uri: props.question.question_image }}
+          <ImageZoom
+            uri={props.question.question_image}
             style={styles.questionImage}
           />
         ) : null}
@@ -73,6 +74,7 @@ const SelectQuestion = (props: ISelectQuestionProps) => {
               <View key={answer.text} style={styles.option}>
                 <BouncyCheckbox
                   size={25}
+                  style={{ width: "100%" }}
                   fillColor={getSelectFillColor(answer.text)}
                   unfillColor={getUnCheckedFillColor(answer.text)}
                   disableBuiltInState={true}
@@ -87,8 +89,8 @@ const SelectQuestion = (props: ISelectQuestionProps) => {
                 />
                 {answer.type === QuestionTypes.Image ? (
                   <Pressable onPress={(_) => handleOptionClicked(answer.text)}>
-                    <Image
-                      source={{ uri: answer.text }}
+                    <ImageZoom
+                      uri={props.question.question_image}
                       style={styles.questionImage}
                     />
                   </Pressable>

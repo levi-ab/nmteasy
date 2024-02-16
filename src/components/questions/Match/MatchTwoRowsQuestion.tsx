@@ -13,6 +13,7 @@ import { LetterOptions, QuestionTypes } from "../../../utils/constants";
 import {
   checkIfMatchQuestionMatrixIsCorrect} from "../../../utils/matrixUtils";
 import { AnswerBoxForMatchQuestion } from "./AnswerBoxForMatchQuestion";
+import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 
 export interface IMatchTwoRowsQuestionProps {
   question: IDoubleAnswersQuestion;
@@ -89,10 +90,7 @@ const MatchTwoRowsQuestion = (props: IMatchTwoRowsQuestionProps) => {
             {props.question.answers.first_row_answers?.map((answer, index) => {
               return answer.type === QuestionTypes.Image ? (
                 <Pressable onPress={null} key={index}>
-                  <Image
-                    source={{ uri: answer.text }}
-                    style={styles.questionImage}
-                  />
+                  <ImageZoom uri={answer.text} style={styles.questionImage} />
                 </Pressable>
               ) : (
                 <Text style={styles.answerText} key={index}>
@@ -105,8 +103,8 @@ const MatchTwoRowsQuestion = (props: IMatchTwoRowsQuestionProps) => {
             {props.question.answers.second_row_answers?.map((answer, index) => {
               return answer.type === QuestionTypes.Image ? (
                 <Pressable onPress={null}>
-                  <Image
-                    source={{ uri: answer.text }}
+                  <ImageZoom
+                    uri={answer.text}
                     style={styles.questionImage}
                     key={index}
                   />

@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { colors } from "../../../styles";
+import { ImageZoom } from "@likashefqet/react-native-image-zoom";
 
 
 export interface IImageIcon {
@@ -38,7 +39,7 @@ const QuestionImageOption = (props: IImageIcon) => {
 
   return (
     <Pressable style={[styles.imageContainer, getBorderStyle()]} onPress={props.onPress}>
-      <Image source={props.src} style={styles.imageStyles}></Image>
+      <ImageZoom source={props.src} style={styles.imageStyles}></ImageZoom>
     </Pressable>
   );
 };
