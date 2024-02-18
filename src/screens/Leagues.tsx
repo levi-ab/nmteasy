@@ -19,79 +19,6 @@ const Leagues = () => {
   const [loading, setLoading] = useState(false);
   const [currentLeague, setCurrentLeague] = useState<ILeague>();
 
-  const peopleData = [
-    {
-      id: 3,
-      first_name: "Mike",
-      last_name: "Johnson",
-      username: "mikejohnson",
-      points: 150,
-    },
-    {
-      id: 10,
-      first_name: "Sophia",
-      last_name: "Clark",
-      username: "sophiaclark",
-      points: 140,
-    },
-    {
-      id: 6,
-      first_name: "Sarah",
-      last_name: "Williams",
-      username: "sarahwilliams",
-      points: 130,
-    },
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      username: "johndoe",
-      points: 120,
-    },
-    {
-      id: 5,
-      first_name: "Alex",
-      last_name: "Taylor",
-      username: "alextaylor",
-      points: 110,
-    },
-    {
-      id: 8,
-      first_name: "Olivia",
-      last_name: "Jones",
-      username: "oliviajones",
-      points: 115,
-    },
-    {
-      id: 7,
-      first_name: "Chris",
-      last_name: "Miller",
-      username: "chrismiller",
-      points: 95,
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Smith",
-      username: "janesmith",
-      points: 90,
-    },
-    {
-      id: 9,
-      first_name: "Daniel",
-      last_name: "Lee",
-      username: "daniellee",
-      points: 100,
-    },
-    {
-      id: 4,
-      first_name: "Emily",
-      last_name: "Brown",
-      username: "emilybrown",
-      points: 80,
-    },
-    user
-  ];
 
   useEffect(() => {
     setLoading(true);
@@ -107,7 +34,7 @@ const Leagues = () => {
       });
   }, []);
 
-  const userLeagueIndex = AvailableLeagues.findIndex(x => x === user?.league.title)
+  const userLeagueIndex = AvailableLeagues.findIndex(x => x === currentLeague?.title)
 
   return (
     <View style={styles.container}>
@@ -201,7 +128,7 @@ const Leagues = () => {
       </ScrollView>
       <ScrollView style={styles.usersContainer}>
         {currentLeague?.users
-          ?.sort((a, b) => b.points - a.points)
+          ?.sort((a, b) => b.weekly_points - a.weekly_points)
           .map((x, index) => (
             <View
               key={index}
@@ -218,7 +145,7 @@ const Leagues = () => {
                 {x?.first_name + " " + x?.last_name}
               </Text>
               <Text style={[styles.text, { color: colors.gold }]}>
-                {x?.points} xp
+                {x?.weekly_points} xp
               </Text>
             </View>
           ))}

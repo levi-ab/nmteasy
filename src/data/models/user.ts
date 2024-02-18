@@ -6,6 +6,7 @@ export default interface IUser {
 	email: string
 	league: ILeague
 	points: number
+	weekly_points: number
 }
 
 export interface ILeague {
