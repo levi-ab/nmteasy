@@ -29,12 +29,14 @@ import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 type ParamList = {
   Lesson: {
     lessonID: string;
+    questions: (ISingleAnswersQuestion | IDoubleAnswersQuestion)[];
   };
 };
 
 const Lesson = () => {
   const route = useRoute<RouteProp<ParamList, "Lesson">>();
   const lessonID: string = route.params.lessonID;
+  const navigatedQuestions = route.params.questions
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [nextQuestionActive, setNextQuestionActive] = useState(false);
   const [answerResultVisible, setAnswerResultVisible] = useState(false);
@@ -48,16 +50,19 @@ const Lesson = () => {
   const [questionsAnalytics, setQuestionAnalytics] = useState<IQuestionAnalytic[]>([]);
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
-  >([]);
+  >(navigatedQuestions ?? []);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
   const { state: { token } } = useAuth();
   const { lessonType } = useContext(LessonTypeContext);
 
   useEffect(() => {
-    LessonService
-      .getQuestionsByLesson(token, lessonType, lessonID)
-      .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
-      .catch((err) => console.error(err));
+    if (lessonID) {
+      LessonService.getQuestionsByLesson(token, lessonType, lessonID)
+        .then((res) =>
+          setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion))
+        )
+        .catch((err) => console.error(err));
+    }
   }, []);
 
   useEffect(() => {

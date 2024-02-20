@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { LineChart, Grid, YAxis, XAxis } from "react-native-svg-charts";
+import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 import { colors } from "../../styles";
-import analyticsService from "../../services/analyticsService";
 import { useAuth } from "../../data/AuthContext";
+import analyticsService from "../../services/analyticsService";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 
 const AnalyticsChart = () => {
@@ -23,7 +23,7 @@ const AnalyticsChart = () => {
         const numbersArray: number[] = [];
         for (const [dateString, number] of Object.entries(res)) {
           const date = new Date(dateString);
-          const day = date.toLocaleDateString('uk-UA', { weekday: 'short' });
+          const day = date.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
           datesArray.push(day);
           numbersArray.push(number as number);
         }

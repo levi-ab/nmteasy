@@ -19,6 +19,7 @@ import AppHeader from "./AppHeader";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 import { getThemePrimaryColor } from "../../utils/themes";
 import Leagues from "../../screens/Leagues";
+import Questions from "../../screens/Questions";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -55,7 +56,7 @@ const AppNavigator: React.FC = () => {
               options={{ drawerLabel: "Головна", title: "Головна" }}
             />
             <Drawer.Screen
-              name="Ліга"
+              name="League"
               component={Leagues}
               options={{
                 drawerLabel: "Ліга",
@@ -64,7 +65,16 @@ const AppNavigator: React.FC = () => {
               }}
             />
             <Drawer.Screen
-              name="Аналітика"
+              name="Questions"
+              component={Questions}
+              options={{
+                drawerLabel: "Інші Уроки",
+                title: "Інші Уроки",
+                unmountOnBlur: true,
+              }}
+            />
+            <Drawer.Screen
+              name="Analytics"
               component={Analytics}
               options={{
                 drawerLabel: "Аналітика",
@@ -72,7 +82,6 @@ const AppNavigator: React.FC = () => {
                 unmountOnBlur: true,
               }}
             />
-
             <Drawer.Screen
               name="Settings"
               component={Settings}

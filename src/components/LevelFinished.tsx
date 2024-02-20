@@ -65,8 +65,9 @@ const LevelFinished = (props: Props) => {
   }, [props.isVisible, slideAnim]);
 
   const handleGoHome = () => {
+    if(props.lessonID) {
     analyticsService
-      .addAnalytic(
+      .addLessonAnalytics(
         token,
         props.lessonID,
         props.elapsedTime,
@@ -83,6 +84,32 @@ const LevelFinished = (props: Props) => {
           .catch(err => console.error(err))
       })
       .catch((err) => console.error(err));
+    } else {
+      analyticsService
+        .addQuestionsAnalytics(
+          token,
+          props.questionsAnalytics,
+          lessonType,
+          props.rightAnswersCount
+        )
+        .then((_) => {
+          const updatedUserData = {
+            ...user,
+            points: (user?.points as number) + props.rightAnswersCount,
+          };
+          dispatch({
+            type: "SIGN_IN",
+            payload: { user: updatedUserData as IUser, token: token },
+          });
+          LessonService.getLessons(token, lessonType)
+            .then((res) => {
+              setLessons(res);
+              navigation.navigate("Home");
+            })
+            .catch((err) => console.error(err));
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   return (

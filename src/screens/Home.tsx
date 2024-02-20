@@ -27,7 +27,7 @@ import { getLessonTitleById } from "../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 import { useAuth } from "../data/AuthContext";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import LessonsContext from "../data/LessonsContext";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
@@ -48,6 +48,7 @@ const HomeScreen = () => {
   const { lessonTypeSelectorOpen, lessonType, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
   const { lessonSearch } = useLessonSearch();
   const sectionListRef = useRef<SectionList>(null);
+  const navigation = useNavigation<NavigationProp<any>>();
   const {
     state: { token },
   } = useAuth();
@@ -92,8 +93,13 @@ const HomeScreen = () => {
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}
         levelTitle={getLessonTitleById(selectedLevelID, lessons)}
+        onButtonPress={() =>
+          navigation.navigate("Lesson", {
+            lessonID: selectedLevelID,
+          })
+        }
       />
-      {filteredLessons.length ? (
+      {filteredLessons.length || isLoading ? (
         <SectionList
           ref={sectionListRef}
           sections={filteredLessons}

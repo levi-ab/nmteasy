@@ -10,10 +10,11 @@ export interface IStartLevelModal {
     setSelectedLevelID: React.Dispatch<React.SetStateAction<string | null>>
     selectedLevelID: string | null;
     levelTitle: string;
+    onButtonPress: () => void;
+    questions?: []
 }
 
 const StartLevelModal = (props: IStartLevelModal) => {
-  const navigation = useNavigation<NavigationProp<any>>();
   const { lessonType } = useContext(LessonTypeContext);
 
   return (
@@ -30,7 +31,10 @@ const StartLevelModal = (props: IStartLevelModal) => {
         onTouchEnd={() => props.setSelectedLevelID(null)}
       >
         <View
-          style={[styles.modalView, { backgroundColor: getThemeSecondaryColor(lessonType) }]}
+          style={[
+            styles.modalView,
+            { backgroundColor: getThemeSecondaryColor(lessonType) },
+          ]}
         >
           <Text
             style={[
@@ -41,9 +45,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
             {props.levelTitle}
           </Text>
           <PressableButton
-            onPress={() =>
-              navigation.navigate("Lesson", { lessonID: props.selectedLevelID })
-            }
+            onPress={props.onButtonPress}
             style={{
               backgroundColor: colors.white,
               height: 50,

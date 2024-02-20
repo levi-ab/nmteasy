@@ -66,12 +66,12 @@ const ExplainQuestionModal = (props: {
             onPress={() => props.setShowExplainModal(false)}
             text="Далі"
             style={{
-              backgroundColor: colors.themeSecondary,
+              backgroundColor: colors.themePrimary,
               height: 40,
               width: "100%",
               borderRadius: 20,
             }}
-            buttonShadow={colors.themePrimary}
+            buttonShadow={colors.themeSecondary}
             textStyle={{
               color: colors.grays80,
               fontWeight: "bold",
