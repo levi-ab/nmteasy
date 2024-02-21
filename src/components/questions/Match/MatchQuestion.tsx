@@ -110,9 +110,7 @@ const MatchQuestion = (props: IMatchQuestionProps) => {
           <View style={{ flexDirection: "column", gap: 10 }}>
             {props.question.answers?.map((answer, index) => {
               return answer.type === QuestionTypes.Image ? (
-                <Pressable onPress={null} key={index}>
-                  <ImageZoom uri={answer.text} style={styles.questionImage}/>
-                </Pressable>
+                <Image src={answer.text} style={styles.questionImage} />
               ) : (
                 <Text style={styles.answerText} key={index}>
                   {index + 1 + " " + answer.text}
@@ -196,6 +194,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginTop: 20,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 });

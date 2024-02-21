@@ -7,8 +7,9 @@ import { ILessonByGeneralTitle } from "./src/data/models/lessons";
 import { LessonTypes } from "./src/utils/constants";
 import LessonTypeContext from "./src/data/LessonsTypeContext";
 import GlobalLoader from "./src/components/common/GlobalLoader";
-import { SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView, StatusBar, View } from "react-native";
 import { LessonSearchProvider } from "./src/data/LessonSearchContext";
+import { colors } from "./src/styles";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -41,6 +42,8 @@ export default function App() {
       <StatusBar backgroundColor={"transparent"} translucent />
     </AuthProvider>
   ) : (
-    <GlobalLoader isVisible={true} />
+    <View style={{flex: 1, backgroundColor: colors.basicGray}}>
+      <GlobalLoader isVisible={true} />
+    </View>
   );
 }

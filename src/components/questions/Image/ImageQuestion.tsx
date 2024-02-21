@@ -1,8 +1,10 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import QuestionImageOption from "./QuestionImageOption";
 import { colors } from "../../../styles";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ISingleAnswersQuestion } from "../../../data/models/questions";
+import LessonTypeContext from "../../../data/LessonsTypeContext";
+import { LessonTypes } from "../../../utils/constants";
 
 export interface IImageQuestionProps {
     question: ISingleAnswersQuestion,
@@ -15,6 +17,8 @@ export interface IImageQuestionProps {
 const ImageQuestion = (props: IImageQuestionProps) => {
   const [selectedImage, setSelectedImage] = useState("");
 
+  const { lessonType } = useContext(LessonTypeContext);
+
   const handleImageOptionClicked = (src: string) => {
     setSelectedImage(src); 
     props.setNextQuestionActive(true);
@@ -26,7 +30,12 @@ const ImageQuestion = (props: IImageQuestionProps) => {
       <ScrollView style={{ maxHeight: "30%", flexGrow: 0 }}>
         <Text style={styles.questionText}>{props.question.question_text}</Text>
       </ScrollView>
-      <View style={styles.imageOptionsContainer}>
+      <View
+        style={[
+          styles.imageOptionsContainer,
+          { marginTop: lessonType === LessonTypes.Ukrainian ? 80 : 0 },
+        ]}
+      >
         {props.question.answers.map((answer) => (
           <QuestionImageOption
             key={answer.text}

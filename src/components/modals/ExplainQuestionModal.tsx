@@ -10,7 +10,7 @@ import {
 import { colors } from "../../styles";
 import { useContext, useEffect, useState } from "react";
 import PressableButton from "../common/PressableButton";
-import LessonService from "../../services/LessonService";
+import LessonService from "../../services/lessonService";
 import { IExplanation } from "../../data/models/questions";
 import { useAuth } from "../../data/AuthContext";
 import LessonTypeContext from "../../data/LessonsTypeContext";

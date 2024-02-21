@@ -15,7 +15,7 @@ import {
   IDoubleAnswersQuestion,
   ISingleAnswersQuestion,
 } from "../data/models/questions";
-import LessonService from "../services/LessonService";
+import LessonService from "../services/lessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
 import GlobalLoader from "../components/common/GlobalLoader";

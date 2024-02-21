@@ -21,7 +21,6 @@ import {
 } from "react";
 import { colors } from "../styles";
 import StartLevelModal from "../components/modals/StartLevelModal";
-import LessonService from "../services/LessonService";
 import { ILessonByGeneralTitle } from "../data/models/lessons";
 import { getLessonTitleById } from "../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
@@ -33,6 +32,7 @@ import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
 import { useLessonSearch } from "../data/LessonSearchContext";
 import { getThemePrimaryColor } from "../utils/themes";
+import LessonService from "../services/lessonService";
 
 type ParamList = {
   Home: {

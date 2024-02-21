@@ -68,8 +68,8 @@ const AppNavigator: React.FC = () => {
               name="Questions"
               component={Questions}
               options={{
-                drawerLabel: "Інші Уроки",
-                title: "Інші Уроки",
+                drawerLabel: "Інші Режими",
+                title: "Інші Режими",
                 unmountOnBlur: true,
               }}
             />
