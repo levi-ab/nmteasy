@@ -6,7 +6,7 @@ import PressableButton from "./common/PressableButton";
 import analyticsService from "../services/analyticsService";
 import { useAuth } from "../data/AuthContext";
 import LessonsContext from "../data/LessonsContext";
-import LessonService from "../services/LessonService";
+import LessonService from "../services/lessonService";
 import { IQuestionAnalytic } from "../data/models/analytics";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
