@@ -16,6 +16,7 @@ import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import SelectQuestion from "../components/questions/Select/SelectQuestion";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
+import * as Progress from 'react-native-progress';
 
 const Battle = () => {
   const { lessonTypeSelectorOpen, lessonType, setLessonTypeSelectorOpen } =
@@ -25,10 +26,38 @@ const Battle = () => {
   const [ws, setWS] = useState<WebSocket | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<ISingleAnswersQuestion | IDoubleAnswersQuestion | null>(null);
   const [answer, setSelectedAnswer] = useState<string>();
+  const [currentQuestionLocked, setCurrentQuestionLocked] = useState(false);
+  const initialTime = 60;
+  const [timer, setTimer] = useState(initialTime);
 
   const {
     state: { user, token },
   } = useAuth();
+
+  useEffect(() => {
+    // Reset the timer when currentQuestion changes
+    let interval: NodeJS.Timeout;
+  
+    if (currentQuestion != null) {
+      setTimer(initialTime);  // Set initial timer value
+  
+      // Start the timer
+      interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          console.log(prevTimer);  // Log the previous timer value
+          if (prevTimer === 1) {
+            console.log("skipping question");
+            ws?.send('{"messageType": "skip_question", "Message":""}');
+          }
+          return prevTimer > 0 ? prevTimer - 1 : 0;  // Update the timer value
+        });
+      }, 1000);
+    }
+    // Clean up the interval on component unmount or when currentQuestion changes
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentQuestion]);
 
   useEffect(() => {
     if (!isBattleLoading) {
@@ -96,7 +125,7 @@ const Battle = () => {
     }
 
     if (parsedMessage.MessageType === RESULT) {
-      //  handleAnswerResult();
+      handleAnswerResult(parsedMessage);
       return;
     }
 
@@ -119,18 +148,11 @@ const Battle = () => {
     try {
       const question = JSON.parse(parsedMessage.Message);
       setCurrentQuestion(mapToSingleOrDoubleAnswersQuestion(question)); 
+      setCurrentQuestionLocked(false);
     } catch (error) {
       showToast("Щось пішло не так", "error");
     }
   }
-
-  const showToast = (text: string, type: "success" | "error") => {
-    Toast.show({
-      type: type,
-      text1: type === "error" ? "Помилочка" : "Повідомлення",
-      text2: text,
-    });
-  };
 
   const handleAnswerPressed = () => {
     const messageObject = {
@@ -144,9 +166,34 @@ const Battle = () => {
       MessageType: ANSWER,
     };
 
-    console.log(message);
     ws?.send(JSON.stringify(message));
   }
+
+  const handleAnswerResult = (message: Message) => {
+    if (message.Message === "correct") {
+      showToast("Правильна відповідь", "success");
+      return
+    } 
+
+    if (message.Message === "wrong") {
+      setCurrentQuestionLocked(true);
+      showToast("Неправильна відповідь", "error");
+      return
+    } 
+
+    if (message.Message === "other_answered") {
+      showToast("Суперник відповів правильно", "info");
+      return
+    } 
+  }
+
+  const showToast = (text: string, type: "success" | "error" | "info") => {
+    Toast.show({
+      type: type,
+      text1: type === "error" ? "Помилочка" : "Повідомлення",
+      text2: text,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -158,6 +205,11 @@ const Battle = () => {
       ) : null}
       {currentRoomID ? (
         <>
+          <Progress.Bar
+            progress={timer / initialTime}
+            width={200}
+            height={10}
+          />
           <GetCurrentQuestionElement
             question={currentQuestion}
             setNextQuestionActive={() => console.log()}
@@ -174,6 +226,7 @@ const Battle = () => {
               width: "60%",
               borderRadius: 20,
             }}
+            disabled={currentQuestionLocked}
             buttonShadow={getThemeSecondaryColor(lessonType)}
             textStyle={{
               color: colors.grays80,
