@@ -10,7 +10,8 @@ export interface ISelectQuestionProps {
   question: ISingleAnswersQuestion;
   setNextQuestionActive: Function;
   setIsAnswerRight: Function;
-  answerResultVisible: boolean
+  answerResultVisible: boolean;
+  setSelectedAnswer?: Function;
 }
 
 const SelectQuestion = (props: ISelectQuestionProps) => {
@@ -24,6 +25,9 @@ const SelectQuestion = (props: ISelectQuestionProps) => {
     setSelectedOption(text)
     props.setNextQuestionActive(true);
     props.setIsAnswerRight(props.question.right_answer === text);
+    if(props.setSelectedAnswer){
+      props.setSelectedAnswer(text);
+    }
   }
 
   const getSelectFillColor = (text: string) => {

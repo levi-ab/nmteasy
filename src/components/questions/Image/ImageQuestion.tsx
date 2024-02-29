@@ -11,6 +11,7 @@ export interface IImageQuestionProps {
     setNextQuestionActive: Function
     setIsAnswerRight: Function
     answerResultVisible: boolean
+    setSelectedAnswer?: Function;
 }
 
 
@@ -23,6 +24,9 @@ const ImageQuestion = (props: IImageQuestionProps) => {
     setSelectedImage(src); 
     props.setNextQuestionActive(true);
     props.setIsAnswerRight(props.question.right_answer === src);
+    if(props.setSelectedAnswer){
+      props.setSelectedAnswer(src);
+    }
   }
 
   return (

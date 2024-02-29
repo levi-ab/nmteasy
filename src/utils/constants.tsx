@@ -74,3 +74,13 @@ export const LeaguesToUkrainianMap: StringMapType = {
 }
 
 export const NULL_UUID = "00000000-0000-0000-0000-000000000000"
+
+export const INFO = "info";
+export const ERROR = "error";
+export const ANSWER = "answer";
+export const QUESTION = "question";
+export const NEXT_QUESTION = "next_question";
+export const GET_NEXT_QUESTION = "get_next_question";
+export const RESULT = "result";
+export const FINISHED = "finished";
+export const MATCH_FOUND = "match_found";
