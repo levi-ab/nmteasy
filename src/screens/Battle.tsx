@@ -1,33 +1,46 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { colors } from "../styles";
-import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  View,
+} from "react-native";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
-import PressableButton from "../components/common/PressableButton";
 import { useAuth } from "../data/AuthContext";
-import { isLoading } from "expo-font";
 import { Message } from "../data/models/battle";
-import { ANSWER, ERROR, FINISHED, MATCH_FOUND, QUESTION, QuestionTypes, RESULT } from "../utils/constants";
+import {
+  ANSWER,
+  ERROR,
+  FINISHED,
+  MATCH_FOUND,
+  QUESTION,
+  RESULT,
+} from "../utils/constants";
 import Toast from "react-native-toast-message";
-import { IDoubleAnswersQuestion, IQuestion, ISingleAnswersQuestion } from "../data/models/questions";
-import MatchTwoRowsQuestion from "../components/questions/Match/MatchTwoRowsQuestion";
-import ImageQuestion from "../components/questions/Image/ImageQuestion";
-import SelectQuestion from "../components/questions/Select/SelectQuestion";
-import MatchQuestion from "../components/questions/Match/MatchQuestion";
+import {
+  IDoubleAnswersQuestion,
+  ISingleAnswersQuestion,
+} from "../data/models/questions";
 import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
-import * as Progress from 'react-native-progress';
+import BattleNotStartedView from "../components/battle/BattleNotStartedView";
+import BattleInProgressView from "../components/battle/BattleInProgressView";
+import BattleFinishedView from "../components/battle/BattleFinishedView";
 
 const Battle = () => {
-  const { lessonTypeSelectorOpen, lessonType, setLessonTypeSelectorOpen } =
-    useContext(LessonTypeContext);
+  const { lessonTypeSelectorOpen, lessonType } = useContext(LessonTypeContext);
   const [isBattleLoading, setIsBattleLoading] = useState(false);
+  const [battleFinished, setBattleFinished] = useState(false);
+  const [currentQuestionLocked, setCurrentQuestionLocked] = useState(false);
   const [currentRoomID, setCurrentRoomID] = useState<string | null>(null);
   const [ws, setWS] = useState<WebSocket | null>(null);
-  const [currentQuestion, setCurrentQuestion] = useState<ISingleAnswersQuestion | IDoubleAnswersQuestion | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<
+    ISingleAnswersQuestion | IDoubleAnswersQuestion | null
+  >(null);
   const [answer, setSelectedAnswer] = useState<string>();
-  const [currentQuestionLocked, setCurrentQuestionLocked] = useState(false);
-  const initialTime = 60;
+  const [userRightAnswerCount, setUserRightAnswerCount] = useState<number>(0);
+  const [opponentRightAnswerCount, setOpponentRightAnswerCount] = useState<number>(0);
+
+  const initialTime = 5;
   const [timer, setTimer] = useState(initialTime);
 
   const {
@@ -37,18 +50,21 @@ const Battle = () => {
   useEffect(() => {
     // Reset the timer when currentQuestion changes
     let interval: NodeJS.Timeout;
-  
+
     if (currentQuestion != null) {
-      setTimer(initialTime);  // Set initial timer value
-  
+      setTimer(initialTime); // Set initial timer value
+
       // Start the timer
       interval = setInterval(() => {
         setTimer((prevTimer) => {
-          if (prevTimer === 1 && user?.id === currentRoomID?.slice(0, 36)) { //cuz only one user can skip and this way we assign it randomly
+          if (prevTimer === 1 && user?.id === currentRoomID?.slice(0, 36)) {
+            //cuz only one user can skip and this way we assign it randomly
             console.log("skipping question");
-            ws?.send(`{"messageType": "skip_question", "Message":"", "RoomID": "${currentRoomID}"}`);
+            ws?.send(
+              `{"messageType": "skip_question", "Message":"", "RoomID": "${currentRoomID}"}`
+            );
           }
-          return prevTimer > 0 ? prevTimer - 1 : 0;  // Update the timer value
+          return prevTimer > 0 ? prevTimer - 1 : 0; // Update the timer value
         });
       }, 1000);
     }
@@ -60,11 +76,11 @@ const Battle = () => {
 
   useEffect(() => {
     if (!isBattleLoading) {
-      if(ws !== null) {
+      if (ws !== null) {
         ws.close();
         setWS(null);
       }
-      return
+      return;
     }
 
     const wsUrl = "http://192.168.33.36:8008/ws/";
@@ -79,13 +95,13 @@ const Battle = () => {
     socket.onopen = () => {
       setWS(socket);
       //sending here are join the queue message
-      socket.send('{"messageType": "join_matchmaking", "Message":""}')
-      console.log("Joined the queue")
+      socket.send('{"messageType": "join_matchmaking", "Message":""}');
+      console.log("Joined the queue");
     };
 
     socket.onmessage = (event) => {
       console.log("Received message:", event.data);
-      handleMessageReceived(event.data)
+      handleMessageReceived(event.data);
     };
 
     socket.onerror = (error) => {
@@ -126,7 +142,7 @@ const Battle = () => {
     }
 
     if (parsedMessage?.MessageType === FINISHED) {
-      //  handleGameFinished();
+      handleGameFinished(parsedMessage);
       return;
     }
 
@@ -136,10 +152,21 @@ const Battle = () => {
     }
 
     if (parsedMessage?.MessageType === QUESTION) {
-       handleReceivedQuestion(parsedMessage);
+      handleReceivedQuestion(parsedMessage);
       return;
     }
   };
+
+  const handleGameFinished = (parsedMessage: Message) => {
+    try {
+      const finishedResult: {UserResult: number, OpponentResult: number} = JSON.parse(parsedMessage.Message);
+      setUserRightAnswerCount(finishedResult.UserResult);
+      setOpponentRightAnswerCount(finishedResult.OpponentResult);
+      setBattleFinished(true);
+    } catch (error) {
+      showToast("Щось пішло не так", "error");
+    }
+  }
 
   const handleMatchFound = (parsedMessage: Message) => {
     try {
@@ -153,12 +180,12 @@ const Battle = () => {
   const handleReceivedQuestion = (parsedMessage: Message) => {
     try {
       const question = JSON.parse(parsedMessage.Message);
-      setCurrentQuestion(mapToSingleOrDoubleAnswersQuestion(question)); 
+      setCurrentQuestion(mapToSingleOrDoubleAnswersQuestion(question));
       setCurrentQuestionLocked(false);
     } catch (error) {
       showToast("Щось пішло не так", "error");
     }
-  }
+  };
 
   const handleAnswerPressed = () => {
     try {
@@ -166,38 +193,37 @@ const Battle = () => {
         Answer: answer,
         UserID: user?.id,
       };
-  
+
       const message = {
         Message: JSON.stringify(messageObject),
         RoomID: currentRoomID,
         MessageType: ANSWER,
       };
-  
+
       ws?.send(JSON.stringify(message));
     } catch (error) {
       showToast("Щось пішло не так(", "error");
       console.error("Could not answer:", error);
     }
-
-  }
+  };
 
   const handleAnswerResult = (message: Message) => {
     if (message.Message === "correct") {
       showToast("Правильна відповідь", "success");
-      return
-    } 
+      return;
+    }
 
     if (message.Message === "wrong") {
       setCurrentQuestionLocked(true);
       showToast("Неправильна відповідь", "error");
-      return
-    } 
+      return;
+    }
 
     if (message.Message === "other_answered") {
       showToast("Суперник відповів правильно", "info");
-      return
-    } 
-  }
+      return;
+    }
+  };
 
   const showToast = (text: string, type: "success" | "error" | "info") => {
     Toast.show({
@@ -207,82 +233,40 @@ const Battle = () => {
     });
   };
 
+  const renderBattleView = (battleFinished: boolean) => {
+    if(battleFinished) {
+      return (
+        <BattleFinishedView
+          userRightAnswerCount={userRightAnswerCount}
+          opponentRightAnswerCount={opponentRightAnswerCount}
+        />
+      );
+    }
+
+    return (
+      <BattleInProgressView
+        timer={timer}
+        initialTime={initialTime}
+        setSelectedAnswer={setSelectedAnswer}
+        currentQuestion={currentQuestion}
+        handleAnswerPressed={handleAnswerPressed}
+        currentQuestionLocked={currentQuestionLocked}
+        lessonType={lessonType}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {lessonTypeSelectorOpen ? (
-        <Pressable
-          style={styles.selectorOpenBackGround}
-          onPress={() => setLessonTypeSelectorOpen(false)}
-        />
-      ) : null}
       {currentRoomID ? (
-        <>
-          <Progress.Bar
-            progress={timer / initialTime}
-            width={200}
-            height={10}
-          />
-          <GetCurrentQuestionElement
-            question={currentQuestion}
-            setNextQuestionActive={() => console.log()}
-            setIsAnswerRight={() => console.log()}
-            answerResultVisible={false}
-            setSelectedAnswer={setSelectedAnswer}
-          />
-          <PressableButton
-            onPress={handleAnswerPressed}
-            text={"Відповісти"}
-            style={{
-              backgroundColor: getThemePrimaryColor(lessonType),
-              height: 60,
-              width: "60%",
-              borderRadius: 20,
-            }}
-            disabled={currentQuestionLocked}
-            buttonShadow={getThemeSecondaryColor(lessonType)}
-            textStyle={{
-              color: colors.grays80,
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 18,
-            }}
-          />
-        </>
+        renderBattleView(battleFinished)
       ) : (
-        <>
-          {isBattleLoading ? (
-            <ActivityIndicator
-              size="large"
-              color={getThemePrimaryColor(lessonType)}
-              style={{ height: 150 }}
-            />
-          ) : null}
-          <PressableButton
-            onPress={handleFindBattlePressed}
-            text={isBattleLoading ? "Скасувати" : "Баттл"}
-            style={{
-              backgroundColor: isBattleLoading
-                ? colors.red
-                : getThemePrimaryColor(lessonType),
-              height: 60,
-              width: "60%",
-              borderRadius: 20,
-            }}
-            buttonShadow={
-              isBattleLoading
-                ? colors.redShadow
-                : getThemeSecondaryColor(lessonType)
-            }
-            textStyle={{
-              color: colors.grays80,
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 18,
-            }}
-          />
-        </>
+        <BattleNotStartedView
+          lessonType={lessonType}
+          isBattleLoading={isBattleLoading}
+          handleFindBattlePressed={handleFindBattlePressed}
+        />
       )}
-
       <GlobalLoader isVisible={false} />
       <Toast />
     </View>
@@ -292,80 +276,13 @@ const Battle = () => {
 export default Battle;
 
 
-const GetCurrentQuestionElement = ({
-  question,
-  setNextQuestionActive,
-  setIsAnswerRight,
-  answerResultVisible,
-  setSelectedAnswer,
-}: {
-  question: IDoubleAnswersQuestion | ISingleAnswersQuestion | null;
-  setNextQuestionActive: any;
-  setIsAnswerRight: any;
-  setSelectedAnswer: any,
-  answerResultVisible: any;
-}) => {
-  switch (question?.type) {
-    case QuestionTypes.MatchWithTwoRows:
-      return (
-        <MatchTwoRowsQuestion
-          key={question.id}
-          question={question as IDoubleAnswersQuestion}
-          setNextQuestionActive={setNextQuestionActive}
-          setIsAnswerRight={setIsAnswerRight}
-          answerResultVisible={answerResultVisible}
-        />
-      );
-    case QuestionTypes.Select:
-      if (
-        (question as ISingleAnswersQuestion).answers.every(
-          (answer) => answer.type === QuestionTypes.Image
-        )
-      )
-        return (
-          <ImageQuestion
-            key={question.id}
-            question={question as ISingleAnswersQuestion}
-            setNextQuestionActive={setNextQuestionActive}
-            setIsAnswerRight={setIsAnswerRight}
-            answerResultVisible={answerResultVisible}
-            setSelectedAnswer={setSelectedAnswer}
-          />
-        );
-      return (
-        <SelectQuestion
-          key={question.id}
-          question={question as ISingleAnswersQuestion}
-          setNextQuestionActive={setNextQuestionActive}
-          setIsAnswerRight={setIsAnswerRight}
-          answerResultVisible={answerResultVisible}
-          setSelectedAnswer={setSelectedAnswer}
-        />
-      );
-    case QuestionTypes.Match:
-      return (
-        <MatchQuestion
-          key={question.id}
-          question={question as ISingleAnswersQuestion}
-          setNextQuestionActive={setNextQuestionActive}
-          setIsAnswerRight={setIsAnswerRight}
-          answerResultVisible={answerResultVisible}
-        />
-      );
-    // case QuestionTypes.Text:
-    //   return <ImageQuestion question={question} />;
-    default:
-      return null;
-  }
-};
-
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
     height: "100%",
     backgroundColor: colors.basicGray,
-    padding: 20
+    padding: 20,
   },
 
   selectorOpenBackGround: {
