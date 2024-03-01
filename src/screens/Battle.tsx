@@ -32,6 +32,7 @@ const Battle = () => {
   const [battleFinished, setBattleFinished] = useState(false);
   const [currentQuestionLocked, setCurrentQuestionLocked] = useState(false);
   const [currentRoomID, setCurrentRoomID] = useState<string | null>(null);
+  const [opponentName, setOpponentName] = useState<string>("")
   const [ws, setWS] = useState<WebSocket | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<
     ISingleAnswersQuestion | IDoubleAnswersQuestion | null
@@ -40,7 +41,7 @@ const Battle = () => {
   const [userRightAnswerCount, setUserRightAnswerCount] = useState<number>(0);
   const [opponentRightAnswerCount, setOpponentRightAnswerCount] = useState<number>(0);
 
-  const initialTime = 5;
+  const initialTime = 60;
   const [timer, setTimer] = useState(initialTime);
 
   const {
@@ -118,6 +119,18 @@ const Battle = () => {
     return () => socket.close();
   }, [isBattleLoading]);
 
+  useEffect(() => {
+    const interval = setInterval(() => { //unlocking ability to answer every 10 seconds
+      if (currentQuestionLocked) {
+        setCurrentQuestionLocked(false);
+      }
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentQuestionLocked]);
+
   const handleFindBattlePressed = () => {
     setIsBattleLoading(!isBattleLoading);
   };
@@ -171,7 +184,8 @@ const Battle = () => {
   const handleMatchFound = (parsedMessage: Message) => {
     try {
       showToast("Суперника Знайдено!", "success");
-      setCurrentRoomID(parsedMessage.Message);
+      setOpponentName(parsedMessage.Message)
+      setCurrentRoomID(parsedMessage.RoomID);
     } catch (error) {
       showToast("Щось пішло не так", "error");
     }
@@ -237,6 +251,7 @@ const Battle = () => {
     if(battleFinished) {
       return (
         <BattleFinishedView
+          opponentName={opponentName }
           userRightAnswerCount={userRightAnswerCount}
           opponentRightAnswerCount={opponentRightAnswerCount}
         />
@@ -252,6 +267,7 @@ const Battle = () => {
         handleAnswerPressed={handleAnswerPressed}
         currentQuestionLocked={currentQuestionLocked}
         lessonType={lessonType}
+        opponentName={opponentName}
       />
     );
   }

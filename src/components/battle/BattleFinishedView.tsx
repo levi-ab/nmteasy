@@ -14,9 +14,11 @@ import IUser from "../../data/models/user";
 const BattleFinishedView = ({
   userRightAnswerCount,
   opponentRightAnswerCount,
+  opponentName
 }: {
   userRightAnswerCount: number;
   opponentRightAnswerCount: number;
+  opponentName: string;
 }) => {
   const navigation = useNavigation<NavigationProp<any>>();
   const { lessonType } = useContext(LessonTypeContext);
@@ -68,7 +70,7 @@ const BattleFinishedView = ({
             { borderColor: getThemePrimaryColor(lessonType) },
           ]}
         >
-          <Text style={styles.smallLabel}>Opponent набрав:</Text>
+          <Text style={styles.smallLabel}>{opponentName} набрав:</Text>
           <Text
             style={[styles.label, { color: getThemePrimaryColor(lessonType) }]}
           >

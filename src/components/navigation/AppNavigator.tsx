@@ -81,6 +81,9 @@ const AppNavigator: React.FC = () => {
                 drawerLabel: "Баттл",
                 title: "Баттл",
                 unmountOnBlur: true,
+                header: ({ navigation, route, options }) => {
+                  return <View />;
+                },
               }}
             />
             <Drawer.Screen
