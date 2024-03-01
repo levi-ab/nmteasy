@@ -44,10 +44,9 @@ const Battle = () => {
       // Start the timer
       interval = setInterval(() => {
         setTimer((prevTimer) => {
-          console.log(prevTimer);  // Log the previous timer value
-          if (prevTimer === 1) {
+          if (prevTimer === 1 && user?.id === currentRoomID?.slice(0, 36)) { //cuz only one user can skip and this way we assign it randomly
             console.log("skipping question");
-            ws?.send('{"messageType": "skip_question", "Message":""}');
+            ws?.send(`{"messageType": "skip_question", "Message":"", "RoomID": "${currentRoomID}"}`);
           }
           return prevTimer > 0 ? prevTimer - 1 : 0;  // Update the timer value
         });
@@ -96,8 +95,8 @@ const Battle = () => {
     socket.onclose = (event) => {
       console.log("WebSocket connection closed:", event);
       setCurrentRoomID(null);
+      setIsBattleLoading(false);
       setCurrentQuestion(null);
-      setWS(null);
     };
 
     return () => socket.close();
@@ -108,28 +107,35 @@ const Battle = () => {
   };
 
   const handleMessageReceived = (message: string) => {
-    const parsedMessage: Message = JSON.parse(message);
-    if (parsedMessage.MessageType === MATCH_FOUND) {
+    let parsedMessage: Message | null = null;
+    try {
+      parsedMessage = JSON.parse(message);
+    } catch (error) {
+      showToast("Щось пішло не так", "error");
+      console.error("Could not answer:", error);
+    }
+
+    if (parsedMessage?.MessageType === MATCH_FOUND) {
       handleMatchFound(parsedMessage);
       return;
     }
 
-    if (parsedMessage.MessageType === ERROR) {
+    if (parsedMessage?.MessageType === ERROR) {
       //  handleErrorSent();
       return;
     }
 
-    if (parsedMessage.MessageType === FINISHED) {
+    if (parsedMessage?.MessageType === FINISHED) {
       //  handleGameFinished();
       return;
     }
 
-    if (parsedMessage.MessageType === RESULT) {
+    if (parsedMessage?.MessageType === RESULT) {
       handleAnswerResult(parsedMessage);
       return;
     }
 
-    if (parsedMessage.MessageType === QUESTION) {
+    if (parsedMessage?.MessageType === QUESTION) {
        handleReceivedQuestion(parsedMessage);
       return;
     }
@@ -155,18 +161,24 @@ const Battle = () => {
   }
 
   const handleAnswerPressed = () => {
-    const messageObject = {
-      Answer: answer,
-      UserID: user?.id,
-    };
+    try {
+      const messageObject = {
+        Answer: answer,
+        UserID: user?.id,
+      };
+  
+      const message = {
+        Message: JSON.stringify(messageObject),
+        RoomID: currentRoomID,
+        MessageType: ANSWER,
+      };
+  
+      ws?.send(JSON.stringify(message));
+    } catch (error) {
+      showToast("Щось пішло не так(", "error");
+      console.error("Could not answer:", error);
+    }
 
-    const message = {
-      Message: JSON.stringify(messageObject),
-      RoomID: currentRoomID,
-      MessageType: ANSWER,
-    };
-
-    ws?.send(JSON.stringify(message));
   }
 
   const handleAnswerResult = (message: Message) => {
