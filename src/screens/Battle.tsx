@@ -84,7 +84,7 @@ const Battle = () => {
       return;
     }
 
-    const wsUrl = "http://192.168.33.36:8008/ws/";
+    const wsUrl = `${process.env.EXPO_PUBLIC_API_URL}/ws/`;
 
     // Add authorization header to the WebSocket URL yeah ik, will need to change that
     const wsUrlWithAuth = `${wsUrl}/${token}`;
