@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { colors } from "../styles";
 import {
   StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityComponent,
   View,
 } from "react-native";
 import LessonTypeContext from "../data/LessonsTypeContext";
@@ -25,6 +27,10 @@ import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import BattleNotStartedView from "../components/battle/BattleNotStartedView";
 import BattleInProgressView from "../components/battle/BattleInProgressView";
 import BattleFinishedView from "../components/battle/BattleFinishedView";
+import { G, Path, Svg } from "react-native-svg";
+import { getThemePrimaryColor } from "../utils/themes";
+import BackButton from "../components/common/BackButton";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 const Battle = () => {
   const { lessonTypeSelectorOpen, lessonType } = useContext(LessonTypeContext);
@@ -47,6 +53,8 @@ const Battle = () => {
   const {
     state: { user, token },
   } = useAuth();
+
+  const navigation = useNavigation<NavigationProp<any>>();
 
   useEffect(() => {
     // Reset the timer when currentQuestion changes
@@ -84,7 +92,7 @@ const Battle = () => {
       return;
     }
 
-    const wsUrl = `${process.env.EXPO_PUBLIC_API_URL}/ws/`;
+    const wsUrl = `${process.env.EXPO_PUBLIC_SOCKET_URL}/ws/`;
 
     // Add authorization header to the WebSocket URL yeah ik, will need to change that
     const wsUrlWithAuth = `${wsUrl}/${token}`;
@@ -274,6 +282,7 @@ const Battle = () => {
 
   return (
     <View style={styles.container}>
+      <BackButton onPress={() => navigation.goBack()}/>
       {currentRoomID ? (
         renderBattleView(battleFinished)
       ) : (
