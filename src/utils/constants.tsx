@@ -84,3 +84,4 @@ export const GET_NEXT_QUESTION = "get_next_question";
 export const RESULT = "result";
 export const FINISHED = "finished";
 export const MATCH_FOUND = "match_found";
+export const OPPONENT_DISCONNECTED = "opponent_disconnected"

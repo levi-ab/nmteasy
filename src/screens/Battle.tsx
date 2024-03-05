@@ -2,8 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { colors } from "../styles";
 import {
   StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityComponent,
   View,
 } from "react-native";
 import LessonTypeContext from "../data/LessonsTypeContext";
@@ -15,6 +13,7 @@ import {
   ERROR,
   FINISHED,
   MATCH_FOUND,
+  OPPONENT_DISCONNECTED,
   QUESTION,
   RESULT,
 } from "../utils/constants";
@@ -27,8 +26,6 @@ import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
 import BattleNotStartedView from "../components/battle/BattleNotStartedView";
 import BattleInProgressView from "../components/battle/BattleInProgressView";
 import BattleFinishedView from "../components/battle/BattleFinishedView";
-import { G, Path, Svg } from "react-native-svg";
-import { getThemePrimaryColor } from "../utils/themes";
 import BackButton from "../components/common/BackButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
@@ -176,7 +173,30 @@ const Battle = () => {
       handleReceivedQuestion(parsedMessage);
       return;
     }
+
+    if(parsedMessage?.MessageType === OPPONENT_DISCONNECTED){
+      handleOpponentDisconnected(parsedMessage)
+    }
   };
+
+  const handleOpponentDisconnected = (parsedMessage: Message) => {
+    if(battleFinished){
+      return;
+    }
+
+    showToast("Опонент вийшов зі гри", "info")
+    ws?.close();
+    setWS(null);
+    
+    try {
+      const finishedResult: {UserResult: number, OpponentResult: number} = JSON.parse(parsedMessage.Message);
+      setUserRightAnswerCount(finishedResult.UserResult);
+      setOpponentRightAnswerCount(finishedResult.OpponentResult);
+      setBattleFinished(true);
+    } catch (error) {
+      showToast("Щось пішло не так", "error");
+    }
+  }
 
   const handleGameFinished = (parsedMessage: Message) => {
     try {
@@ -282,7 +302,9 @@ const Battle = () => {
 
   return (
     <View style={styles.container}>
-      <BackButton onPress={() => navigation.goBack()}/>
+      {!currentRoomID ? (
+        <BackButton onPress={() => navigation.goBack()} />
+      ) : null}
       {currentRoomID ? (
         renderBattleView(battleFinished)
       ) : (

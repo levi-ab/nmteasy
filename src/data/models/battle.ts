@@ -13,4 +13,5 @@ export type MessageType =
   | "get_next_question"
   | "result"
   | "finished"
-  | "match_found";
+  | "match_found"
+  | "opponent_disconnected"

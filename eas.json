@@ -5,7 +5,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://4zsev4ogrg.execute-api.eu-north-1.amazonaws.com"
+        "EXPO_PUBLIC_API_URL": "https://nmteasy.work.gd:8008",
+        "EXPO_PUBLIC_SOCKET_URL": "wss://nmteasy.work.gd:8008"
       }
     },
     "preview2": {
