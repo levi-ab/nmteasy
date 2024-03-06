@@ -24,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/icon.png",
+        "foregroundImage": "./src/assets/android_icon.png",
         "backgroundColor": "#202124"
       },
       "package": "com.leviab.nmteasy"
