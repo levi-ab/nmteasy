@@ -7,7 +7,7 @@ import {
 import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
 import { useAuth } from "../data/AuthContext";
-import { Message } from "../data/models/battle";
+import { FinishedResult, Message } from "../data/models/battle";
 import {
   ANSWER,
   ERROR,
@@ -41,8 +41,7 @@ const Battle = () => {
     ISingleAnswersQuestion | IDoubleAnswersQuestion | null
   >(null);
   const [answer, setSelectedAnswer] = useState<string>();
-  const [userRightAnswerCount, setUserRightAnswerCount] = useState<number>(0);
-  const [opponentRightAnswerCount, setOpponentRightAnswerCount] = useState<number>(0);
+  const [finishedResult, setFinishedResult] = useState<FinishedResult | null>(null);
 
   const initialTime = 60;
   const [timer, setTimer] = useState(initialTime);
@@ -101,7 +100,7 @@ const Battle = () => {
     socket.onopen = () => {
       setWS(socket);
       //sending here are join the queue message
-      socket.send('{"messageType": "join_matchmaking", "Message":""}');
+      socket.send(`{"messageType": "join_matchmaking", "Message":"${lessonType}"}`);
       console.log("Joined the queue");
     };
 
@@ -180,18 +179,16 @@ const Battle = () => {
   };
 
   const handleOpponentDisconnected = (parsedMessage: Message) => {
-    if(battleFinished){
+    if (battleFinished) {
       return;
     }
 
-    showToast("Опонент вийшов зі гри", "info")
+    showToast("Опонент вийшов зі гри", "info");
     ws?.close();
     setWS(null);
-    
+
     try {
-      const finishedResult: {UserResult: number, OpponentResult: number} = JSON.parse(parsedMessage.Message);
-      setUserRightAnswerCount(finishedResult.UserResult);
-      setOpponentRightAnswerCount(finishedResult.OpponentResult);
+      setFinishedResult(JSON.parse(parsedMessage.Message));
       setBattleFinished(true);
     } catch (error) {
       showToast("Щось пішло не так", "error");
@@ -200,14 +197,18 @@ const Battle = () => {
 
   const handleGameFinished = (parsedMessage: Message) => {
     try {
-      const finishedResult: {UserResult: number, OpponentResult: number} = JSON.parse(parsedMessage.Message);
-      setUserRightAnswerCount(finishedResult.UserResult);
-      setOpponentRightAnswerCount(finishedResult.OpponentResult);
+      const finishedResult = JSON.parse(
+        parsedMessage.Message
+      ) as FinishedResult;
+      if (finishedResult.AnsweredLast) {
+        showToast("Правильна відповідь", "success");
+      }
+      setFinishedResult(finishedResult);
       setBattleFinished(true);
     } catch (error) {
       showToast("Щось пішло не так", "error");
     }
-  }
+  };
 
   const handleMatchFound = (parsedMessage: Message) => {
     try {
@@ -279,9 +280,9 @@ const Battle = () => {
     if(battleFinished) {
       return (
         <BattleFinishedView
-          opponentName={opponentName }
-          userRightAnswerCount={userRightAnswerCount}
-          opponentRightAnswerCount={opponentRightAnswerCount}
+          opponentName={opponentName}
+          userRightAnswerCount={finishedResult?.UserResult ?? 0}
+          opponentRightAnswerCount={finishedResult?.OpponentResult ?? 0}
         />
       );
     }

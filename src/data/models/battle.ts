@@ -4,6 +4,12 @@ export interface Message {
     MessageType: MessageType;
 }
 
+export interface FinishedResult {
+  UserResult: number;
+  OpponentResult: number;
+  AnsweredLast: boolean;
+}
+
 export type MessageType =
   | "info"
   | "error"
