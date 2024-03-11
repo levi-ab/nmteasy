@@ -33,12 +33,17 @@ export const ErrorsMap: StringMapType = {
   "no user found": "Пароль чи Пошта неправильні"
 };
 
-
 export enum LessonTypes {
   History = "history",
   Ukrainian = "ukrainian",
   Biology = "biology"
 }
+
+export const LessonImagesMap: Record<string, Array<string>> = {
+  [LessonTypes.History]: ["../../assets/swords.png","../../assets/fort.png"],
+  [LessonTypes.Ukrainian]: ["",""],
+  [LessonTypes.Biology]: ["",""]
+};
 
 export const LessonTypesToUkrainianMap: StringMapType = {
   "history": "Історія",

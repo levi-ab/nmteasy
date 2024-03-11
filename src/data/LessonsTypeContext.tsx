@@ -3,8 +3,8 @@ import { ILessonByGeneralTitle } from "./models/lessons";
 import { LessonTypes } from "../utils/constants";
 
 const LessonTypeContext = createContext<{
-  lessonType: string;
-  setLessonType: React.Dispatch<SetStateAction<string>>;
+  lessonType: LessonTypes;
+  setLessonType: React.Dispatch<SetStateAction<LessonTypes>>;
   lessonTypeSelectorOpen: boolean;
   setLessonTypeSelectorOpen: React.Dispatch<SetStateAction<boolean>>;
 }>({
