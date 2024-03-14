@@ -1,4 +1,4 @@
-import { memo, useContext } from "react";
+import { memo, useContext, useMemo } from "react";
 import { Image, View } from "react-native";
 import { Circle, G, Path, Svg } from "react-native-svg";
 import { ILesson } from "../../data/models/lessons";
@@ -10,15 +10,16 @@ interface IsLandRenderItemProps {
   item: ILesson;
   index: number;
   handleLevelPress: Function;
+  lessonType: string;
 }
 
 const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({
   item,
   index,
   handleLevelPress,
+  lessonType
 }) => {
-  const { lessonType } = useContext(LessonTypeContext);
-
+  
   return (
     <View>
       <IslandButton
@@ -35,15 +36,8 @@ const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({
         marginRight={index % 5 >= 2 ? (-index % 5) * 30 : (index % 5) * 60}
         onPress={() => handleLevelPress(item.id)}
       />
-
       <GetImageByLessonType lessonType={lessonType} index={index} />
       <GetSecondImageByLessonType lessonType={lessonType} index={index} />
-
-      {/* {index === 0 ? (
-        Math.random() < 0.5
-        ? <StarSVG index={index}/>
-        : <LightBulbSvg index={index}/>
-      ) : null} */}
     </View>
   );
 };
@@ -120,6 +114,38 @@ const GetImageByLessonType = ({
       )
     ) : null;
   }
+
+  if (lessonType === LessonTypes.Ukrainian) {
+    return index % 2 === 0 && index !== 0 ? (
+      Math.random() < 0.5 ? (
+        <Image
+          source={require("../../assets/ukrainian.png")}
+          style={{
+            tintColor: "white",
+            position: "absolute",
+            left: index === 2 ? 120 : -120,
+            top: 30,
+            width: 70,
+            height: 70,
+            opacity: 0.6,
+          }}
+        />
+      ) : (
+        <Image
+          source={require("../../assets/ukrainian1.png")}
+          style={{
+            position: "absolute",
+            tintColor: "white",
+            left: index === 2 ? 120 : -120,
+            top: 30,
+            width: 60,
+            height: 60,
+            opacity: 0.6,
+          }}
+        />
+      )
+    ) : null;
+  }
 };
 
 const GetSecondImageByLessonType = ({
@@ -182,6 +208,39 @@ const GetSecondImageByLessonType = ({
           style={{
             position: "absolute",
             tintColor: "white",
+            left: -120,
+            top: 30,
+            width: 80,
+            height: 80,
+            opacity: 0.6,
+          }}
+        />
+      )
+    ) : null;
+  }
+
+  if (lessonType === LessonTypes.Ukrainian) {
+    return index === 0 ? (
+      Math.random() < 0.5 ? (
+        <Image
+          source={require("../../assets/ukrainian2.png")}
+          style={{
+            tintColor: "white",
+            position: "absolute",
+            left: -120,
+            top: 30,
+            width: 70,
+            height: 70,
+            opacity: 0.6,
+          }}
+        />
+      ) : (
+        <Image
+          source={require("../../assets/ukrainian3.png")}
+          style={{
+            position: "absolute",
+            tintColor: "white",
+            objectFit: "contain",
             left: -120,
             top: 30,
             width: 80,

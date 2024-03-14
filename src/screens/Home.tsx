@@ -16,6 +16,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -49,6 +50,7 @@ const HomeScreen = () => {
   const { lessonSearch } = useLessonSearch();
   const sectionListRef = useRef<SectionList>(null);
   const navigation = useNavigation<NavigationProp<any>>();
+  const memoizedLessonType = useMemo(() => lessonType, [lessonType]);
   const {
     state: { token },
   } = useAuth();
@@ -113,6 +115,7 @@ const HomeScreen = () => {
               item={item}
               index={index}
               handleLevelPress={handleLevelPress}
+              lessonType={memoizedLessonType}
             />
           )}
           initialNumToRender={5}
