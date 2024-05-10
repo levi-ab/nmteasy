@@ -74,7 +74,7 @@ export const isConnectedToInternet = async (): Promise<boolean | null> => {
   return state.isConnected;
 }
 
-export const mapSavedLessonToRealLesson = (lesson: string) => {
+export const mapSavedLessonToRealLesson = (lesson: string): ILessonByGeneralTitle => {
   const title = lesson.split("|")[0];
   const type = lesson.split("|")[1];
 

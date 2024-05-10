@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Animated, StyleSheet, TextInput, View } from "react-native";
+import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Circle, G, Line, Path, Svg } from "react-native-svg";
 import { colors } from "../../styles";
@@ -10,20 +10,21 @@ import { useLessonSearch } from "../../data/LessonSearchContext";
 const LessonSearch = () => {
     const [searchOpen, setSearchOpen] = useState(false);
     const { setLessonSearch, lessonSearch } = useLessonSearch();
-    const [width] = useState(new Animated.Value(0));
+    const [verticalPosition] = useState(new Animated.Value(-200));
     const { lessonType } = useContext(LessonTypeContext);
 
     const handleSearchClicked = () => {
       if(searchOpen) {
-        Animated.timing(width, {
-          toValue: 0,
+        Animated.timing(verticalPosition, {
+          toValue: -200,
           duration: 300,
           useNativeDriver: false,
         }).start();
         setLessonSearch("");
+        Keyboard.dismiss();
       } else {
-        Animated.timing(width, {
-          toValue: 200,
+        Animated.timing(verticalPosition, {
+          toValue: 40,
           duration: 200,
           useNativeDriver: false,
         }).start();
@@ -80,16 +81,23 @@ const LessonSearch = () => {
             </Svg>
           )}
         </TouchableOpacity>
-        <Animated.View style={{ width: width, paddingHorizontal: 4}}>
+        <Animated.View
+          style={{
+            paddingHorizontal: 4,
+            position: "absolute",
+            top: verticalPosition,
+            width: Dimensions.get("window").width + 100, //i fucking love magic numbers, have fun figuring out what is 100
+            left: -Dimensions.get("window").width / 2,
+            padding: 10,
+            backgroundColor: getThemePrimaryColor(lessonType),
+          }}
+        >
           <TextInput
-            style={[
-              styles.textInput,
-              { color: getThemePrimaryColor(lessonType) },
-            ]}
+            style={[styles.textInput]}
             placeholder="Пошук"
-            onChangeText={text => setLessonSearch(text)}
+            onChangeText={(text) => setLessonSearch(text)}
             value={lessonSearch}
-            placeholderTextColor={getThemeSecondaryColor(lessonType) }
+            placeholderTextColor={getThemeSecondaryColor(lessonType)}
           ></TextInput>
         </Animated.View>
       </View>
@@ -105,9 +113,13 @@ const styles = StyleSheet.create({
     },
 
     textInput: {
-        backgroundColor: colors.basicGray,
+        padding: 5,
+        width: 250,
         borderRadius: 5,
         height:  40,
+        marginLeft: 40,
+        borderWidth: 1,
+        borderColor: colors.grays100,
         fontSize: 16,
     }
   });

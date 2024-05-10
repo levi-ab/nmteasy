@@ -91,11 +91,15 @@ const HomeScreen = () => {
     [setSelectedLevelID]
   );
 
-  const showToast = (text: string, type: "success" | "error") => {
+  const showToast = (text: string, type: string, customMessage: string = "") => {
     Toast.show({
       type: type,
-      text1: type === "error" ? "Помилочка" : "Повідомлення",
-      text2: text,
+      text1: customMessage.length
+        ? text
+        : type === "error"
+        ? "Помилочка"
+        : "Повідомлення",
+      text2: customMessage,
     });
   };
 

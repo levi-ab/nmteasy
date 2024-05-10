@@ -6,6 +6,7 @@ import LessonTypeSlideUp from "./LessonTypeSlideUp";
 import { getThemePrimaryColor } from "../../utils/themes";
 import { useContext } from "react";
 import LessonTypeContext from "../../data/LessonsTypeContext";
+import LessonSearch from "./LessonSearch";
 
 const AppHeader = ({
   title,
@@ -77,6 +78,7 @@ const AppHeader = ({
           <View />
         ) : (
           <>
+            <LessonSearch />
             <LessonTypeSelector />
             <LessonTypeSlideUp />
           </>

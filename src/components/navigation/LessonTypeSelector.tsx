@@ -4,15 +4,13 @@ import { colors } from "../../styles";
 import { useContext } from "react";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 import { LessonTypes, LessonTypesToUkrainianMap } from "../../utils/constants";
-import LessonSearch from "./LessonSearch";
 
 const LessonTypeSelectorButton = () => {
   const { lessonType } = useContext(LessonTypeContext);
   const { lessonTypeSelectorOpen, setLessonTypeSelectorOpen } = useContext(LessonTypeContext);
 
   return (
-    <View style={{flexDirection:"row", alignItems:"center", gap: 5 }}>
-      <LessonSearch />
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
       <TouchableOpacity
         style={styles.lessonTypeContainer}
         onPress={() => setLessonTypeSelectorOpen(!lessonTypeSelectorOpen)}

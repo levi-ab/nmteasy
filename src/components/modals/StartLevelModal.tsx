@@ -35,7 +35,7 @@ const StartLevelModal = (props: IStartLevelModal) => {
       .then((res) => {
         saveLessonLocally(props.levelTitle, lessonType, res).then((saveRes) => {
           if (saveRes) {
-            (props.showToast as Function)("Урок Збережено", "success");
+            (props.showToast as Function)("Урок Збережено", "success", "Ви можете переглянути список локальних уроків у налаштуваннях");
             return;
           }
 

@@ -59,7 +59,7 @@ const Leagues = () => {
                 fill="none"
                 width={70}
                 height={70}
-                style={{position: "absolute", top: 80, zIndex: 10}}
+                style={{ position: "absolute", top: 80, zIndex: 10 }}
               >
                 <G id="SVGRepo_bgCarrier" stroke-width="0"></G>
                 <G

@@ -5,7 +5,7 @@ export interface ILesson {
     title: string;
     questions: null;
     proper_title: string;
-    lesson_analytic: ILessonAnalytic
+    lesson_analytic: ILessonAnalytic | null
 }
 
 export interface ILessonByGeneralTitle {
