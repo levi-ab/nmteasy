@@ -1,4 +1,5 @@
 import { ILessonByGeneralTitle } from "../data/models/lessons";
+import NetInfo from '@react-native-community/netinfo';
 import {
   IQuestion,
   ISingleAnswersQuestion,
@@ -66,4 +67,25 @@ export const secondsToTime = (seconds: number) => {
   const formattedSeconds = remainingSeconds + 'с';
 
   return formattedHours + formattedMinutes + formattedSeconds;
+}
+
+export const isConnectedToInternet = async (): Promise<boolean | null> => {
+  const state = await NetInfo.fetch();
+  return state.isConnected;
+}
+
+export const mapSavedLessonToRealLesson = (lesson: string) => {
+  const title = lesson.split("|")[0];
+  const type = lesson.split("|")[1];
+
+  return {
+    title: title,
+    data: [{
+      id: title,
+      title: title,
+      questions: null,
+      proper_title: title,
+      lesson_analytic: null,
+    }],
+  }
 }

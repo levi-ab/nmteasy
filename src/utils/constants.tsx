@@ -39,16 +39,16 @@ export enum LessonTypes {
   Biology = "biology"
 }
 
-export const LessonImagesMap: Record<string, Array<string>> = {
-  [LessonTypes.History]: ["../../assets/swords.png","../../assets/fort.png"],
-  [LessonTypes.Ukrainian]: ["",""],
-  [LessonTypes.Biology]: ["",""]
-};
-
 export const LessonTypesToUkrainianMap: StringMapType = {
   "history": "Історія",
   "ukrainian": "Українська",
   "biology": "Біологія"
+}
+
+export const LessonTypesToUkrainianMapWithStupidEnding: StringMapType = {
+  "history": "Історії",
+  "ukrainian": "Української",
+  "biology": "Біології"
 }
 
 export const AvailableLessons = [

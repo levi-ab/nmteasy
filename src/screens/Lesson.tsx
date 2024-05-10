@@ -4,7 +4,10 @@ import { colors } from "../styles";
 import ImageQuestion from "../components/questions/Image/ImageQuestion";
 import { useContext, useEffect, useState } from "react";
 import { NULL_UUID, QuestionTypes } from "../utils/constants";
-import { mapToSingleOrDoubleAnswersQuestion } from "../utils/utils";
+import {
+  isConnectedToInternet,
+  mapToSingleOrDoubleAnswersQuestion,
+} from "../utils/utils";
 import PressableButton from "../components/common/PressableButton";
 import AnswerResultSlideUp from "../components/questions/AnswerResultSlideUp";
 import SelectQuestion from "../components/questions/Select/SelectQuestion";
@@ -15,7 +18,7 @@ import {
   IDoubleAnswersQuestion,
   ISingleAnswersQuestion,
 } from "../data/models/questions";
-import LessonService from "../services/lessonService";
+import lessonService from "../services/lessonService";
 import MatchQuestion from "../components/questions/Match/MatchQuestion";
 import { useAuth } from "../data/AuthContext";
 import GlobalLoader from "../components/common/GlobalLoader";
@@ -29,6 +32,7 @@ import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 type ParamList = {
   Lesson: {
     lessonID: string;
+    lessonTitle: string;
     questions: (ISingleAnswersQuestion | IDoubleAnswersQuestion)[];
   };
 };
@@ -36,34 +40,53 @@ type ParamList = {
 const Lesson = () => {
   const route = useRoute<RouteProp<ParamList, "Lesson">>();
   const lessonID: string = route.params.lessonID;
-  const navigatedQuestions = route.params.questions
+  const lessonTitle = route.params.lessonID;
+  const navigatedQuestions = route.params.questions;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [nextQuestionActive, setNextQuestionActive] = useState(false);
   const [answerResultVisible, setAnswerResultVisible] = useState(false);
   const [isAnswerRight, setIsAnswerRight] = useState(false);
   const [showLevelFinished, setShowLevelFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [elapsedTimeWithoutCurrentQuestion, setElapsedTimeWithoutCurrentQuestion] = useState(0);
+  const [
+    elapsedTimeWithoutCurrentQuestion,
+    setElapsedTimeWithoutCurrentQuestion,
+  ] = useState(0);
   const [rightAnswersCount, setRightAnswersCount] = useState(0);
   const [showExplainModal, setShowExplainModal] = useState(false);
-  const [showComplainModal, setShowComplainModal] = useState(false); 
-  const [questionsAnalytics, setQuestionAnalytics] = useState<IQuestionAnalytic[]>([]);
+  const [showComplainModal, setShowComplainModal] = useState(false);
+  const [questionsAnalytics, setQuestionAnalytics] = useState<
+    IQuestionAnalytic[]
+  >([]);
   const [questions, setQuestions] = useState<
     (ISingleAnswersQuestion | IDoubleAnswersQuestion)[]
   >(navigatedQuestions ?? []);
   const lastQuestionFinished = currentQuestionIndex === questions.length - 1;
-  const { state: { token } } = useAuth();
+  const {
+    state: { token },
+  } = useAuth();
   const { lessonType } = useContext(LessonTypeContext);
 
   useEffect(() => {
-    if (lessonID) {
-      LessonService.getQuestionsByLesson(token, lessonType, lessonID)
+    fetchQuestions();
+  }, []);
+
+  async function fetchQuestions() {
+    if (lessonID && (await isConnectedToInternet())) {
+      lessonService
+        .getQuestionsByLesson(token, lessonType, lessonID)
         .then((res) =>
           setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion))
         )
         .catch((err) => console.error(err));
+      return;
     }
-  }, []);
+
+    lessonService
+      .getLocalQuestionsByLesson(lessonType, lessonID)
+      .then((res) => setQuestions(res.map(mapToSingleOrDoubleAnswersQuestion)))
+      .catch((err) => console.error(err));
+  }
 
   useEffect(() => {
     let timerId: NodeJS.Timeout;
@@ -159,13 +182,13 @@ const Lesson = () => {
       setQuestionAnalytics([
         ...questionsAnalytics,
         {
-          id:"",
+          id: "",
           question_id: questions[currentQuestionIndex].id,
           created_at: "",
           updated_at: "",
           time_spent: elapsedTime - elapsedTimeWithoutCurrentQuestion,
           answered_right: isAnswerRight,
-          user_id:"",
+          user_id: "",
         },
       ]);
       setElapsedTimeWithoutCurrentQuestion(elapsedTime);
@@ -207,7 +230,7 @@ const Lesson = () => {
       text2: text,
     });
   };
-  
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.grays100, paddingTop: 80 }}>
       {questions?.length ? (
@@ -275,8 +298,10 @@ const Lesson = () => {
             questionsAnalytics={questionsAnalytics}
           />
         </>
-      ) : <GlobalLoader isVisible={true}/>}
-      <Toast/>
+      ) : (
+        <GlobalLoader isVisible={true} />
+      )}
+      <Toast />
     </View>
   );
 };

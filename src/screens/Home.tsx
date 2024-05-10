@@ -23,7 +23,7 @@ import {
 import { colors } from "../styles";
 import StartLevelModal from "../components/modals/StartLevelModal";
 import { ILessonByGeneralTitle } from "../data/models/lessons";
-import { getLessonTitleById } from "../utils/utils";
+import { getLessonTitleById, isConnectedToInternet, mapSavedLessonToRealLesson } from "../utils/utils";
 import CloudTitleBanner from "../components/common/CloudTitleBanner";
 import { MemoizedIsLandRenderItem } from "../components/common/IslandRenderItem";
 import { useAuth } from "../data/AuthContext";
@@ -33,7 +33,8 @@ import LessonTypeContext from "../data/LessonsTypeContext";
 import GlobalLoader from "../components/common/GlobalLoader";
 import { useLessonSearch } from "../data/LessonSearchContext";
 import { getThemePrimaryColor } from "../utils/themes";
-import LessonService from "../services/lessonService";
+import lessonService from "../services/lessonService";
+import Toast from "react-native-toast-message";
 
 type ParamList = {
   Home: {
@@ -57,10 +58,31 @@ const HomeScreen = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    LessonService.getLessons(token, lessonType)
+    fetchLessons();
+  }, [lessonType]);
+
+  async function fetchLessons() {
+    if(await isConnectedToInternet()) {
+      lessonService.getLessons(token, lessonType)
       .then((res) => {setLessons(res); setIsLoading(false)})
       .catch((err) => {console.error(err); setIsLoading(false)});
-  }, [lessonType]);
+    } else {
+      lessonService
+        .getLocalLessonsKeys(lessonType)
+        .then((res) => {
+          setLessons(
+            res.map((item: string) => (mapSavedLessonToRealLesson(item)))
+          );
+          setIsLoading(false);
+          setRefreshing(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+          setRefreshing(false);
+        });
+    }
+  }
 
   const handleLevelPress = useCallback(
     (id: SetStateAction<string | null>) => {
@@ -69,24 +91,22 @@ const HomeScreen = () => {
     [setSelectedLevelID]
   );
 
+  const showToast = (text: string, type: "success" | "error") => {
+    Toast.show({
+      type: type,
+      text1: type === "error" ? "Помилочка" : "Повідомлення",
+      text2: text,
+    });
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
     setIsLoading(true);
-    LessonService.getLessons(token, lessonType)
-      .then((res) => {
-        setRefreshing(false);
-        setIsLoading(false);
-        setLessons(res);
-      })
-      .catch((err) => {
-        setIsLoading(false)
-        setRefreshing(false);
-        console.error(err);
-      });
+    fetchLessons();
   };
 
   const filteredLessons = lessons.filter((lesson) =>
-    lesson.title.toLocaleLowerCase().includes(lessonSearch.toLocaleLowerCase())
+    lesson.title?.toLocaleLowerCase().includes(lessonSearch.toLocaleLowerCase())
   );
 
   return (
@@ -95,9 +115,12 @@ const HomeScreen = () => {
         setSelectedLevelID={setSelectedLevelID}
         selectedLevelID={selectedLevelID}
         levelTitle={getLessonTitleById(selectedLevelID, lessons)}
+        showSaveLocallyBtn={true}
+        showToast={showToast}
         onButtonPress={() =>
           navigation.navigate("Lesson", {
             lessonID: selectedLevelID,
+            lessonTitle: getLessonTitleById(selectedLevelID, lessons)
           })
         }
       />
@@ -153,6 +176,7 @@ const HomeScreen = () => {
       ) : null}
 
       <GlobalLoader isVisible={isLoading} />
+      <Toast />
     </View>
   );
 };

@@ -6,11 +6,12 @@ import PressableButton from "./common/PressableButton";
 import analyticsService from "../services/analyticsService";
 import { useAuth } from "../data/AuthContext";
 import LessonsContext from "../data/LessonsContext";
-import LessonService from "../services/lessonService";
+import lessonService from "../services/lessonService";
 import { IQuestionAnalytic } from "../data/models/analytics";
 import LessonTypeContext from "../data/LessonsTypeContext";
 import { getThemePrimaryColor, getThemeSecondaryColor } from "../utils/themes";
 import IUser from "../data/models/user";
+import GlobalLoader from "./common/GlobalLoader";
 
 interface Props {
   rightAnswersCount: number;
@@ -18,7 +19,7 @@ interface Props {
   isVisible: boolean;
   elapsedTime: number;
   lessonID: string;
-  questionsAnalytics: IQuestionAnalytic[]
+  questionsAnalytics: IQuestionAnalytic[];
 }
 
 const getResultByPercent = (progress: number) => {
@@ -40,13 +41,14 @@ const getResultByPercent = (progress: number) => {
 const LevelFinished = (props: Props) => {
   const [slideAnim] = useState(new Animated.Value(1));
   const navigation = useNavigation<NavigationProp<any>>();
+  const [isLoading, setIsLoading] = useState(false);
+
   const { lessonType } = useContext(LessonTypeContext);
   const {
     state: { token, user },
-    dispatch
+    dispatch,
   } = useAuth();
   const { setLessons } = useContext(LessonsContext);
-
 
   useEffect(() => {
     if (props.isVisible) {
@@ -64,26 +66,45 @@ const LevelFinished = (props: Props) => {
     }
   }, [props.isVisible, slideAnim]);
 
-  const handleGoHome = () => {
-    if(props.lessonID) {
-    analyticsService
-      .addLessonAnalytics(
-        token,
-        props.lessonID,
-        props.elapsedTime,
-        props.rightAnswersCount,
-        props.questionCount,
-        props.questionsAnalytics,
-        lessonType
-      )
-      .then(_ => {
-        const updatedUserData = {...user, points: user?.points as number  + props.rightAnswersCount}
-        dispatch({ type: 'SIGN_IN', payload: {user: updatedUserData as IUser, token: token} });
-        LessonService.getLessons(token, lessonType)
-          .then(res => {setLessons(res); navigation.navigate("Home");})
-          .catch(err => console.error(err))
-      })
-      .catch((err) => console.error(err));
+  const handleGoHome = () => { //TODO REFACTOR THIS SPAGHETTI SHIT MY EYES HURT READING THIS 
+    if (props.lessonID) {
+      setIsLoading(true);
+      analyticsService
+        .addLessonAnalytics(
+          token,
+          props.lessonID,
+          props.elapsedTime,
+          props.rightAnswersCount,
+          props.questionCount,
+          props.questionsAnalytics,
+          lessonType
+        )
+        .then((_) => {
+          const updatedUserData = {
+            ...user,
+            points: (user?.points as number) + props.rightAnswersCount,
+          };
+          dispatch({
+            type: "SIGN_IN",
+            payload: { user: updatedUserData as IUser, token: token },
+          });
+          lessonService
+            .getLessons(token, lessonType)
+            .then((res) => {
+              setLessons(res);
+              setIsLoading(false);
+              navigation.navigate("Home");
+            })
+            .catch((err) => {
+              console.error(err);
+              navigation.navigate("Home");
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+          navigation.navigate("Home");
+          setIsLoading(false);
+        });
     } else {
       analyticsService
         .addQuestionsAnalytics(
@@ -101,14 +122,23 @@ const LevelFinished = (props: Props) => {
             type: "SIGN_IN",
             payload: { user: updatedUserData as IUser, token: token },
           });
-          LessonService.getLessons(token, lessonType)
+          lessonService
+            .getLessons(token, lessonType)
             .then((res) => {
               setLessons(res);
+              setIsLoading(false);
               navigation.navigate("Home");
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+              console.error(err);
+              navigation.navigate("Home");
+            });
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+          navigation.navigate("Home");
+          setIsLoading(false);
+        });
     }
   };
 
@@ -223,6 +253,7 @@ const LevelFinished = (props: Props) => {
           }}
         />
       </View>
+      <GlobalLoader isVisible={isLoading} />
     </Animated.View>
   );
 };

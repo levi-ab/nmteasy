@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 import { Circle, G, Path, Svg } from "react-native-svg";
 import { ILesson } from "../../data/models/lessons";
 import IslandButton from "./IslandButton";
-import { LessonImagesMap, LessonTypes } from "../../utils/constants";
+import { LessonTypes } from "../../utils/constants";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 
 interface IsLandRenderItemProps {
@@ -24,9 +24,9 @@ const IsLandRenderItem: React.FC<IsLandRenderItemProps> = ({
     <View>
       <IslandButton
         percentage={
-          item.lesson_analytic.right_answers_count !== 0
-            ? (item.lesson_analytic.right_answers_count /
-                item.lesson_analytic.questions_count) *
+          item.lesson_analytic?.right_answers_count !== 0
+            ? (item.lesson_analytic?.right_answers_count /
+                item.lesson_analytic?.questions_count) *
               100
             : 0
         }

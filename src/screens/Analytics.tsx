@@ -11,6 +11,7 @@ import { secondsToTime } from "../utils/utils";
 import AnalyticsChart from "../components/analytics/AnalyticsChart";
 import { getThemePrimaryColor } from "../utils/themes";
 import LessonTypeContext from "../data/LessonsTypeContext";
+import { LessonTypesToUkrainianMapWithStupidEnding } from "../utils/constants";
 
 const Analytics = () => {
   const {
@@ -62,7 +63,7 @@ const Analytics = () => {
                 { color: getThemePrimaryColor(lessonType) },
               ]}
             >
-              Аналітика
+              Аналітика {LessonTypesToUkrainianMapWithStupidEnding[lessonType]}
             </Text>
             <Text style={styles.smallLabel}>Тут зібраний твій прогрес</Text>
             <View
@@ -95,7 +96,7 @@ const Analytics = () => {
                 <Text style={styles.smallLabel}>
                   {
                     flattenedLessons.filter(
-                      (lesson) => lesson.lesson_analytic.time_spent != 0
+                      (lesson) => lesson.lesson_analytic?.time_spent != 0
                     ).length
                   }
                 </Text>
@@ -148,9 +149,9 @@ const Analytics = () => {
                   {
                     flattenedLessons.filter(
                       (lesson) =>
-                        lesson.lesson_analytic.right_answers_count ===
-                          lesson.lesson_analytic.questions_count &&
-                        lesson.lesson_analytic.right_answers_count !== 0
+                        lesson.lesson_analytic?.right_answers_count ===
+                          lesson.lesson_analytic?.questions_count &&
+                        lesson.lesson_analytic?.right_answers_count !== 0
                     ).length
                   }
                 </Text>
@@ -180,7 +181,7 @@ const Analytics = () => {
                   {secondsToTime(
                     flattenedLessons.reduce(
                       (accumulator, lesson) =>
-                        accumulator + lesson.lesson_analytic.time_spent,
+                        accumulator + lesson.lesson_analytic?.time_spent,
                       0
                     )
                   )}
@@ -207,10 +208,10 @@ const Analytics = () => {
             <View>
               <AnimatedProgressBar
                 progress={
-                  item.lesson_analytic.right_answers_count /
-                  (item.lesson_analytic.questions_count === 0
+                  item.lesson_analytic?.right_answers_count /
+                  (item.lesson_analytic?.questions_count === 0
                     ? 1
-                    : item.lesson_analytic.questions_count)
+                    : item.lesson_analytic?.questions_count)
                 }
               />
             </View>

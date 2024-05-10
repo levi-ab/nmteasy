@@ -6,6 +6,7 @@ import {
 } from "../../utils/themes";
 import { colors } from "../../styles";
 import { G, Path, Svg } from "react-native-svg";
+import { LessonTypesToUkrainianMapWithStupidEnding } from "../../utils/constants";
 
 const BattleNotStartedView = ({
   lessonType,
@@ -23,7 +24,7 @@ const BattleNotStartedView = ({
       id="Flat"
       width={200}
       height={200}
-      style={{marginLeft: 20, marginBottom: 20}}
+      style={{ marginLeft: 20, marginBottom: 20 }}
     >
       <G id="SVGRepo_bgCarrier" stroke-width="0"></G>
       <G
@@ -44,7 +45,7 @@ const BattleNotStartedView = ({
         textAlign: "center",
       }}
     >
-      Знайти Баттл
+      Знайти Баттл з {LessonTypesToUkrainianMapWithStupidEnding[lessonType]}
     </Text>
     <Text
       style={{

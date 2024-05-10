@@ -10,7 +10,7 @@ import {
 import { colors } from "../../styles";
 import { useContext, useEffect, useState } from "react";
 import PressableButton from "../common/PressableButton";
-import LessonService from "../../services/lessonService";
+import lessonService from "../../services/lessonService";
 import { IExplanation } from "../../data/models/questions";
 import { useAuth } from "../../data/AuthContext";
 import LessonTypeContext from "../../data/LessonsTypeContext";
@@ -29,7 +29,7 @@ const ExplainQuestionModal = (props: {
     if(props.showExplainModal){
         setExplanation(null);
         // setAnswerLoading(true);
-        LessonService.getExplanationByQuestion(token, props.questionID, lessonType)
+        lessonService.getExplanationByQuestion(token, props.questionID, lessonType)
           .then(res =>{ setExplanation(res); })
           .catch(err => {console.error(err); })
     }

@@ -1,21 +1,49 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../styles";
 import PressableButton from "../common/PressableButton";
-import { useNavigation, NavigationProp  } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { useContext } from "react";
 import LessonTypeContext from "../../data/LessonsTypeContext";
 import { getThemeSecondaryColor } from "../../utils/themes";
+import GlobalLoader from "../common/GlobalLoader";
+import lessonService from "../../services/lessonService";
+import { useAuth } from "../../data/AuthContext";
+import Toast from "react-native-toast-message";
+import { saveLessonLocally } from "../../utils/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface IStartLevelModal {
-    setSelectedLevelID: React.Dispatch<React.SetStateAction<string | null>>
-    selectedLevelID: string | null;
-    levelTitle: string;
-    onButtonPress: () => void;
-    questions?: []
+  setSelectedLevelID: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedLevelID: string | null;
+  levelTitle: string;
+  onButtonPress: () => void;
+  questions?: [];
+  showSaveLocallyBtn?: boolean;
+  showToast?: Function;
 }
 
 const StartLevelModal = (props: IStartLevelModal) => {
   const { lessonType } = useContext(LessonTypeContext);
+  const {
+    state: { token },
+    dispatch,
+  } = useAuth();
+
+  const handleSaveLessonLocally = () => {
+    lessonService
+      .getQuestionsByLesson(token, lessonType, props.selectedLevelID as string)
+      .then((res) => {
+        saveLessonLocally(props.levelTitle, lessonType, res).then((saveRes) => {
+          if (saveRes) {
+            (props.showToast as Function)("Урок Збережено", "success");
+            return;
+          }
+
+          (props.showToast as Function)("Не вийшло збререгти", "error");
+        });
+      })
+      .catch((err) => (props.showToast as Function)(String(err), "error"));
+  };
 
   return (
     <Modal
@@ -61,6 +89,13 @@ const StartLevelModal = (props: IStartLevelModal) => {
             }}
             text="Почати Урок"
           />
+          {props.showSaveLocallyBtn ? (
+            <Text style={[styles.smallText]} onPress={handleSaveLessonLocally}>
+              Зберегти урок Офлайн
+            </Text>
+          ) : (
+            <View />
+          )}
         </View>
       </View>
     </Modal>
@@ -118,5 +153,17 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 18,
     textAlign: "center",
+  },
+  smallText: {
+    fontWeight: "700",
+    marginTop: 20,
+    width: "100%",
+    fontSize: 16,
+    textAlign: "center",
+    color: "white",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: 5,
+    borderColor: colors.grays20,
   },
 });
