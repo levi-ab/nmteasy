@@ -84,7 +84,7 @@ export const mapSavedLessonToRealLesson = (lesson: string): ILessonByGeneralTitl
       id: title,
       title: title,
       questions: null,
-      proper_title: title,
+      proper_title: lesson,
       lesson_analytic: null,
     }],
   }

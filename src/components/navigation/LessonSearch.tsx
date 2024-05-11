@@ -86,8 +86,8 @@ const LessonSearch = () => {
             paddingHorizontal: 4,
             position: "absolute",
             top: verticalPosition,
-            width: Dimensions.get("window").width + 100, //i fucking love magic numbers, have fun figuring out what is 100
-            left: -Dimensions.get("window").width / 2,
+            width: Dimensions.get("window").width + 200, //i fucking love magic numbers, have fun figuring out what is 100
+            left: -Dimensions.get("window").width / 2 - 20,
             padding: 10,
             backgroundColor: getThemePrimaryColor(lessonType),
           }}

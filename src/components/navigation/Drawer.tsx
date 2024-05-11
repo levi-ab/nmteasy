@@ -69,8 +69,8 @@ const CustomDrawer = (props: any) => {
                 onPress={() => props.navigation.navigate("Settings")}
               >
                 <Svg
-                  width="25px"
-                  height="25px"
+                  width="30px"
+                  height="30px"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#000000"

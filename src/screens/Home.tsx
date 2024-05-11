@@ -35,14 +35,17 @@ import { useLessonSearch } from "../data/LessonSearchContext";
 import { getThemePrimaryColor } from "../utils/themes";
 import lessonService from "../services/lessonService";
 import Toast from "react-native-toast-message";
+import NothingFound from "../components/common/NothingFound";
 
 type ParamList = {
   Home: {
-    revalidate: boolean;
+    lessonTitle: string;
   };
 };
 
 const HomeScreen = () => {
+  const route = useRoute<RouteProp<ParamList, "Home">>();
+  const lessonTitleRouteParam: string = route?.params?.lessonTitle;
   const [selectedLevelID, setSelectedLevelID] = useState<null | string>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,17 +64,39 @@ const HomeScreen = () => {
     fetchLessons();
   }, [lessonType]);
 
+  useEffect(() => {
+    if(lessonTitleRouteParam && lessons?.length) {
+      const lessonThemeIndex = lessons.findIndex((item) =>
+        lessonTitleRouteParam.includes(item.title)
+      );
+
+      scrollToItem(
+        lessonThemeIndex,
+        getLessonIndexInThemeFromLessonTitle(lessonTitleRouteParam)
+      );
+    }
+  }, [lessonTitleRouteParam]);
+
   async function fetchLessons() {
     if(await isConnectedToInternet()) {
-      lessonService.getLessons(token, lessonType)
-      .then((res) => {setLessons(res); setIsLoading(false)})
-      .catch((err) => {console.error(err); setIsLoading(false)});
+      lessonService
+        .getLessons(token, lessonType)
+        .then((res) => {
+          setLessons(res);
+          setIsLoading(false);
+          setRefreshing(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+          setRefreshing(false);
+        });
     } else {
       lessonService
         .getLocalLessonsKeys(lessonType)
         .then((res) => {
           setLessons(
-            res.map((item: string) => (mapSavedLessonToRealLesson(item)))
+            res.map((item: string) => mapSavedLessonToRealLesson(item))
           );
           setIsLoading(false);
           setRefreshing(false);
@@ -82,6 +107,12 @@ const HomeScreen = () => {
           setRefreshing(false);
         });
     }
+  }
+
+  const getLessonIndexInThemeFromLessonTitle = (lessonTitle: string): number => {
+    //lessonTitle is in format "{lessonName} - {lessonIndex + 1}"
+    //so we extract index, which is {lessonIndex - 1}
+    return Number(lessonTitle.split("-")[1].trim()) - 1;
   }
 
   const handleLevelPress = useCallback(
@@ -109,6 +140,17 @@ const HomeScreen = () => {
     fetchLessons();
   };
 
+  const scrollToItem = (sectionIndex: number, itemIndex: number) => {
+    if (sectionListRef.current && sectionIndex >= 0 && itemIndex >= 0) {
+      sectionListRef.current.scrollToLocation({
+        sectionIndex,
+        itemIndex,
+        animated: true,
+        viewPosition: 0.5, // 0.5 means centered
+      });
+    }
+  };
+
   const filteredLessons = lessons.filter((lesson) =>
     lesson.title?.toLocaleLowerCase().includes(lessonSearch.toLocaleLowerCase())
   );
@@ -124,7 +166,7 @@ const HomeScreen = () => {
         onButtonPress={() =>
           navigation.navigate("Lesson", {
             lessonID: selectedLevelID,
-            lessonTitle: getLessonTitleById(selectedLevelID, lessons)
+            lessonTitle: getLessonTitleById(selectedLevelID, lessons),
           })
         }
       />
@@ -156,20 +198,7 @@ const HomeScreen = () => {
           }}
         />
       ) : (
-        <View style={styles.container}>
-          <Image
-            source={require("../assets/nothing-to-see.png")}
-            style={{ width: 120, height: 120 }}
-          />
-          <Text
-            style={[
-              styles.notFoundText,
-              { color: getThemePrimaryColor(lessonType) },
-            ]}
-          >
-            Нічого не знайдено
-          </Text>
-        </View>
+        <NothingFound width={120} height={120} marginTop={200} />
       )}
 
       {lessonTypeSelectorOpen ? (
@@ -203,9 +232,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray,
     opacity: 0.5,
   },
-
-  notFoundText: {
-    fontSize: 20,
-    fontFamily: "Inter-Black"
-  }
 });
