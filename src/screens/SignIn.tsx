@@ -1,5 +1,5 @@
 import { NavigationProp } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,13 +14,36 @@ import PressableButton from "../components/common/PressableButton";
 import TextInputWithLabel from "../components/text/TextInputWithLabel";
 import Toast from "react-native-toast-message";
 import GlobalLoader from "../components/common/GlobalLoader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NOT_FIRST_TIME } from "../utils/constants";
 
 const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isNoScreen, setIsNoScreen] = useState(false);
 
   const { dispatch } = useAuth();
+
+  useEffect(() => {
+    setIsLoading(true);
+    setIsNoScreen(true);
+    const checkIfFirstTime = async () => {
+      try {
+        let item = await AsyncStorage.getItem(NOT_FIRST_TIME);
+        if (item == "" || item == null) {
+          navigation.navigate("Introduction");
+        }
+      } catch (e) {
+        navigation.navigate("Introduction");
+      }
+    };
+
+    checkIfFirstTime().then((_) => {
+      setIsLoading(false);
+      setIsNoScreen(false);
+    });
+  }, []);
 
   const showToast = (text: string, type: "success" | "error") => {
     Toast.show({
@@ -47,7 +70,9 @@ const SignIn = ({ navigation }: { navigation: NavigationProp<any> }) => {
       });
   };
 
-  return (
+  return isNoScreen ? (
+    <View style={styles.container} />
+  ) : (
     <View style={styles.container}>
       <Text style={styles.header}>Увійти в {"NMTEASY"}</Text>
       <TextInputWithLabel

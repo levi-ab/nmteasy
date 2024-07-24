@@ -13,7 +13,7 @@ import { colors } from "../../styles";
 export interface IPressableButton {
   onPress: () => void;
   style?: ViewStyle;
-  buttonShadow: string;
+  buttonShadow?: string;
   textStyle?: TextStyle;
   text: string;
   disabled?: boolean;

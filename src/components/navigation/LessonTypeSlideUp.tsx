@@ -23,14 +23,14 @@ const LessonTypeSlideUp = () => {
       // Slide up animation
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 200,
         useNativeDriver: false,
       }).start();
     } else {
       // Slide down animation
       Animated.timing(slideAnim, {
         toValue: -250,
-        duration: 300,
+        duration: 200,
         useNativeDriver: false,
       }).start();
     }

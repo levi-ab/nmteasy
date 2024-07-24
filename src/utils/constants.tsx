@@ -90,3 +90,4 @@ export const RESULT = "result";
 export const FINISHED = "finished";
 export const MATCH_FOUND = "match_found";
 export const OPPONENT_DISCONNECTED = "opponent_disconnected"
+export const NOT_FIRST_TIME = "first_time_user"

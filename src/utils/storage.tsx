@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IQuestion } from "../data/models/questions";
 import { ILessonByGeneralTitle } from "../data/models/lessons";
+import { NOT_FIRST_TIME as NOT_FIRST_TIME } from "./constants";
 
 export const saveLessonLocally = async (
   lessonTitle: string,

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createDrawerNavigator,
@@ -21,6 +21,9 @@ import { getThemePrimaryColor } from "../../utils/themes";
 import Leagues from "../../screens/Leagues";
 import Questions from "../../screens/Questions";
 import Battle from "../../screens/Battle";
+import Introduction from "../../screens/Introduction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NOT_FIRST_TIME } from "../../utils/constants";
 
 const Drawer = createDrawerNavigator<any>();
 
@@ -118,6 +121,11 @@ const AppNavigator: React.FC = () => {
           </>
         ) : (
           <>
+            <Drawer.Screen
+              name="Introduction"
+              component={Introduction}
+              options={{ drawerLabel: "Увійти", title: "Увійти" }}
+            />
             <Drawer.Screen
               name="SignIn"
               component={SignIn}
